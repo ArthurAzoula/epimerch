@@ -7,21 +7,25 @@ use Lombok\Getter;
 use Lombok\Setter;
 
 #[ORM\Entity]
-class CartItem extends AbstractEntity
+class OrderItem extends AbstractEntity
 {
-    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'products')]
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'orderItems')]
     #[Getter, Setter]
-    private ?Cart $cart = null;
+    private ?Order $order = null;
 
-    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'cartItems')]
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'orderItems')]
     #[Getter, Setter]
     private ?Product $product = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     #[Getter, Setter]
     private ?int $quantity = null;
 
     #[ORM\Column(type: 'decimal', scale: 2)]
     #[Getter, Setter]
     private ?float $price = null;
+
+    #[ORM\Column(type: 'decimal', scale: 2)]
+    #[Getter, Setter]
+    private ?float $total = null;
 }

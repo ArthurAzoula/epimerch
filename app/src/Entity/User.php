@@ -44,6 +44,10 @@ class User extends AbstractEntity
     #[Getter, Setter]
     private ?Collection $addresses = null;
 
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'user')]
+    #[Getter, Setter]
+    private ?Collection $orders = null;
+
 
     #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'user')]
     #[Getter, Setter]
@@ -52,6 +56,7 @@ class User extends AbstractEntity
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function addAddress(Address $address): static
@@ -69,6 +74,27 @@ class User extends AbstractEntity
         if ($this->addresses->removeElement($address)) {
             if ($address->getUser() === $this) {
                 $address->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
             }
         }
 

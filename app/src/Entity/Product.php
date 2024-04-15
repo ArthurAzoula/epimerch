@@ -29,9 +29,9 @@ class Product extends AbstractEntity
     #[Getter, Setter]
     private ?float $price = null;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'product')]
     #[Getter, Setter]
-    private ?Order $order = null;
+    private ?Collection $orderItems = null;
 
     #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'product')]
     #[Getter, Setter]
@@ -39,6 +39,50 @@ class Product extends AbstractEntity
 
     public function __construct()
     {
-        $this->order = new Order();
+        $this->orderItems = new ArrayCollection();
+    }
+
+    public function addOrderItem(OrderItem $orderItem): static
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems[] = $orderItem;
+            $orderItem->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderItem(OrderItem $orderItem): static
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getProduct() === $this) {
+                $orderItem->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addCartItem(CartItem $cartItem): static
+    {
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems[] = $cartItem;
+            $cartItem->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartItem(CartItem $cartItem): static
+    {
+        if ($this->cartItems->removeElement($cartItem)) {
+            // set the owning side to null (unless already changed)
+            if ($cartItem->getProduct() === $this) {
+                $cartItem->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

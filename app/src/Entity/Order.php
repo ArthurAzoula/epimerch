@@ -14,11 +14,6 @@ use phpDocumentor\Reflection\Types\Boolean;
 #[ORM\Table(name: '`order`')]
 class Order extends AbstractEntity
 {
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-    }
-
     #[ORM\Column]
     #[Getter, Setter]
     private ?float $totalPrice = null;
@@ -27,25 +22,35 @@ class Order extends AbstractEntity
     #[Getter, Setter]
     private ?bool $isPaid = false;
 
-    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'order')]
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order')]
     #[Getter, Setter]
-    private Collection $products;
+    private Collection $orderItems;
 
-    public function addProduct(Product $product): static
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
+    #[Getter, Setter]
+    private ?User $user = null;
+
+    public function __construct()
     {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setOrder($this);
+        $this->orderItems = new ArrayCollection();
+    }
+
+    public function addOrderItem(OrderItem $orderItem): static
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems[] = $orderItem;
+            $orderItem->setOrder($this);
         }
 
         return $this;
     }
 
-    public function removeProduct(Product $product): static
+    public function removeOrderItem(OrderItem $orderItem): static
     {
-        if ($this->products->removeElement($product)) {
-            if ($product->getOrder() === $this) {
-                $product->setOrder(null);
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getOrder() === $this) {
+                $orderItem->setOrder(null);
             }
         }
 
