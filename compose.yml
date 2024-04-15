@@ -4,11 +4,11 @@ services:
   db:
     image: postgres:latest
     environment:
-      POSTGRES_DB: mydb
-      POST_USER: myuser
-      POSTGRES_PASSWORD: mypass
+      POSTGRES_USER: rootuser
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: ecommerce
     ports:
-      - "5432:5432"
+      - 5433:5432
     volumes:
       - db-data:/var/lib/postgresql/data
   api:
@@ -29,6 +29,11 @@ services:
       - .:/code
     environment:
       FLASK_ENV: development
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
 volumes:
   db-data:
