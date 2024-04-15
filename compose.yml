@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypass
+    ports:
+      - "5436:5436"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  api:
+    build: ./app
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/code
+    environment:
+      FLASK_ENV: development
+  web:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - .:/code
+    environment:
+      FLASK_ENV: development
+
+volumes:
+  db-data:

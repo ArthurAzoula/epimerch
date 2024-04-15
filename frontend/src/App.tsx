@@ -1,6 +1,6 @@
 import './App.css'
 
-function App() {
+function App(): any {
   
   return (
     <>
