@@ -2,23 +2,25 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgres:latest
     environment:
       POSTGRES_DB: mydb
-      POSTGRES_USER: myuser
+      POST_USER: myuser
       POSTGRES_PASSWORD: mypass
     ports:
-      - "5436:5436"
+      - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
   api:
-    build: ./app
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
     ports:
-      - "9000:9000"
+      - "8000:8000"
     volumes:
       - .:/code
     environment:
-      FLASK_ENV: development
+      SYMFONY_ENV: dev
   web:
     build: ./frontend
     ports:
