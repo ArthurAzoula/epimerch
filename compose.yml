@@ -2,13 +2,12 @@ version: '3'
 
 services:
   db:
-    image: postgres:latest
+    image: 'postgres:alpine'
     environment:
       POSTGRES_USER: rootuser
       POSTGRES_PASSWORD: rootpassword
-      POSTGRES_DB: ecommerce
     ports:
-      - 5433:5432
+      - 5436:5432
     volumes:
       - db-data:/var/lib/postgresql/data
   api:
@@ -18,15 +17,16 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/code
+      - ./app:/var/www/html
     environment:
       SYMFONY_ENV: dev
+      DATABASE_URL: postgresql://rootuser:rootpassword@db:5432/ecommerce
   web:
     build: ./frontend
     ports:
       - "3000:80"
     volumes:
-      - .:/code
+      - ./frontend:/app
     environment:
       FLASK_ENV: development
   adminer:
