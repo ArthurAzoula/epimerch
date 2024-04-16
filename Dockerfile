@@ -1,6 +1,9 @@
 FROM php:8.2-fpm-buster
 ARG TIMEZONE
 
+COPY /docker/startup.sh /usr/local/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh
+
 COPY /docker/php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
 
 RUN apt-get update && apt-get install -y \
