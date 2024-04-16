@@ -2,9 +2,9 @@ services:
   db:
     image: 'postgres:alpine'
     environment:
-      POSTGRES_USER: rootuser
-      POSTGRES_PASSWORD: rootpassword
-      POSTGRES_DB: ecommerce
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
@@ -20,7 +20,7 @@ services:
       - symfony_app_var:/var/www/symfony/var
       - symfony_app_vendor:/var/www/symfony/vendor
     environment:
-      DATABASE_URL: postgresql://rootuser:rootpassword@db:5432/ecommerce
+      DATABASE_URL: ${DATABASE_URL}
   webserver:
     image: nginx:alpine
     ports:
