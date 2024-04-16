@@ -1,1 +1,2 @@
-*.override.yml
+.env
+compose.override.yml
