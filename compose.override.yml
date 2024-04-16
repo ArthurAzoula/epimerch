@@ -1,13 +1,13 @@
 services:
-  db: 
+  database: 
     ports: !override
       - "5432:5432"
-  api:
+  webserver:
     ports: !override
-      - "8000:8000"
+      - "80:80"
   web:
     ports: !override
       - "3000:80"
   adminer:
     ports: !override
-      - "8080:8080"
+      - "8081:8080"
