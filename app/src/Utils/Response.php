@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Utils;
+
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class Response extends HttpFoundationResponse {
@@ -10,15 +12,17 @@ class Response extends HttpFoundationResponse {
 
   public static function json(mixed $data, HttpStatus $status = HttpStatus::OK, array $headers = array()): Response {
     $headers['Content-Type'] = 'application/json';
-    return new self(json_encode($data), $status, $headers);
+    return new self(json_encode($data), $status->value, $headers);
   }
 
-  public static function error(mixed $message, HttpStatus $status = HttpStatus::BAD_REQUEST, array $headers = array()): Response {
-    return new self(json_encode(['error' => $message]), $status, $headers);
+  public static function error(String $message, HttpStatus $status = HttpStatus::BAD_REQUEST, array $headers = array()): Response {
+    $headers['Content-Type'] = 'application/json';
+    return new self(json_encode(['error' => $message]), $status->value, $headers);
   }
 
-  public static function success(mixed $message, HttpStatus $status = HttpStatus::OK, array $headers = array()): Response {
-    return new self(json_encode(['success' => $message]), $status, $headers);
+  public static function success(String $message, HttpStatus $status = HttpStatus::OK, array $headers = array()): Response {
+    $headers['Content-Type'] = 'application/json';
+    return new self(json_encode(['success' => $message]), $status->value, $headers);
   }
   
 }

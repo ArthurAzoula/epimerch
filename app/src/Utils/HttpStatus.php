@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Utils;
+
 enum HttpStatus: int {
   
   case OK = 200;

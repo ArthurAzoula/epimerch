@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints\Ulid;
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: "email", message: "Email already taken")]
 #[UniqueEntity(fields: "login", message: "Login already taken")]
-
 class User extends AbstractEntity implements UserInterface
 {
 

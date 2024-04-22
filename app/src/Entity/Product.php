@@ -27,7 +27,7 @@ class Product extends AbstractEntity
     #[Getter, Setter]
     private ?string $photo = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', scale: 2, precision: 10)]
     #[Getter, Setter]
     private ?float $price = null;
 

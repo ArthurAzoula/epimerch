@@ -13,7 +13,7 @@ use Lombok\Setter;
 #[ORM\Table(name: '`order`')]
 class Order extends AbstractEntity
 {
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', scale: 2, precision: 10)]
     #[Getter, Setter]
     private ?float $totalPrice = null;
 
