@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
-class Cart
+class Cart extends AbstractEntity
 {
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'cart')]
     #[Getter, Setter]
@@ -23,5 +23,14 @@ class Cart
     public function __construct()
     {
         $this->cartItems = new ArrayCollection();
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return array_merge(parent::jsonSerialize(),
+        array(
+            'user' => $this->user,
+            'cartItems' => $this->cartItems
+        ));
     }
 }
