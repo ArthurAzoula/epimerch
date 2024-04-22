@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
-class Cart
+class Cart extends AbstractEntity
 {
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'cart')]
     #[Getter, Setter]

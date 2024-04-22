@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\Utils\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +24,7 @@ class TestController extends AbstractController
         $mailer->send($email);
         
         // return json response
-        return new Response(json_encode(['message' => 'Hello World!']));
+        return new Response(['message' => 'Hello World!']);
     }
     
     #[Route('/test', name: 'test')]

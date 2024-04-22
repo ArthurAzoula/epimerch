@@ -2,11 +2,8 @@ framework:
     router:
         # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
         # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
-        #default_uri: http://localhost
-
-        api_login_check:
-            path: /api/login_check
-
+        #default_uri: http://localhost*
+        
 when@prod:
     framework:
         router:

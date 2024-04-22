@@ -1,6 +1,5 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
-    enable_authenticator_manager: true
 
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
@@ -8,13 +7,6 @@ security:
     providers:
         users_in_memory: { memory: null }
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            lazy: true
-            provider: users_in_memory
-
         login:
             pattern: ^/api/login
             stateless: true
@@ -27,9 +19,19 @@ security:
             pattern:   ^/api
             stateless: true
             jwt: ~
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: users_in_memory
+
 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS}
+        - { path: ^/api/register, roles: PUBLIC_ACCESS}
+        - { path: ^/api/reset-password, roles: PUBLIC_ACCESS}
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
