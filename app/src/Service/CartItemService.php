@@ -35,15 +35,32 @@ class CartItemService
         return $cartItem;
     }
 
-    public function update(CartItem $cartItem): CartItem
+    public function update(int $id, CartItem $cartItem): CartItem
     {
+        $existingCartItem = $this->getCartItemById($id);
+
+        if ($existingCartItem === null) {
+            throw new \Exception("CartItem with id $id not found");
+        }
+
+        $existingCartItem->setCart($cartItem->getCart());
+        $existingCartItem->setProduct($cartItem->getProduct());
+        $existingCartItem->setQuantity($cartItem->getQuantity());
+        $existingCartItem->setPrice($cartItem->getPrice());
+
         $this->entityManager->flush();
 
-        return $cartItem;
+        return $existingCartItem;
     }
 
-    public function delete(CartItem $cartItem): void
+    public function delete(int $id): void
     {
+        $cartItem = $this->getCartItemById($id);
+
+        if ($cartItem === null) {
+            throw new \Exception("CartItem with id $id not found");
+        }
+
         $this->entityManager->remove($cartItem);
         $this->entityManager->flush();
     }

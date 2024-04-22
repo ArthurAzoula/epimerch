@@ -12,11 +12,15 @@ use Lombok\Setter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Bridge\Doctrine\Types\UlidType;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\Ulid;
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: "email", message: "Email already taken")]
 #[UniqueEntity(fields: "login", message: "Login already taken")]
-class User extends AbstractEntity
+class User extends AbstractEntity implements UserInterface
 {
 
     #[ORM\Column(length: 255)]
@@ -51,6 +55,10 @@ class User extends AbstractEntity
     #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'user')]
     #[Getter, Setter]
     private ?Cart $cart = null;
+    
+    #[ORM\Column(type: UlidType::NAME, options: ["default" => "ulid_generate()"])]
+    #[Getter, Setter]
+    private ?Ulid $resetPassword = null;
 
     public function __construct()
     {
@@ -103,5 +111,36 @@ class User extends AbstractEntity
     public function getPassword(): ?string
     {
         return "*********";
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return
+            array_merge(
+                parent::jsonSerialize(),
+                array(
+                    'login' => $this->login,
+                    'email' => $this->email,
+                    'firstname' => $this->firstname,
+                    'lastname' => $this->lastname,
+                    'addresses' => $this->addresses,
+                    'orders' => $this->orders,
+                    'cart' => $this->cart
+                )
+            );
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->login;
     }
 }

@@ -40,15 +40,30 @@ class UserService
         return $user;
     }
 
-    public function update(User $user): User
+    public function update(int $id, User $user): User
     {
+        $existingUser = $this->getUserById($id);
+
+        if ($existingUser === null) {
+            throw new \Exception("User with id $id not found");
+        }
+
+        $existingUser->setEmail($user->getEmail());
+        $existingUser->setPassword($user->getPassword());
+
         $this->entityManager->flush();
 
-        return $user;
+        return $existingUser;
     }
 
-    public function delete(User $user): void
+    public function delete(int $id): void
     {
+        $user = $this->getUserById($id);
+
+        if ($user === null) {
+            throw new \Exception("User with id $id not found");
+        }
+
         $this->entityManager->remove($user);
         $this->entityManager->flush();
     }

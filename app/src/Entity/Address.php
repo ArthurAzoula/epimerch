@@ -26,4 +26,15 @@ class Address extends AbstractEntity
     #[ORM\Column(length: 255)]
     #[Getter, Setter]
     private ?string $code = null;
+
+    public function jsonSerialize(): mixed
+    {
+        return array_merge(parent::jsonSerialize(),
+        array(
+            'city' => $this->city,
+            'name' => $this->name,
+            'country' => $this->country,
+            'code' => $this->code
+        ));
+    }
 }

@@ -55,4 +55,17 @@ class Order extends AbstractEntity
 
         return $this;
     }
+
+    public function jsonSerialize(): mixed
+    {
+        return array_merge(
+            parent::jsonSerialize(),
+            array(
+                'totalPrice' => $this->totalPrice,
+                'isPaid' => $this->isPaid,
+                'orderItems' => $this->orderItems,
+                'user' => $this->user
+            )
+        );
+    }
 }

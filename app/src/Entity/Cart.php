@@ -24,4 +24,13 @@ class Cart extends AbstractEntity
     {
         $this->cartItems = new ArrayCollection();
     }
+
+    public function jsonSerialize(): mixed
+    {
+        return array_merge(parent::jsonSerialize(),
+        array(
+            'user' => $this->user,
+            'cartItems' => $this->cartItems
+        ));
+    }
 }

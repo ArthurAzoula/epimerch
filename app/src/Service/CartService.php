@@ -35,17 +35,32 @@ class CartService
         return $cart;
     }
 
-    public function update(Cart $cart): Cart
+    public function update(int $id, Cart $cart): Cart
     {
+        $existingCart = $this->getCartById($id);
+
+        if ($existingCart === null) {
+            throw new \Exception("Cart with id $id not found");
+        }
+
+        $existingCart->setUser($cart->getUser());
+        $existingCart->setTotalAmount($cart->getTotalAmount());
+
         $this->entityManager->flush();
 
-        return $cart;
+        return $existingCart;
     }
 
-    public function delete(Cart $cart): void
+    public function delete(int $id): void
     {
+        $cart = $this->getCartById($id);
+
+        if ($cart === null) {
+            throw new \Exception("Cart with id $id not found");
+        }
+
         $this->entityManager->remove($cart);
-        $this->entityManager->flush();
+        $this->entityManager->flush();   
     }
 }
 
