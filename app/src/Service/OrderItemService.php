@@ -6,8 +6,7 @@ use App\Entity\OrderItem;
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-
-class OrderItemService 
+class OrderItemService
 {
     private OrderItemRepository $orderItemRepository;
     private EntityManagerInterface $entityManager;
@@ -54,7 +53,7 @@ class OrderItemService
         return $existingOrderItem;
     }
 
-    public function delete(int $id): void
+    public function delete(int $id): void	
     {
         $orderItem = $this->getOrderItemById($id);
 
@@ -65,4 +64,20 @@ class OrderItemService
         $this->entityManager->remove($orderItem);
         $this->entityManager->flush();
     }
+
+    public function getOrderItemsByOrderId(int $orderId): ?array
+    {
+        return $this->orderItemRepository->findBy(['order' => $orderId]);
+    }
+
+    public function getOrderItemsByProductId(int $productId): ?array
+    {
+        return $this->orderItemRepository->findBy(['product' => $productId]);
+    }
+
+    public function getOrderItemsByOrderIdAndProductId(int $orderId, int $productId): ?array
+    {
+        return $this->orderItemRepository->findBy(['order' => $orderId, 'product' => $productId]);
+    }
+
 }

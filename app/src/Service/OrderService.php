@@ -35,15 +35,31 @@ class OrderService
         return $order;
     }
 
-    public function update(Order $order): Order
+    public function update(int $id, Order $order): Order
     {
+        $existingOrder = $this->getOrderById($id);
+
+        if ($existingOrder === null) {
+            throw new \Exception("Order with id $id not found");
+        }
+
+        $existingOrder->setOrderDate($order->getOrderDate());
+        $existingOrder->setOrderStatus($order->getOrderStatus());
+        $existingOrder->setTotalAmount($order->getTotalAmount());
+
         $this->entityManager->flush();
 
-        return $order;
+        return $existingOrder;
     }
 
-    public function delete(Order $order): void
+    public function delete(int $id): void
     {
+        $order = $this->getOrderById($id);
+
+        if ($order === null) {
+            throw new \Exception("Order with id $id not found");
+        }
+
         $this->entityManager->remove($order);
         $this->entityManager->flush();
     }

@@ -3,84 +3,110 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\UserService;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Response;
+use HttpStatus;
 
 class UserController
 {
-    #[Route('/users', name: 'users', methods: ['GET'])]
-    public function index(UserRepository $userRepository, SerializerInterface $serializer): Response
-    {
-        $users = $userRepository->findAll();
-        $data = $serializer->serialize($users, 'json');
 
-        return new Response($data, 200, [
-            'Content-Type' => 'application/json'
-        ]);
+    private UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
     }
 
-    #[Route('/users', name: 'add_user', methods: ['POST'])]
-    public function add(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, SerializerInterface $serializer): Response
+    #[Route('/users', name: 'users', methods: ['GET'])]
+    public function index(): Response
     {
-        $data = $request->getContent();
-        $user = $serializer->deserialize($data, User::class, 'json');
+        try {
+            $users = $this->userService->getAll();
+            
+            foreach ($users as $user) {
+                $data[] = $user->jsonSerialize();
+            }
 
-        $errors = $validator->validate($user);
-
-        if (count($errors) > 0) {
-            return new JsonResponse($errors, 400);
+            return Response::json($data, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        return new JsonResponse($user, 201);
     }
 
     #[Route('/users/{id}', name: 'get_user', methods: ['GET'])]
-    public function show(User $user, SerializerInterface $serializer): Response
+    public function get(int $id): Response
     {
-        $data = $serializer->serialize($user, 'json');
+        try {
+            $user = $this->userService->getUserById($id);
 
-        return new Response($data, 200, [
-            'Content-Type' => 'application/json'
-        ]);
-    }
+            if ($user === null) {
+                return Response::error("User with id $id not found", HttpStatus::NOT_FOUND);
+            }
 
-    #[Route('/users/{id}', name: 'update_user', methods: ['PUT'])]
-    public function update(User $user, Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, SerializerInterface $serializer): Response
-    {
-        $data = $request->getContent();
-        $updatedUser = $serializer->deserialize($data, User::class, 'json');
+            $data = $user->jsonSerialize();
 
-        $errors = $validator->validate($updatedUser);
-
-        if (count($errors) > 0) {
-            return new JsonResponse($errors, 400);
+            return Response::json($data, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
-
-        $user->setLogin($updatedUser->getLogin());
-        $user->setEmail($updatedUser->getEmail());
-        $user->setFirstname($updatedUser->getFirstname());
-        $user->setLastname($updatedUser->getLastname());
-
-        $entityManager->flush();
-
-        return new JsonResponse($user, 200);
     }
 
     #[Route('/users/{id}', name: 'delete_user', methods: ['DELETE'])]
-    public function delete(User $user, EntityManagerInterface $entityManager): Response
+    public function delete(int $id)
     {
-        $entityManager->remove($user);
-        $entityManager->flush();
+        try {
 
-        return new Response(null, 204);
+            $this->userService->delete($id);
+
+            return Response::json(null, HttpStatus::NO_CONTENT);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/users', name: 'add_user', methods: ['POST'])]
+    public function add(Request $request, ValidatorInterface $validator, SerializerInterface $serializer): Response
+    {
+        try {
+            $data = $request->getContent();
+            $user = $serializer->deserialize($data, User::class, 'json');
+
+            $errors = $validator->validate($user);
+
+            if (count($errors) > 0) {
+                return Response::error($errors, HttpStatus::BAD_REQUEST);
+            }
+
+            $user = $this->userService->create($user);
+
+            return Response::json($user, HttpStatus::CREATED);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/users/{id}', name: 'update_user', methods: ['PUT'])]
+    public function update(int $id, Request $request, ValidatorInterface $validator, SerializerInterface $serializer): Response
+    {
+        try {
+            $data = $request->getContent();
+            $updatedUser = $serializer->deserialize($data, User::class, 'json');
+
+            $errors = $validator->validate($updatedUser);
+
+            if (count($errors) > 0) {
+                return Response::error($errors, HttpStatus::BAD_REQUEST);
+            }
+
+            $user = $this->userService->update($id, $updatedUser);
+
+            return Response::json($user, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
     }
 }
