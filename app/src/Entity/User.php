@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Bridge\Doctrine\Types\UlidType;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Ulid;
 
@@ -20,7 +21,7 @@ use Symfony\Component\Validator\Constraints\Ulid;
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: "email", message: "Email already taken")]
 #[UniqueEntity(fields: "login", message: "Login already taken")]
-class User extends AbstractEntity implements UserInterface
+class User extends AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
     #[ORM\Column(length: 255)]
@@ -42,6 +43,9 @@ class User extends AbstractEntity implements UserInterface
     #[ORM\Column(length: 255)]
     #[Getter, Setter]
     private ?string $lastname = null;
+
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
     #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'user')]
     #[Getter, Setter]
@@ -132,15 +136,28 @@ class User extends AbstractEntity implements UserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        $roles = $this->roles;
+
+        $roles[] = 'PUBLIC_ACCESS';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     public function eraseCredentials(): void
     {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getUserIdentifier(): string
     {
-        return $this->login;
+        return $this->email;
     }
 }
