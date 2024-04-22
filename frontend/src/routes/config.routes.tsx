@@ -1,11 +1,10 @@
 // Import pages
 import Home from "../pages/Home";
-import RegisterComponent from "../components/RegisterComponent";
-import LoginComponent from "../components/LoginComponent";
 import ProfileScreen from "../pages/ProfileScreen";
 import Cart from "../components/Cart";
 import Details from "../components/Details";
 import Err from "../components/Err";
+import RegisterPage from "../pages/RegisterPage";
 
 type RouteType = {
     path: string;
@@ -19,15 +18,11 @@ const routes: RouteType = [
         exact: true,
         component: Home,
     },
-    {
-        path: "/login",
-        exact: true,
-        component: LoginComponent,
-    },
+
     {
         path: "/register",
         exact: true,
-        component: RegisterComponent,
+        component: RegisterPage,
     },
     {
         path: "/profile",
