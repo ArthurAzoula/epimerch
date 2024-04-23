@@ -6,13 +6,13 @@ use App\Entity\User;
 use App\Service\UserService;
 use App\Utils\HttpStatus;
 use App\Utils\Response;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Validator\Constraints;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 class AuthController extends AbstractController {
   
@@ -22,7 +22,7 @@ class AuthController extends AbstractController {
   }
   
   #[Route('/register', name: 'register', methods: ['POST'])]
-  public function register(Request $request, UserService $userService, ValidatorInterface $validator): Response {
+  public function register(Request $request, UserService $userService, UserPasswordHasherInterface $passwordHasher): Response {
     try {
       $params = json_decode($request->getContent(), true);
       
@@ -30,13 +30,22 @@ class AuthController extends AbstractController {
       if ($verifyUserExist) {
         return Response::error("Cette adresse mail existe déjà", HttpStatus::BAD_REQUEST);
       }
+
+      $plainedTextPassword = $params["password"];
+
       
       $user = new User();
       $user->setEmail($params["email"]);
       $user->setLogin($params["login"]);
       $user->setFirstname($params["firstname"]);
       $user->setLastname($params["lastname"]);
-      $user->setPassword($params["password"]);
+
+      $hashedPassword = $passwordHasher->hashPassword(
+        $user,
+        $plainedTextPassword
+      );
+      
+      $user->setPassword($hashedPassword);
       
       $userService->create($user);
       

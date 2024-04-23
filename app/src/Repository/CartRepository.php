@@ -21,17 +21,18 @@ class CartRepository extends ServiceEntityRepository
         parent::__construct($registry, Cart::class);
     }
 
-    public function addProductToCart(int $cartId, int $productId, int $quantity): void
-    {
-        return $this->createQueryBuilder('c')
-            ->update()
-            ->set('c.totalAmount', 'c.totalAmount + :productPrice')
-            ->where('c.id = :cartId')
-            ->setParameter('cartId', $cartId)
-            ->setParameter('productPrice', $quantity)
-            ->getQuery()
-            ->execute();
-    }
+
+    // public function addProductToCart(int $cartId, int $productId, int $quantity): void
+    // {
+    //     return $this->createQueryBuilder('c')
+    //         ->update()
+    //         ->set('c.totalAmount', 'c.totalAmount + :productPrice')
+    //         ->where('c.id = :cartId')
+    //         ->setParameter('cartId', $cartId)
+    //         ->setParameter('productPrice', $quantity)
+    //         ->getQuery()
+    //         ->execute();
+    // }
 
     //    /**
     //     * @return Cart[] Returns an array of Cart objects
