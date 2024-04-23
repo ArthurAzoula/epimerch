@@ -1,7 +1,7 @@
 import './App.css'
 import Router from './routes/Router'
 
-function App() {
+function App(): any {
   
   return (
     <Router></Router>

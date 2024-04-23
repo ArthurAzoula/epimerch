@@ -1,0 +1,52 @@
+services:
+  db:
+    image: 'postgres:alpine'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TIMEZONE: ${TIMEZONE}
+    command: /usr/local/bin/startup.sh
+    volumes:
+      - ./app:/var/www/symfony:cached
+      - symfony_app_var:/var/www/symfony/var
+      - symfony_app_vendor:/var/www/symfony/vendor
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+  webserver:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/templates:/etc/nginx/templates
+      - ./docker/upstream.conf:/etc/nginx/conf.d/upstream.conf
+      - ./app:/var/www/symfony:cached
+      - symfony_app_var:/var/www/symfony/var
+      - symfony_app_vendor:/var/www/symfony/vendor
+  web:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/app
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  symfony_app_var:
+  symfony_app_vendor:
+  db-data:
