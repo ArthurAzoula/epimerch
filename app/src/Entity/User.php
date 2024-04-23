@@ -12,13 +12,14 @@ use Lombok\Setter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\Ulid;
+
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Bridge\Doctrine\Types\UlidType;
+use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: "email", message: "Email already taken")]
 #[UniqueEntity(fields: "login", message: "Login already taken")]
 class User extends AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
@@ -60,7 +61,9 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     #[Getter, Setter]
     private ?Cart $cart = null;
     
-    #[ORM\Column(type: UlidType::NAME, options: ["default" => "ulid_generate()"])]
+    #[ORM\GeneratedValue("CUSTOM")]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
+    #[ORM\Column(type: UlidType::NAME)]
     #[Getter, Setter]
     private ?Ulid $resetPassword = null;
 
