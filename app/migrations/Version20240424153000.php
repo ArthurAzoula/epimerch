@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240423092656 extends AbstractMigration
+final class Version20240424153000 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,15 @@ final class Version20240423092656 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-
+        $this->addSql('ALTER TABLE client ALTER reset_password TYPE UUID');
+        $this->addSql('ALTER TABLE client ALTER reset_password DROP NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-
+        $this->addSql('CREATE SCHEMA public');
+        $this->addSql('ALTER TABLE client ALTER reset_password TYPE UUID');
+        $this->addSql('ALTER TABLE client ALTER reset_password SET NOT NULL');
     }
 }
