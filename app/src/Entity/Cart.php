@@ -12,9 +12,9 @@ use Doctrine\Common\Collections\Collection;
 #[ORM\Entity]
 class Cart extends AbstractEntity
 {
-    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'cart')]
+    #[ORM\OneToOne(targetEntity: Client::class, inversedBy: 'cart')]
     #[Getter, Setter]
-    private ?User $user = null;
+    private ?Client $client = null;
 
     #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart')]
     #[Getter, Setter]
@@ -29,7 +29,7 @@ class Cart extends AbstractEntity
     {
         return array_merge(parent::jsonSerialize(),
         array(
-            'user' => $this->user,
+            'client' => $this->client,
             'cartItems' => $this->cartItems
         ));
     }

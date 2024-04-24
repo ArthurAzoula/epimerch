@@ -27,9 +27,9 @@ class Address extends AbstractEntity
     #[Getter, Setter]
     private ?string $code = null;
     
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'addresses')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'addresses')]
     #[Getter, Setter]
-    private ?User $user = null;
+    private ?Client $client = null;
 
     public function jsonSerialize(): mixed
     {

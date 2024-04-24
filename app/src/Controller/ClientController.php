@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Service\UserService;
+use App\Entity\Client;
+use App\Service\ClientService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -11,24 +11,24 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
 
-class UserController
+class ClientController
 {
 
-    private UserService $userService;
+    private ClientService $clientService;
 
-    public function __construct(UserService $userService)
+    public function __construct(ClientService $clientService)
     {
-        $this->userService = $userService;
+        $this->clientService = $clientService;
     }
 
     #[Route('/users', name: 'users', methods: ['GET'])]
     public function index(): Response
     {
         try {
-            $users = $this->userService->getAll();
+            $clients = $this->clientService->getAll();
             
-            foreach ($users as $user) {
-                $data[] = $user->jsonSerialize();
+            foreach ($clients as $client) {
+                $data[] = $client->jsonSerialize();
             }
 
             return Response::json($data, HttpStatus::OK);
@@ -41,13 +41,13 @@ class UserController
     public function get(int $id): Response
     {
         try {
-            $user = $this->userService->getUserById($id);
+            $client = $this->clientService->getClientById($id);
 
-            if ($user === null) {
+            if ($client === null) {
                 return Response::error("User with id $id not found", HttpStatus::NOT_FOUND);
             }
 
-            $data = $user->jsonSerialize();
+            $data = $client->jsonSerialize();
 
             return Response::json($data, HttpStatus::OK);
         } catch (\Exception $e) {
@@ -60,7 +60,7 @@ class UserController
     {
         try {
 
-            $this->userService->delete($id);
+            $this->clientService->delete($id);
 
             return Response::json(null, HttpStatus::NO_CONTENT);
         } catch (\Exception $e) {
@@ -73,17 +73,17 @@ class UserController
     {
         try {
             $data = $request->getContent();
-            $user = $serializer->deserialize($data, User::class, 'json');
+            $client = $serializer->deserialize($data, Client::class, 'json');
 
-            $errors = $validator->validate($user);
+            $errors = $validator->validate($client);
 
             if (count($errors) > 0) {
                 return Response::error($errors, HttpStatus::BAD_REQUEST);
             }
 
-            $user = $this->userService->create($user);
+            $client = $this->clientService->create($client);
 
-            return Response::json($user, HttpStatus::CREATED);
+            return Response::json($client, HttpStatus::CREATED);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
@@ -94,17 +94,17 @@ class UserController
     {
         try {
             $data = $request->getContent();
-            $updatedUser = $serializer->deserialize($data, User::class, 'json');
+            $updatedClient = $serializer->deserialize($data, Client::class, 'json');
 
-            $errors = $validator->validate($updatedUser);
+            $errors = $validator->validate($updatedClient);
 
             if (count($errors) > 0) {
                 return Response::error($errors, HttpStatus::BAD_REQUEST);
             }
 
-            $user = $this->userService->update($id, $updatedUser);
+            $client = $this->clientService->update($id, $updatedClient);
 
-            return Response::json($user, HttpStatus::OK);
+            return Response::json($client, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

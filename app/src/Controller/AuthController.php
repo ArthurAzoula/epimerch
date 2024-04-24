@@ -2,54 +2,50 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Service\UserService;
+use App\Entity\Client;
+use App\Service\ClientService;
 use App\Utils\HttpStatus;
 use App\Utils\Response;
-use Doctrine\ORM\EntityManager;
 use Exception;
-use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
 class AuthController extends AbstractController {
   
   #[Route('/login', name: 'login', methods: ['POST'])]
-  public function login(Request $request, UserService $userService, ValidatorInterface $validator): Response {
+  public function login(Request $request, ClientService $clientService, ValidatorInterface $validator): Response {
     return Response::json(['message' => 'Login Route']);
   }
   
   #[Route('/register', name: 'register', methods: ['POST'])]
-  public function register(Request $request, UserService $userService, UserPasswordHasherInterface $passwordHasher): Response {
+  public function register(Request $request, ClientService $clientService, UserPasswordHasherInterface $passwordHasher): Response {
     try {
       $params = json_decode($request->getContent(), true);
       
-      $verifyUserExist = $userService->getUserByEmail($params["email"]);
-      if ($verifyUserExist) {
+      $verifyClientExist = $clientService->getClientByEmail($params["email"]);
+      if ($verifyClientExist) {
         return Response::error("Cette adresse mail existe déjà", HttpStatus::BAD_REQUEST);
       }
 
       $plainedTextPassword = $params["password"];
-
       
-      $user = new User();
-      $user->setEmail($params["email"]);
-      $user->setLogin($params["login"]);
-      $user->setFirstname($params["firstname"]);
-      $user->setLastname($params["lastname"]);
+      $client = new Client();
+      $client->setEmail($params["email"]);
+      $client->setLogin($params["login"]);
+      $client->setFirstname($params["firstname"]);
+      $client->setLastname($params["lastname"]);
 
       $hashedPassword = $passwordHasher->hashPassword(
-        $user,
+        $client,
         $plainedTextPassword
       );
       
-      $user->setPassword($hashedPassword);
+      $client->setPassword($hashedPassword);
       
-      $userService->create($user);
+      $clientService->create($client);
       
       return new Response(json_encode(['message' => 'Login Route']));
     } catch (Exception $e) {

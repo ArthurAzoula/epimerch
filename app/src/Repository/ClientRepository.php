@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
+use App\Entity\Client;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,14 +14,14 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository
+class ClientRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, Client::class);
     }
 
-    public function findUserByEmail(string $email): ?User
+    public function findClientByEmail(string $email): ?Client
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.email = :email')
@@ -31,7 +31,7 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findUserByUsername(string $username): ?User
+    public function findClientByUsername(string $username): ?Client
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.username = :username')

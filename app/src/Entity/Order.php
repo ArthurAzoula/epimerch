@@ -25,9 +25,9 @@ class Order extends AbstractEntity
     #[Getter, Setter]
     private Collection $orderItems;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'orders')]
     #[Getter, Setter]
-    private ?User $user = null;
+    private ?Client $client = null;
 
     public function __construct()
     {
@@ -64,7 +64,7 @@ class Order extends AbstractEntity
                 'totalPrice' => $this->totalPrice,
                 'isPaid' => $this->isPaid,
                 'orderItems' => $this->orderItems,
-                'user' => $this->user
+                'client' => $this->client
             )
         );
     }

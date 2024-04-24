@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AbstractEntity;
@@ -19,10 +19,10 @@ use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Uid\Ulid;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[UniqueEntity(fields: "email", message: "Email already taken")]
 #[UniqueEntity(fields: "login", message: "Login already taken")]
-class User extends AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
+class Client extends AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
     #[ORM\Column(length: 255)]
@@ -48,22 +48,22 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'client')]
     #[Getter, Setter]
     private ?Collection $addresses = null;
 
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client')]
     #[Getter, Setter]
     private ?Collection $orders = null;
 
 
-    #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'user')]
+    #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'client')]
     #[Getter, Setter]
     private ?Cart $cart = null;
     
     #[ORM\GeneratedValue("CUSTOM")]
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-    #[ORM\Column(type: UlidType::NAME)]
+    #[ORM\Column(type: UlidType::NAME, nullable: true)]
     #[Getter, Setter]
     private ?Ulid $resetPassword = null;
 
