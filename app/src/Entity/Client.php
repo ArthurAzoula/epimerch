@@ -117,7 +117,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
 
     public function getPassword(): ?string
     {
-        return "*********";
+        return $this->password;
     }
 
     public function jsonSerialize(): mixed
