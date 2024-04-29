@@ -21,11 +21,28 @@ class OrderItem extends AbstractEntity
     #[Getter, Setter]
     private ?int $quantity = null;
 
-    #[ORM\Column(type: 'decimal', scale: 2)]
+    #[ORM\Column(type: 'decimal', scale: 2, precision: 10)]
     #[Getter, Setter]
     private ?float $price = null;
 
-    #[ORM\Column(type: 'decimal', scale: 2)]
+    #[ORM\Column(type: 'decimal', scale: 2, precision: 10)]
     #[Getter, Setter]
     private ?float $total = null;
+
+    private function calculateTotal(): void
+    {
+        $this->total = $this->price * $this->quantity;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return array_merge(parent::jsonSerialize(),
+        array(
+            'order' => $this->order,
+            'product' => $this->product,
+            'quantity' => $this->quantity,
+            'price' => $this->price,
+            'total' => $this->total
+        ));
+    }
 }

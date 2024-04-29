@@ -8,13 +8,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Lombok\Getter;
 use Lombok\Setter;
-use phpDocumentor\Reflection\Types\Boolean;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
 class Order extends AbstractEntity
 {
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', scale: 2, precision: 10)]
     #[Getter, Setter]
     private ?float $totalPrice = null;
 
@@ -26,9 +25,9 @@ class Order extends AbstractEntity
     #[Getter, Setter]
     private Collection $orderItems;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'orders')]
     #[Getter, Setter]
-    private ?User $user = null;
+    private ?Client $client = null;
 
     public function __construct()
     {
@@ -55,5 +54,18 @@ class Order extends AbstractEntity
         }
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return array_merge(
+            parent::jsonSerialize(),
+            array(
+                'totalPrice' => $this->totalPrice,
+                'isPaid' => $this->isPaid,
+                'orderItems' => $this->orderItems,
+                'client' => $this->client
+            )
+        );
     }
 }

@@ -1,7 +1,7 @@
 services:
   db: 
     ports: !override
-      - "5432:5432"
+      - "5437:5432"
   webserver:
     ports: !override
       - "80:80"

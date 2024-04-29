@@ -15,7 +15,7 @@ services:
       dockerfile: Dockerfile
       args:
         TIMEZONE: ${TIMEZONE}
-    command: /usr/local/bin/startup.sh
+    command: ~/var/www/symfony/startup.sh
     volumes:
       - ./app:/var/www/symfony:cached
       - symfony_app_var:/var/www/symfony/var
@@ -40,16 +40,11 @@ services:
       - "3000:80"
     volumes:
       - ./frontend:/app
-    networks:
-      - app-network
   adminer:
     image: adminer
     restart: always
     ports:
       - "8080:8080"
-      
-networks:
-  app-network:
 
 volumes:
   symfony_app_var:

@@ -9,18 +9,19 @@ use Doctrine\ORM\Mapping as ORM;
 use Lombok\Getter;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Types\UlidType;
-use Symfony\Component\Validator\Constraints\Ulid;
+use Symfony\Component\Uid\Ulid;
 
+#[ORM\HasLifecycleCallbacks]
+#[ORM\MappedSuperclass]
 abstract class AbstractEntity extends \Lombok\Helper implements JsonSerializable
 {
 
     #[ORM\Id]
     #[ORM\GeneratedValue("CUSTOM")]
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
-    #[ORM\Column(type: UlidType::NAME, options: ["default" => "ulid_generate()"])]
+    #[ORM\Column(type: UlidType::NAME)]
     #[Getter]
     protected Ulid $id;
-
 
     #[ORM\Column(updatable: false)]
     #[Getter]
@@ -38,16 +39,18 @@ abstract class AbstractEntity extends \Lombok\Helper implements JsonSerializable
     #[ORM\PreUpdate]
     public function updateTimestamps(): void
     {
-        if (empty($this->createdAt)) {
-            $this->createdAt = date_create(timezone: new DateTimeZone('EUROPE/Paris'));
-        }
+        $currentTime = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
 
-        $this->updatedAt = date_create(timezone: new DateTimeZone('EUROPE/Paris'));
+        if (empty($this->createdAt)) {
+            $this->createdAt = $currentTime;
+        }
+        
+        $this->updatedAt = $currentTime;
     }
 
     public function softDelete(): void
     {
-        $this->deletedAt = date_create(timezone: new DateTimeZone('EUROPE/Paris'));
+        $this->deletedAt = date_create('now', timezone: new DateTimeZone('EUROPE/Paris'));
     }
 
     public function jsonSerialize(): mixed

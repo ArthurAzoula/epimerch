@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Genre;
 use Lombok\Getter;
 use Lombok\Setter;
 
@@ -25,7 +27,7 @@ class Product extends AbstractEntity
     #[Getter, Setter]
     private ?string $photo = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', scale: 2, precision: 10)]
     #[Getter, Setter]
     private ?float $price = null;
 
@@ -36,6 +38,12 @@ class Product extends AbstractEntity
     #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'product')]
     #[Getter, Setter]
     private ?Collection $cartItems = null;
+    
+    private Category $category;
+
+    private Genre $genre;
+
+
 
     public function __construct()
     {
@@ -84,5 +92,18 @@ class Product extends AbstractEntity
         }
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return array_merge(parent::jsonSerialize(),
+        array(
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'photo' => $this->getPhoto(),
+            'price' => $this->getPrice(),
+            'category' => $this->getCategory(),
+            'genre' => $this->getGenre()
+        ));
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AbstractEntity;
@@ -12,12 +12,17 @@ use Lombok\Setter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Bridge\Doctrine\Types\UlidType;
+use Symfony\Component\Uid\Ulid;
+
+#[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[UniqueEntity(fields: "email", message: "Email already taken")]
 #[UniqueEntity(fields: "login", message: "Login already taken")]
-
-class User extends AbstractEntity
+class Client extends AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
     #[ORM\Column(length: 255)]
@@ -40,18 +45,27 @@ class User extends AbstractEntity
     #[Getter, Setter]
     private ?string $lastname = null;
 
-    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'user')]
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
+
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'client')]
     #[Getter, Setter]
     private ?Collection $addresses = null;
 
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client')]
     #[Getter, Setter]
     private ?Collection $orders = null;
 
 
-    #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'user')]
+    #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'client')]
     #[Getter, Setter]
     private ?Cart $cart = null;
+    
+    #[ORM\GeneratedValue("CUSTOM")]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
+    #[ORM\Column(type: UlidType::NAME, nullable: true)]
+    #[Getter, Setter]
+    private ?Ulid $resetPassword = null;
 
     public function __construct()
     {
@@ -103,6 +117,50 @@ class User extends AbstractEntity
 
     public function getPassword(): ?string
     {
-        return "*********";
+        return $this->password;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return
+            array_merge(
+                parent::jsonSerialize(),
+                array(
+                    'login' => $this->login,
+                    'email' => $this->email,
+                    'firstname' => $this->firstname,
+                    'lastname' => $this->lastname,
+                    'addresses' => $this->addresses,
+                    'orders' => $this->orders,
+                    'cart' => $this->cart
+                )
+            );
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        $roles[] = 'PUBLIC_ACCESS';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }

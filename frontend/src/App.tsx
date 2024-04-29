@@ -1,13 +1,10 @@
 import './App.css'
+import Router from './routes/Router'
 
-function App(): any {
+function App(): unknown {
   
   return (
-    <>
-      <h1 className='text-3xl font-bold underline'>
-        Hello E-commerce
-      </h1>
-    </>
+    <Router></Router>
   )
 }
 
