@@ -70,7 +70,7 @@ class AuthController extends AbstractController {
       
       $clientService->create($client);
       
-      return new Response(json_encode(['message' => 'Login Route']));
+      return Response::success("Votre compte a bien été crée !", HttpStatus::CREATED);
     } catch (Exception $e) {
       return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
     }
