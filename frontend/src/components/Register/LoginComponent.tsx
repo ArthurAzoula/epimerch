@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import InputComponent from "./InputComponent";
+import BorderButton from "../Header/BorderButton";
 
-const LoginPage: React.FC = () => {
+const LoginComponent: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -22,31 +24,31 @@ const LoginPage: React.FC = () => {
 
   return (
     <div>
-      <h2>Connexion</h2>
+      <div className="flex justify-center">
+        <h2 className="text-3xl">Connexion</h2>
+      </div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>
-            Adresse e-mail:
-            <input
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              required
-            />
-          </label>
+          <InputComponent
+            typeInput="email"
+            inputValue={email}
+            handleOnChange={handleEmailChange}
+            placeholder="Ex: henri@epitech.eu"
+            isRequired={true}
+            className=""
+          />
         </div>
         <div>
-          <label>
-            Mot de passe:
-            <input
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-            />
-          </label>
+          <InputComponent
+            typeInput="password"
+            inputValue={password}
+            handleOnChange={handlePasswordChange}
+            placeholder="Mot de passe"
+            isRequired={true}
+            className=""
+          />
         </div>
-        <button type="submit">Se connecter</button>
+        <BorderButton text="Se connecter" />
       </form>
       <div>
         <p>
@@ -57,4 +59,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default LoginComponent;

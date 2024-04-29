@@ -5,6 +5,7 @@ import Cart from "../components/Cart";
 import Details from "../components/Details";
 import Err from "../components/Err";
 import RegisterPage from "../pages/RegisterPage";
+import ConnexionPage from "../pages/ConnexionPage";
 
 type RouteType = {
     path: string;
@@ -23,6 +24,12 @@ const routes: RouteType = [
         path: "/register",
         exact: true,
         component: RegisterPage,
+    },
+
+    {
+        path: "/login",
+        exact: true,
+        component: ConnexionPage,
     },
     {
         path: "/profile",
