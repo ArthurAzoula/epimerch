@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Security\ClientProvider;
 use App\Service\ClientService;
 use App\Utils\HttpStatus;
 use App\Utils\Response;
@@ -17,11 +18,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AuthController extends AbstractController {
   
   #[Route('/login', name: 'login', methods: ['POST'])]
-  public function login(Request $request, ClientService $clientService, ValidatorInterface $validator, JWTTokenManagerInterface $JWTManager): Response {
+  public function login(Request $request, ClientProvider $clientProvider, ValidatorInterface $validator, JWTTokenManagerInterface $JWTManager): Response {
     try {
       $params = json_decode($request->getContent(), true);
 
-      $client = $clientService->getClientByEmail($params["email"]);
+      $client = $clientProvider->loadUserByIdentifier($params["identifiant"]);
 
       if (!$client) {
         return Response::error("Cet utilisateur n'existe pas", HttpStatus::NOT_FOUND);
