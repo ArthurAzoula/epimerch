@@ -1,16 +1,26 @@
 security:
 
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\Client:
+            algorithm: plaintext
+            encode_as_base64: false
+            iterations: 1
 
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\Client
+                property: email
+
     firewalls:
         login:
             pattern: ^/api/login
             stateless: true
+            provider: app_user_provider
             json_login:
-                check_path: /api/login_check
+                check_path: /api/login
+                username_path: email
+                password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
@@ -21,9 +31,6 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
-            provider: users_in_memory
 
 
     access_control:
