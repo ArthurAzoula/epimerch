@@ -30,6 +30,8 @@ class AuthController extends AbstractController {
       if (!password_verify($params["password"], $client->getPassword())) {
         return Response::error("Mot de passe incorrect", HttpStatus::BAD_REQUEST);
       }
+      
+      $client->setRoles(['IS_AUTHENTICATED_FULLY']);
 
       $token = $JWTManager->create($client);
 
