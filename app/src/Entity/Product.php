@@ -39,8 +39,12 @@ class Product extends AbstractEntity
     #[Getter, Setter]
     private ?Collection $cartItems = null;
     
+    #[ORM\Column()]
+    #[Getter, Setter]
     private Category $category;
 
+    #[ORM\Column()]
+    #[Getter, Setter]
     private Genre $genre;
 
 
@@ -93,6 +97,8 @@ class Product extends AbstractEntity
 
         return $this;
     }
+
+
 
     public function jsonSerialize(): mixed
     {
