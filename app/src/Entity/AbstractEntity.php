@@ -11,9 +11,8 @@ use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Uid\Ulid;
 
-#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\MappedSuperclass]
-#[ORM\InheritanceType("SINGLE_TABLE")]
 abstract class AbstractEntity extends \Lombok\Helper implements JsonSerializable
 {
 
