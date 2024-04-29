@@ -22,7 +22,10 @@ const MenuButtonComponent = ({
   return (
     <>
       <li className="relative">
-        <button className="h-full text-center" onClick={handleClick}>
+        <button
+          className="h-full text-center uppercase relative hover:border-2 hover:border-solid hover:border-black px-2 py-1 text-nowrap"
+          onClick={handleClick}
+        >
           {menuTitle}{" "}
         </button>
         {activeMenu === menuTitle && <NavMenu categorie={activeMenu} />}
