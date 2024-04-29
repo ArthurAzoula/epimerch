@@ -2,7 +2,7 @@ security:
 
     password_hashers:
         App\Entity\Client:
-            algorithm: plaintext
+            algorithm: auto
             encode_as_base64: false
             iterations: 1
 
