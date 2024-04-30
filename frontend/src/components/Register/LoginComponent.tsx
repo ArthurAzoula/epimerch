@@ -23,39 +23,76 @@ const LoginComponent: React.FC = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-center">
-        <h2 className="text-3xl">Connexion</h2>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <InputComponent
-            typeInput="email"
-            inputValue={email}
-            handleOnChange={handleEmailChange}
-            placeholder="Ex: henri@epitech.eu"
-            isRequired={true}
-            className=""
-          />
-        </div>
-        <div>
-          <InputComponent
-            typeInput="password"
-            inputValue={password}
-            handleOnChange={handlePasswordChange}
-            placeholder="Mot de passe"
-            isRequired={true}
-            className=""
-          />
-        </div>
-        <BorderButton text="Se connecter" />
-      </form>
-      <div>
-        <p>
-          Nouveau client ? <Link to="/register">Créer un compte</Link>
-        </p>
+    <div className="flex-grow flex justify-center min-h-full h-full">
+      <div className="border-l-2 border-r-2 w-2/5 border-zinc-900 min-h-full h-full">
+        <h1 className="flex items-center justify-center pt-16 pb-8 text-3xl font-bold">CONNEXION</h1>
+        <form onSubmit={handleSubmit} className="">
+          <div>
+            <InputComponent
+              typeInput="email"
+              inputValue={email}
+              handleOnChange={handleEmailChange}
+              placeholder="Ex: henri@epitech.eu"
+              isRequired={true}
+              className="w-1/3"
+            />
+          </div>
+          <div>
+            <InputComponent
+              typeInput="password"
+              inputValue={password}
+              handleOnChange={handlePasswordChange}
+              placeholder="Mot de passe"
+              isRequired={true}
+              className="w-1/3"
+            />
+          </div>
+          <div className="flex justify-center items-center">
+            <div className="flex w-2/6 justify-end pt-4">
+              <BorderButton text="Se connecter" />
+            </div>
+            <div className="flex">Mot de passe oublié </div>
+          </div>
+        </form>
       </div>
     </div>
+
+    // <div className="flex">
+    //   <div className="flex justify-center items-center w-full">
+    //     <h2 className="text-3xl uppercase font-bold">Connexion</h2>
+    //   </div>
+    //   <form
+    //     onSubmit={handleSubmit}
+    //     className="border-l-2 border-r-2 border-black w-1/2"
+    //   >
+    //     <div>
+    //       <InputComponent
+    //         typeInput="email"
+    //         inputValue={email}
+    //         handleOnChange={handleEmailChange}
+    //         placeholder="Ex: henri@epitech.eu"
+    //         isRequired={true}
+    //         className="w-1/3"
+    //       />
+    //     </div>
+    //     <div>
+    //       <InputComponent
+    //         typeInput="password"
+    //         inputValue={password}
+    //         handleOnChange={handlePasswordChange}
+    //         placeholder="Mot de passe"
+    //         isRequired={true}
+    //         className="w-1/3"
+    //       />
+    //     </div>
+    //     <BorderButton text="Se connecter" />
+    //   </form>
+    //   <div>
+    //     <p>
+    //       Nouveau client ? <Link to="/register">Créer un compte</Link>
+    //     </p>
+    //   </div>
+    // </div>
   );
 };
 
