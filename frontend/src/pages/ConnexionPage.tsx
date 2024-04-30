@@ -3,7 +3,7 @@ import LoginComponent from "../components/Register/LoginComponent";
 
 const ConnexionPage = () => {
   return (
-    <div>
+    <div className="flex min-h-screen max-h-screen h-screen overflow-hidden flex-col">
       <Header />
       <LoginComponent />
     </div>

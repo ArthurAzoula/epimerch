@@ -10,7 +10,7 @@ const Header = () => {
     setActiveMenu(menu);
   };
   return (
-    <header className="flex border-b-black border mb-14 pb-4 mt-4 sticky top-0">
+    <header className="flex border-b-black border pb-4 pt-4 sticky top-0">
       <div className="flex w-1/3 justify-center items-center">
         <ul className="flex justify-between align-center w-full ms-2">
           <MenuButtonComponent
@@ -60,7 +60,9 @@ const Header = () => {
         </ul>
       </div>
       <div className="flex justify-center w-1/3">
-        <h1 className="flex items-center justify-center text-3xl font-bold">E-COMMERCE</h1>
+        <h1 className="flex items-center justify-center text-3xl font-bold">
+          E-COMMERCE
+        </h1>
       </div>
       <div className="flex w-1/3 items-center justify-end gap-10 mr-8">
         <LoginButton />
