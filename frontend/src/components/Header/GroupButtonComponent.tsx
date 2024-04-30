@@ -1,6 +1,6 @@
 import { useState } from "react";
-import LoginButton from "./LoginButton";
-import MenuButtonComponent from "./MenuButtonComponent";
+import LoginButton from "../Buttons/LoginButton";
+import MenuButtonComponent from "../Buttons/MenuButtonComponent";
 
 const GroupButtonComponent = () => {
   const [activeMenu, setActiveMenu] = useState("");
@@ -11,9 +11,7 @@ const GroupButtonComponent = () => {
 
   return (
     <ul className="flex w-full">
-      <div className="w-1/3">
-
-      </div>
+      <div className="w-1/3"></div>
       <div className="flex justify-center items-center gap-6 w-1/3 mr-4">
         <MenuButtonComponent
           handleMenuClick={() => handleMenuClick("summer")}

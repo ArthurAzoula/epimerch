@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InputComponent from "./InputComponent";
-import BorderButton from "../Header/BorderButton";
-import Header from '../Header/Header';
+import BorderButton from "../Buttons/BorderButton";
+import Header from "../Header/Header";
 
 interface FormData {
   firstName: string;
@@ -36,9 +36,7 @@ const RegisterComponent: React.FC = () => {
   return (
     <>
       <Header />
-      <div>
-        
-      </div>
+      <div></div>
     </>
   );
 };

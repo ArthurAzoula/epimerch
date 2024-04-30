@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ShoppingCart, Search } from "lucide-react";
-import MenuButtonComponent from "./MenuButtonComponent";
-import LoginButton from "./LoginButton";
+import MenuButtonComponent from "../Buttons/MenuButtonComponent";
+import LoginButton from "../Buttons/LoginButton";
 
 const Header = () => {
   const [activeMenu, setActiveMenu] = useState("");
@@ -60,11 +60,11 @@ const Header = () => {
         </ul>
       </div>
       <div className="flex justify-center w-1/3">
-        <h1 className="flex items-center justify-center text-3xl font-bold">
-          E-COMMERCE
+        <h1 className="flex items-center justify-center uppercase text-4xl font-bold tracking-[1rem]">
+          Epimerch
         </h1>
       </div>
-      <div className="flex w-1/3 items-center justify-end gap-10 mr-8">
+      <div className="flex w-1/3 items-center justify-end gap-10 pr-8">
         <LoginButton />
         <button>
           <Search />
