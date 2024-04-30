@@ -15,7 +15,7 @@ services:
       dockerfile: Dockerfile
       args:
         TIMEZONE: ${TIMEZONE}
-    command: ~/var/www/symfony/startup.sh
+    command: ls
     volumes:
       - ./app:/var/www/symfony:cached
       - symfony_app_var:/var/www/symfony/var

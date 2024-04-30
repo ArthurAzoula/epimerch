@@ -1,10 +1,13 @@
 import './App.css'
-import Router from './routes/Router';
+import AuthContextProvider from './context/AuthContext'
+import Router from './routes/Router'
 
 function App(): JSX.Element {
   
   return (
-    <Router></Router>
+    <AuthContextProvider>
+      <Router></Router>
+    </AuthContextProvider>
   )
 }
 

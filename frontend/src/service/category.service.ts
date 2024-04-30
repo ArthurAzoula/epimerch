@@ -1,6 +1,6 @@
 import { Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
 
-type Category = {
+export type Category = {
     id: string;
     name: string;
     createdAt: string;
@@ -30,3 +30,5 @@ const CategoryService = {
       }
       
   };
+  
+  export default CategoryService;

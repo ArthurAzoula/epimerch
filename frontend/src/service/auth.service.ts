@@ -1,11 +1,11 @@
 import { Success, Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
 
-type Login = {
+export type Login = {
   login: string;
   password: string;
 };
 
-type Register = {
+export type Register = {
   firstname: string,
   lastname: string,
   login: string,
@@ -13,14 +13,14 @@ type Register = {
   password: string,
 }
 
-type User = {
+export type User = {
   firstname: string,
   lastname: string,
   login: string,
   email: string,
 }
 
-type Token = {
+export type Token = {
   token: string,
 }
 
@@ -39,3 +39,5 @@ const AuthService = {
     },
     
 };
+
+export default AuthService;
