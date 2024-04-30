@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import NavMenu from "./NavMenu";
+import NavMenu from "../Header/NavMenu";
 
 type MenuButtonComponentProps = {
   handleMenuClick: () => void;
@@ -25,7 +25,9 @@ const MenuButtonComponent = ({
     <>
       <li className="relative">
         <button
-          className={`h-full text-center ${uppercase ? 'uppercase' : 'capitalize'} rounded transition-all duration-200 ease-in-out relative border border-transparent hover:border hover:border-solid hover:border-black px-2 py-1 text-nowrap`}
+          className={`h-full text-center ${
+            uppercase ? "uppercase" : "capitalize"
+          } rounded transition-all duration-200 ease-in-out relative border border-transparent hover:border hover:border-solid hover:border-black px-2 py-1 text-nowrap`}
           onClick={handleClick}
         >
           {menuTitle}{" "}

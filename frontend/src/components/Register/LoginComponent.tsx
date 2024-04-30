@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import InputComponent from "./InputComponent";
-import BorderButton from "../Header/BorderButton";
+import BorderButton from "../Buttons/BorderButton";
+import NudeButton from "../Buttons/NudeButton";
 
 const LoginComponent: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -24,9 +25,11 @@ const LoginComponent: React.FC = () => {
 
   return (
     <div className="flex-grow flex justify-center min-h-full h-full">
-      <div className="border-l-2 border-r-2 w-2/5 border-zinc-900 min-h-full h-full">
-        <h1 className="flex items-center justify-center pt-16 pb-8 text-3xl font-bold">CONNEXION</h1>
-        <form onSubmit={handleSubmit} className="">
+      <div className="border-l border-r w-2/5 border-zinc-900 min-h-full h-full">
+        <h1 className="flex items-center justify-center pt-24 pb-8 text-3xl font-bold">
+          Connectez-vous à l'élégance
+        </h1>
+        <form onSubmit={handleSubmit} className="px-16 py-4">
           <div>
             <InputComponent
               typeInput="email"
@@ -34,7 +37,7 @@ const LoginComponent: React.FC = () => {
               handleOnChange={handleEmailChange}
               placeholder="Ex: henri@epitech.eu"
               isRequired={true}
-              className="w-1/3"
+              className="w-2/3"
             />
           </div>
           <div>
@@ -44,14 +47,27 @@ const LoginComponent: React.FC = () => {
               handleOnChange={handlePasswordChange}
               placeholder="Mot de passe"
               isRequired={true}
-              className="w-1/3"
+              className="w-2/3"
             />
           </div>
-          <div className="flex justify-center items-center">
-            <div className="flex w-2/6 justify-end pt-4">
-              <BorderButton text="Se connecter" />
+          <div className="flex flex-col justify-center items-center">
+            <div className="justify-end pt-8">
+              <BorderButton
+                text="Se connecter"
+                className="hover:bg-black hover:text-white transition-all ease-in-out duration-400"
+              />
             </div>
-            <div className="flex">Mot de passe oublié </div>
+          </div>
+          <div className="flex justify-between pt-12 p-4">
+            <Link
+              className="hover:underline underline-offset-2"
+              to={"/forgot_password"}
+            >
+              <p>Mot de passe oublié ?</p>
+            </Link>
+            <Link className="hover:underline underline-offset-2" to="/register">
+              <p>Pas encore de compte ?</p>
+            </Link>
           </div>
         </form>
       </div>
