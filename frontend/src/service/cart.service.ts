@@ -1,4 +1,5 @@
 import { Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
+import { Product } from './product.service';
 
 type Cart = {
     id: string;

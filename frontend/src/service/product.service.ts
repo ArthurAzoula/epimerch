@@ -1,6 +1,6 @@
 import { Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
 
-type Product = {
+export type Product = {
     id: string;
     name: string;
     price: number;
@@ -31,3 +31,5 @@ const ProductService = {
     }
     
 };
+
+export default ProductService;
