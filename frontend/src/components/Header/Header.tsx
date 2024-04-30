@@ -18,15 +18,18 @@ const Header = () => {
             menuTitle="Eté 24"
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
+            uppercase={false}
           />
           <MenuButtonComponent
             handleMenuClick={() => handleMenuClick("city")}
             menuTitle="Le city"
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
+            uppercase={false}
           />
           <MenuButtonComponent
             handleMenuClick={() => handleMenuClick("woman")}
+            uppercase={false}
             menuTitle="Femme"
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
@@ -36,6 +39,7 @@ const Header = () => {
             menuTitle="Homme"
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
+            uppercase={false}
           />
 
           <MenuButtonComponent
@@ -43,6 +47,7 @@ const Header = () => {
             menuTitle="Couture"
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
+            uppercase={false}
           />
 
           <MenuButtonComponent
@@ -50,6 +55,7 @@ const Header = () => {
             menuTitle="Explore"
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
+            uppercase={false}
           />
         </ul>
       </div>
