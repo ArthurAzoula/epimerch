@@ -35,8 +35,6 @@ class AuthController extends AbstractController
         return Response::error("Mot de passe incorrect", HttpStatus::BAD_REQUEST);
       }
 
-      $client->setRoles(['IS_AUTHENTICATED_FULLY']);
-
       $token = $JWTManager->create($client);
 
       return Response::json(['token' => $token]);
@@ -103,6 +101,7 @@ class AuthController extends AbstractController
   {
     return Response::success("OK", HttpStatus::OK);
   }
+
 
 
   #[Route('/forgot-password', name: 'forgot_password', methods: ['POST'])]

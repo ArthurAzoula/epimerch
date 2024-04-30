@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { ShoppingCart, Search } from "lucide-react";
 import MenuButtonComponent from "../Buttons/MenuButtonComponent";
 import LoginButton from "../Buttons/LoginButton";
+import { Link } from "react-router-dom";
+import ProfilDropdown from "./ProfilDropdown";
+import { AuthContext } from "../../context/AuthContext";
 
 const Header = () => {
   const [activeMenu, setActiveMenu] = useState("");
+
+  const { user } = useContext(AuthContext);
 
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
@@ -60,17 +65,26 @@ const Header = () => {
         </ul>
       </div>
       <div className="flex justify-center w-1/3">
-        <h1 className="flex items-center justify-center uppercase text-4xl font-bold tracking-[1rem]">
-          Epimerch
+        <h1 className="flex items-center justify-center uppercase text-3xl font-bold tracking-[0.7rem]">
+          <Link to={"/"}>
+            Epimerch
+          </Link>
         </h1>
       </div>
       <div className="flex w-1/3 items-center justify-end gap-10 pr-8">
-        <LoginButton />
-        <button>
-          <Search />
+        {user ? (
+          <ProfilDropdown client={{ name: "Arthur Azoula", isAdmin: user.isAdmin }} />
+        ) : (
+          <LoginButton className="hover:bg-black hover:text-white  transition-all ease-in-out duration-300" />
+        )}
+        <button className="relative overflow-hidden border border-transparent rounded-full p-1 transition-all duration-200 ease-in-out hover:border-black group">
+          <Search className="text-black transition-all duration-200 ease-in-out" />
         </button>
-        <button>
-          <ShoppingCart />
+        <button className="relative border border-transparent rounded-full p-1 transition-all duration-200 ease-in-out hover:border-black group">
+          <ShoppingCart className="text-black transition-all duration-200 ease-in-out" />
+          <span className="absolute text-[8px] -top-3 left-2 bg-red-500 text-white rounded-full px-2 py-1 shadow-xl w-5 h-5 flex items-center justify-center">
+            10
+          </span>{" "}
         </button>
       </div>
     </header>
