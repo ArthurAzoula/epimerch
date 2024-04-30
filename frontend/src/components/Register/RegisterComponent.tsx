@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import InputComponent from "./InputComponent";
 import BorderButton from "../Buttons/BorderButton";
 import Header from "../Header/Header";
