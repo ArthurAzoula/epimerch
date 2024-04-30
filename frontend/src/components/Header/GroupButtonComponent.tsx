@@ -10,47 +10,59 @@ const GroupButtonComponent = () => {
   };
 
   return (
-    <ul className="flex gap-14 justify-center align-center">
-      <MenuButtonComponent
-        handleMenuClick={() => handleMenuClick("summer")}
-        menuTitle="Eté 24"
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-      />
-      <MenuButtonComponent
-        handleMenuClick={() => handleMenuClick("city")}
-        menuTitle="Le city"
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-      />
-      <MenuButtonComponent
-        handleMenuClick={() => handleMenuClick("woman")}
-        menuTitle="Femme"
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-      />
-      <MenuButtonComponent
-        handleMenuClick={() => handleMenuClick("man")}
-        menuTitle="Homme"
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-      />
+    <ul className="flex w-full">
+      <div className="w-1/3">
 
-      <MenuButtonComponent
-        handleMenuClick={() => handleMenuClick("couture")}
-        menuTitle="Couture"
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-      />
+      </div>
+      <div className="flex justify-center items-center gap-6 w-1/3 mr-4">
+        <MenuButtonComponent
+          handleMenuClick={() => handleMenuClick("summer")}
+          menuTitle="Eté 24"
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          uppercase={false}
+        />
+        <MenuButtonComponent
+          handleMenuClick={() => handleMenuClick("city")}
+          menuTitle="Le city"
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          uppercase={false}
+        />
+        <MenuButtonComponent
+          handleMenuClick={() => handleMenuClick("woman")}
+          menuTitle="Femme"
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          uppercase={false}
+        />
+        <MenuButtonComponent
+          handleMenuClick={() => handleMenuClick("man")}
+          menuTitle="Homme"
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          uppercase={false}
+        />
 
-      <MenuButtonComponent
-        handleMenuClick={() => handleMenuClick("explore")}
-        menuTitle="Explore"
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-      />
+        <MenuButtonComponent
+          handleMenuClick={() => handleMenuClick("couture")}
+          menuTitle="Couture"
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          uppercase={false}
+        />
 
-      <LoginButton />
+        <MenuButtonComponent
+          handleMenuClick={() => handleMenuClick("explore")}
+          menuTitle="Explore"
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          uppercase={false}
+        />
+      </div>
+      <div className=" w-1/3 flex items-center justify-center">
+        <LoginButton />
+      </div>
     </ul>
   );
 };

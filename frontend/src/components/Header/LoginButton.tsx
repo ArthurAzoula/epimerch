@@ -3,11 +3,9 @@ import { Link } from "react-router-dom";
 const LoginButton = () => {
   return (
     <>
-      <div className="relative border-2 border-solid border-black py-1 px-2">
-        <Link to="/login" className="btn">
-          Connexion
+        <Link to="/login" className="border border-solid border-black py-1 px-2 rounded">
+          <span>Connexion</span>
         </Link>
-      </div>
     </>
   );
 };
