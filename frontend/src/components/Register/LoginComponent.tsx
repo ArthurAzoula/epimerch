@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import InputComponent from "./InputComponent";
 import BorderButton from "../Buttons/BorderButton";
-import NudeButton from "../Buttons/NudeButton";
 
 const LoginComponent: React.FC = () => {
   const [email, setEmail] = useState("");
