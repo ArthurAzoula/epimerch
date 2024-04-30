@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import InputComponent from "./InputComponent";
 import BorderButton from "../Buttons/BorderButton";
-import NudeButton from "../Buttons/NudeButton";
 
 const LoginComponent: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -32,6 +31,7 @@ const LoginComponent: React.FC = () => {
         <form onSubmit={handleSubmit} className="px-16 py-4">
           <div>
             <InputComponent
+              name="email"
               typeInput="email"
               inputValue={email}
               handleOnChange={handleEmailChange}
@@ -42,6 +42,7 @@ const LoginComponent: React.FC = () => {
           </div>
           <div>
             <InputComponent
+              name="password"
               typeInput="password"
               inputValue={password}
               handleOnChange={handlePasswordChange}
@@ -72,43 +73,6 @@ const LoginComponent: React.FC = () => {
         </form>
       </div>
     </div>
-
-    // <div className="flex">
-    //   <div className="flex justify-center items-center w-full">
-    //     <h2 className="text-3xl uppercase font-bold">Connexion</h2>
-    //   </div>
-    //   <form
-    //     onSubmit={handleSubmit}
-    //     className="border-l-2 border-r-2 border-black w-1/2"
-    //   >
-    //     <div>
-    //       <InputComponent
-    //         typeInput="email"
-    //         inputValue={email}
-    //         handleOnChange={handleEmailChange}
-    //         placeholder="Ex: henri@epitech.eu"
-    //         isRequired={true}
-    //         className="w-1/3"
-    //       />
-    //     </div>
-    //     <div>
-    //       <InputComponent
-    //         typeInput="password"
-    //         inputValue={password}
-    //         handleOnChange={handlePasswordChange}
-    //         placeholder="Mot de passe"
-    //         isRequired={true}
-    //         className="w-1/3"
-    //       />
-    //     </div>
-    //     <BorderButton text="Se connecter" />
-    //   </form>
-    //   <div>
-    //     <p>
-    //       Nouveau client ? <Link to="/register">Créer un compte</Link>
-    //     </p>
-    //   </div>
-    // </div>
   );
 };
 
