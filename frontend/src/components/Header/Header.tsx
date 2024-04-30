@@ -15,7 +15,7 @@ const Header = () => {
     setActiveMenu(menu);
   };
   return (
-    <header className="flex border-b-black border pb-4 pt-4 sticky top-0">
+    <header className="flex border-b-black border pb-4 pt-4 sticky bg-white top-0">
       <div className="flex w-1/3 justify-center items-center">
         <ul className="flex justify-between align-center w-full ms-2">
           <MenuButtonComponent
@@ -73,7 +73,7 @@ const Header = () => {
       </div>
       <div className="flex w-1/3 items-center justify-end gap-10 pr-8">
         {user ? (
-          <ProfilDropdown client={{ name: "Arthur Azoula", isAdmin: user.isAdmin }} />
+          <ProfilDropdown client={{ name: "Arthur Azoula", isAdmin: true }} />
         ) : (
           <LoginButton className="hover:bg-black hover:text-white  transition-all ease-in-out duration-300" />
         )}
