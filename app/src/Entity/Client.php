@@ -161,6 +161,6 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
 
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        return $this->login ?? $this->email;
     }
 }
