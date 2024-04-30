@@ -59,7 +59,7 @@ const GroupButtonComponent = () => {
         />
       </div>
       <div className=" w-1/3 flex items-center justify-center">
-        <LoginButton />
+        <LoginButton className="" />
       </div>
     </ul>
   );
