@@ -139,11 +139,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
 
     public function getRoles(): array
     {
-        $roles = $this->roles;
-
-        $roles[] = 'PUBLIC_ACCESS';
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): self
@@ -161,6 +157,6 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
 
     public function getUserIdentifier(): string
     {
-        return $this->login ?? $this->email;
+        return $this->email;
     }
 }

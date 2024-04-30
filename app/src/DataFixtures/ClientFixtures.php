@@ -35,7 +35,7 @@ class ClientFixtures extends Fixture
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin'));
         $admin->setFirstname('Admin');
         $admin->setLastname('Admin');
-        $admin->setRoles(['FULL_ACCESS']);
+        $admin->setRoles(['ROLE_ADMIN', 'IS_AUTHENTICATED_FULLY']);
         
         $manager->persist($admin);
 
