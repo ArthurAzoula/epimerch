@@ -1,7 +1,7 @@
 import './App.css'
-import Router from './routes/Router'
+import Router from './routes/Router';
 
-function App(): unknown {
+function App(): JSX.Element {
   
   return (
     <Router></Router>
