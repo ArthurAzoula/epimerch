@@ -3,7 +3,11 @@ import { Error, getRequest, postRequest, putRequest, deleteRequest } from "./bas
 export type Product = {
     id: string;
     name: string;
+    description: string;
     price: number;
+    photo: string;
+    category: string;
+    genre: string;
     createdAt: string;
     updatedAt: string;
 };

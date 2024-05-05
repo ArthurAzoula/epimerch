@@ -6,6 +6,7 @@ import Details from "../components/Details";
 import Err from "../components/Err";
 import RegisterPage from "../pages/RegisterPage";
 import ConnexionPage from "../pages/ConnexionPage";
+import Clothes from "../pages/ClothesPage";
 
 type RouteType = {
     path: string;
@@ -35,6 +36,11 @@ const routes: RouteType = [
         path: "/profile",
         exact: true,
         component: ProfileScreen,
+    },
+    {
+        path: "/clothes",
+        exact: true,
+        component: Clothes,
     },
     {
         path: "/cart",
