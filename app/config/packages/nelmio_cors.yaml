@@ -1,0 +1,16 @@
+nelmio_cors:
+    defaults:
+        allow_credentials: true
+        allow_origin: ['*']
+        allow_headers: ['X-Requested-With', 'X-Prototype-Version', 'Cache-Control', 'Pragma', 'Origin', 'Content-Type', 'Accept']
+        allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'PATCH', 'OPTIONS']
+        expose_headers: ['Access-Control-Allow-Origin']
+        max_age: 3600
+    paths:
+        '^/':
+            allow_credentials: true
+            allow_origin: ['*']
+            allow_headers: ['X-Requested-With', 'X-Prototype-Version', 'Cache-Control', 'Pragma', 'Origin', 'Content-Type', 'Accept']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'PATCH', 'OPTIONS']
+            expose_headers: ['Access-Control-Allow-Origin']
+            max_age: 3600

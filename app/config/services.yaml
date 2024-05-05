@@ -26,3 +26,7 @@ services:
         class: App\Service\Mailer
         arguments:
             - '%env(MAILER_DSN)%'
+
+    App\Controller\ProductController:
+        tags: ['controller.service_arguments']
+        public: true
