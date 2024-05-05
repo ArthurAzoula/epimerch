@@ -1,11 +1,8 @@
-import { Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
-import { Product } from './product.service';
+import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData, Success } from "./base.service";
+import { Client } from './client.service';
 
-type Cart = {
-    id: string;
-    userId: string;
-    createdAt: string;
-    updatedAt: string;
+export type Cart = BaseEntityData & {
+    client: Client;
 };
 
 const CartService = {
@@ -18,16 +15,16 @@ const CartService = {
         return getRequest<Cart[]>(`/carts/${userId}`);
     },
     
-    async createCart(data: { userId: string }): Promise<Cart | Error> {
+    async createCart(data: Cart): Promise<Cart | Error> {
         return postRequest<Cart>("/carts", data);
     },
     
-    async updateCart(data: { id: string; userId: string }): Promise<Cart | Error> {
-        return putRequest<Cart>("/carts", data);
+    async updateCart(id: string, data: Partial<Cart>): Promise<Cart | Error> {
+        return putRequest<Cart>(`/carts/${id}`, data);
     },
     
-    async deleteCart(id: string): Promise<Cart | Error> {
-        return deleteRequest<Cart>(`/carts/${id}`);
+    async deleteCart(id: string): Promise<Success | Error> {
+        return deleteRequest<Success>(`/carts/${id}`);
     }
     
 };

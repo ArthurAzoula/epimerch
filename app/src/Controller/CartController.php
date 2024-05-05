@@ -27,11 +27,7 @@ class CartController
         try {
             $carts = $this->cartService->getAll();
 
-            foreach ($carts as $cart) {
-                $data[] = $cart->jsonSerialize();
-            }
-
-            return Response::json($data, HttpStatus::OK);
+            return Response::json($carts, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

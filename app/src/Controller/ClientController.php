@@ -26,12 +26,8 @@ class ClientController
     {
         try {
             $clients = $this->clientService->getAll();
-            
-            foreach ($clients as $client) {
-                $data[] = $client->jsonSerialize();
-            }
 
-            return Response::json($data, HttpStatus::OK);
+            return Response::json($clients, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

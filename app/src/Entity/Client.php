@@ -132,7 +132,8 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
                     'lastname' => $this->lastname,
                     'addresses' => $this->addresses,
                     'orders' => $this->orders,
-                    'cart' => $this->cart
+                    'cart' => $this->cart,
+                    'password' => '********'
                 )
             );
     }

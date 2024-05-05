@@ -26,11 +26,7 @@ class ProductController
         try {
             $products = $this->productService->getAll();
 
-            foreach ($products as $product) {
-                $data[] = $product->jsonSerialize();
-            }
-
-            return Response::json($data, HttpStatus::OK);
+            return Response::json($products, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
