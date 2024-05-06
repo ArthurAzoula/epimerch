@@ -1,3 +1,4 @@
+import { Address } from "./address.service";
 import { Success, Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
 import { Cart } from "./cart.service";
 
@@ -19,7 +20,8 @@ export type User = {
   lastname: string,
   login: string,
   email: string,
-  cart: Cart
+  cart: Cart,
+  addresses: Address
 }
 
 export type Token = {
