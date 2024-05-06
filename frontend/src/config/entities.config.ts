@@ -5,7 +5,7 @@ import { Success } from '../service/base.service';
 import CartItemService, { CartItem } from '../service/cartitem.service';
 import OrderService, { Order } from '../service/order.service';
 import OrderItemService, { OrderItem } from '../service/orderitem.service';
-import ProductService from '../service/product.service';
+import ProductService, { Product } from '../service/product.service';
 import CategoryService from '../service/category.service';
 
 export type EntityConfig = {
@@ -34,8 +34,117 @@ export type EntityColumnConfig = {
 
 const entitiesConfig: EntityConfig[] = [
   {
+    name: 'product',
+    display: 'Produits',
+    fetch: ProductService.getProducts,
+    create: ProductService.createProduct as (data: unknown) => Promise<Product | Error>,
+    update: ProductService.updateProduct,
+    delete: ProductService.deleteProduct as (id: string) => Promise<Success | Error>,
+    searchColumn: [['name']],
+    order: 0,
+    columns: [
+      {
+        name: 'id',
+        display: 'ID',
+        type: 'text',
+        order: 1,
+        regex: '^[0-9A-Z]{26}$',
+        editable: false,
+        required: true,
+        unique: true
+      },
+      {
+        name: 'name',
+        display: 'Name',
+        type: 'text',
+        order: 2,
+        regex: '^[A-Za-z0-9 ]{1,255}$',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'description',
+        display: 'Description',
+        type: 'text',
+        order: 3,
+        regex: '^[A-Za-z0-9 ]{1,255}$',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'photo',
+        display: 'Photo',
+        type: 'url',
+        order: 4,
+        regex: '^(http|https)://[a-zA-Z0-9./?=_-]*$',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'price',
+        display: 'Price',
+        type: 'number',
+        order: 5,
+        regex: '^[0-9]{1,255}$',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'category',
+        display: 'Category',
+        type: 'async',
+        order: 6,
+        fetch: CategoryService.getCategories,
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'genre',
+        display: 'Genre',
+        type: 'text',
+        order: 7,
+        regex: '^[A-Za-z0-9 ]{1,255}$',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'createdAt',
+        display: 'Created At',
+        type: 'datetime',
+        order: 8,
+        editable: false,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'updatedAt',
+        display: 'Updated At',
+        type: 'datetime',
+        order: 9,
+        editable: false,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'deletedAt',
+        display: 'Deleted At',
+        type: 'datetime',
+        order: 10,
+        editable: false,
+        required: false,
+        unique: false
+      }
+    ]
+  },
+  {
     name: "adresse",
-    display: "Adresse",
+    display: "Adresses",
     fetch: AddressService.getAddresses,
     create: AddressService.createAddress as (data: unknown) => Promise<Address | Error>,
     update: AddressService.updateAddress,
@@ -124,7 +233,7 @@ const entitiesConfig: EntityConfig[] = [
   },
   {
     name: "cart",
-    display: "Cart",
+    display: "Paniers",
     fetch: CartService.getCarts,
     create: CartService.createCart as (data: unknown) => Promise<Cart | Error>,
     update: CartService.updateCart,
@@ -183,7 +292,7 @@ const entitiesConfig: EntityConfig[] = [
   },
   {
     name: "cartItem",
-    display: "CartItem",
+    display: "Produits panier",
     fetch: CartItemService.getCartItems,
     create: CartItemService.createCartItem as (data: unknown) => Promise<CartItem | Error>,
     update: CartItemService.updateCartItem,
@@ -262,7 +371,7 @@ const entitiesConfig: EntityConfig[] = [
   },
   {
     name: "client",
-    display: "Client",
+    display: "Utilisateurs",
     fetch: ClientService.getClients,
     create: ClientService.createClient as (data: unknown) => Promise<Client | Error>,
     update: ClientService.updateClient,
@@ -351,7 +460,7 @@ const entitiesConfig: EntityConfig[] = [
   },
   {
     name: "order",
-    display: "Order",
+    display: "Achats",
     fetch: OrderService.getOrders,
     create: OrderService.createOrder as (data: unknown) => Promise<Order | Error>,
     update: OrderService.updateOrder,
@@ -430,7 +539,7 @@ const entitiesConfig: EntityConfig[] = [
   },
   {
     name: "orderItem",
-    display: "OrderItem",
+    display: "Achat produits",
     fetch: OrderItemService.getOrderItems,
     create: OrderItemService.createOrderItem as (data: unknown) => Promise<OrderItem | Error>,
     update: OrderItemService.updateOrderItem,

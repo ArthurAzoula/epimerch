@@ -8,6 +8,8 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
   const [data, setData] = useState<[]>([]);
   const [filteredData, setFilteredData] = useState<[]>([]);
   const [search, setSearch] = useState<string>('');
+  const [page, setPage] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(5);
   
   useEffect(() => {
     setData([]);
@@ -39,10 +41,10 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
       }
       
       return deepSearch(row, entity.searchColumn).some(value => String(value).toLowerCase().includes(search.toLowerCase()));
-    });
+    }).slice(page * limit, (page + 1) * limit);
     
     setFilteredData(filtered as []);
-  }, [data, search]);
+  }, [data, search, page, limit]);
   
   const handlePageChange = (selectedItem: {selected: number}) => {
     console.log('selectedItem:', selectedItem);
@@ -52,20 +54,22 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
     setSearch(event.target.value);
   }
   
+  
+  
   return (
-    <div className='flex-grow max-h-full flex flex-col w-full max-w-full overflow-hidden'>
-      <div className='p-4 flex justify-between items-center'>
+    <div className='flex-grow max-h-full h-full flex flex-col w-full max-w-full overflow-hidden'>
+      <div className='p-4 flex justify-between items-center border-b border-black'>
         <div className='flex gap-4 justify-center items-center'>
           <label htmlFor="search">Rechercher: </label>
           <input type="text" name="search" id="search" className='border border-black p-2' placeholder='...' onChange={handleSearch} value={search} />
         </div>
         <button><PlusCircleIcon className='text-green-700 hover:text-green-800 transition-all hover:scale-110' size={28} /></button>
       </div>
-      <div className='w-full max-h-full overflow-auto'>
-        <table className='table-auto w-full mb-2'>
+      <div className='w-full flex-grow overflow-auto'>
+        <table className='table-auto w-full mb-2 overflow-hidden h-auto'>
           <thead className='min-h-full border-b border-black'>
             {entity.columns.map((column, index) => (
-              <th key={index} className={`text-nowrap px-2 py-2 border border-black ${index == 0 ? 'border-s-0' : ''}`}>{column.display}</th>
+              <th key={index} className={`text-nowrap px-2 py-2 border border-t-0 border-black ${index == 0 ? 'border-s-0' : ''}`}>{column.display}</th>
             ))}
             <th className={`text-nowrap px-2 py-2 border border-black`}>Actions</th>
           </thead>

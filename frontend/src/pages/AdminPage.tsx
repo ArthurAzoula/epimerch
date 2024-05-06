@@ -9,7 +9,7 @@ const AdminPage = () => {
   return (
     <div className="flex min-h-screen max-h-screen h-screen overflow-hidden flex-col w-screen">
       <Header />
-      <div className="flex-grow flex w-full">
+      <div className="flex-grow flex w-full h-full max-h-full">
         <div className='border-r border-black'>
           {entities
             .sort((a, b) => {
