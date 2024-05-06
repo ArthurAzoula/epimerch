@@ -28,12 +28,20 @@ const CartService = {
         return deleteRequest<Success>(`/carts/${id}`);
     },
 
-    async getProductsFromCart(cartId: string): Promise<CartItem[] | Error> {
-        return getRequest<CartItem[]>(`/carts/${cartId}/products`);
+    async getProductsFromCart(): Promise<CartItem[] | Error> {
+        return getRequest<CartItem[]>(`/carts`);
     },
 
-    async addProductToCart(cartId: string, productId: string, quantity: number): Promise<CartItem | Error> {
-        return postRequest<CartItem>(`/carts/${cartId}/products/${productId}`, { quantity });
+    async addProductToCart(productId: string, quantity: number): Promise<CartItem | Error> {
+        return postRequest<CartItem>(`/carts/${productId}`, { quantity });
+    },
+
+    async updateQuantity(productId: string, quantity: number): Promise<CartItem | Error> {
+        return putRequest<CartItem>(`/carts/${productId}`, { quantity });
+    },
+
+    async removeProductFromCart(productId: string): Promise<Success | Error> {
+        return deleteRequest<Success>(`/carts/${productId}`);
     }
     
 };

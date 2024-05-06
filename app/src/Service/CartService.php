@@ -115,6 +115,27 @@ class CartService
         return $existingCart;
     }
 
+    public function updateProductQuantity(Ulid $cartId, Ulid $productId, int $quantity): Cart
+    {
+        $cart = $this->getCartById($cartId);
+
+        if ($cart === null) {
+            throw new \Exception("Cart with id $cartId not found");
+        }
+
+        $cartItem = $this->cartItemRepository->findOneBy(['cart' => $cartId, 'product' => $productId]);
+
+        if ($cartItem === null) {
+            throw new \Exception("Product with id $productId not found in cart with id $cartId");
+        }
+
+        $cartItem->setQuantity($quantity);
+
+        $this->entityManager->flush();
+
+        return $cart;
+    }
+
     public function delete(Ulid $id): void
     {
         $cart = $this->getCartById($id);

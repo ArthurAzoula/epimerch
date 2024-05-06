@@ -97,10 +97,38 @@ class CartController extends AbstractController
 
             $cart = $this->cartService->removeProductFromCart($cartId, $productId);
 
-            return Response::success("Produit retiré du panier.", HttpStatus::OK    );
+            return Response::success("Produit retiré du panier.", HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
-    
+
+    #[Route('/carts/{productId}', name: 'update_product_quantity', methods: ['PUT'])]
+    public function updateProductQuantity($productId, Request $request, ClientService $clientService, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    {
+        try {
+
+            $mail = $this->getUser()->getUserIdentifier();
+
+            $client = $clientService->getClientByEmail($mail);
+
+            if (!$client) {
+                return Response::error("Cet utilisateur n'existe pas", HttpStatus::NOT_FOUND);
+            }
+
+            $cartId = Ulid::fromString($client->getCart()->getId());
+
+            $productId = Ulid::fromString($productId);
+
+            $content = $request->getContent();
+            $data = json_decode($content, true);
+            $quantity = $data['quantity'];
+
+            $cart = $this->cartService->updateProductQuantity($cartId, $productId, $quantity);
+
+            return Response::json($cart->jsonSerialize(), HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
 }
