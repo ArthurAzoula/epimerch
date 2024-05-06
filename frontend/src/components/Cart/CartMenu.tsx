@@ -34,7 +34,7 @@ const CartMenu = () => {
             className="relative flex items-center px-4 py-2 gap-4 border-b w-full last:border-b-0"
           >
             <img
-              className="w-24 h-24 object-cover rounded-full"
+              className="w-24 h-24 object-cover"
               src={item.product.photo}
               alt={item.product.name}
             />
