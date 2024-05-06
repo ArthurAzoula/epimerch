@@ -1,4 +1,5 @@
 import { Success, Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
+import { Cart } from "./cart.service";
 
 export type Login = {
   login: string;
@@ -18,6 +19,7 @@ export type User = {
   lastname: string,
   login: string,
   email: string,
+  cart: Cart
 }
 
 export type Token = {

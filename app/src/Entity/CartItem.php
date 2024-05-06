@@ -9,7 +9,7 @@ use Lombok\Setter;
 #[ORM\Entity]
 class CartItem extends AbstractEntity
 {
-    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'products')]
+    #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'products', cascade: ['persist'])]
     #[Getter, Setter]
     private ?Cart $cart = null;
 
@@ -29,10 +29,8 @@ class CartItem extends AbstractEntity
     {
         return array_merge(parent::jsonSerialize(),
         array(
-            'cart' => $this->cart,
             'product' => $this->product,
             'quantity' => $this->quantity,
-            'price' => $this->price
         ));
     }
 }

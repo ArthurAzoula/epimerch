@@ -4,14 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Cart;
 use App\Service\CartService;
+use App\Service\ClientService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
+use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 
-class CartController
+class CartController extends AbstractController
 {
 
     private CartService $cartService;
@@ -21,105 +25,82 @@ class CartController
         $this->cartService = $cartService;
     }
 
-    #[Route('/carts', name: 'carts', methods: ['GET'])]
-    public function index(): Response
-    {
-        try {
-            $carts = $this->cartService->getAll();
-
-            return Response::json($carts, HttpStatus::OK);
-        } catch (\Exception $e) {
-            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    #[Route('/carts/{id}', name: 'get_cart', methods: ['GET'])]
-    public function get(int $id): Response
-    {
-        try {
-            $cart = $this->cartService->getCartById($id);
-
-            if ($cart === null) {
-                return Response::error("Cart with id $id not found", HttpStatus::NOT_FOUND);
-            }
-
-            $data = $cart->jsonSerialize();
-
-            return Response::json($data, HttpStatus::OK);
-        } catch (\Exception $e) {
-            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    #[Route('/carts', name: 'create_cart', methods: ['POST'])]
-    public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
-    {
-        try {
-            $cart = $serializer->deserialize($request->getContent(), Cart::class, 'json');
-            $errors = $validator->validate($cart);
-
-            if (count($errors) > 0) {
-                return Response::error($errors, HttpStatus::BAD_REQUEST);
-            }
-
-            $this->cartService->create($cart);
-
-            return Response::json($cart->jsonSerialize(), HttpStatus::CREATED);
-        } catch (\Exception $e) {
-            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
     #[Route('/carts/{productId}', name: 'add_product_to_cart', methods: ['POST'])]
-    public function addProduct(int $productId, Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    public function addProduct($productId, Request $request, ClientService $clientService, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
         try {
-            $cart = $serializer->deserialize($request->getContent(), Cart::class, 'json');
-            $errors = $validator->validate($cart);
 
-            if (count($errors) > 0) {
-                return Response::error($errors, HttpStatus::BAD_REQUEST);
+            $mail = $this->getUser()->getUserIdentifier();
+
+            $client = $clientService->getClientByEmail($mail);
+
+            if (!$client) {
+                return Response::error("Cet utilisateur n'existe pas", HttpStatus::NOT_FOUND);
             }
 
-            $this->cartService->addProduct($productId, $cart);
+            $cartId = new Ulid($client->getCart()->getId());
+
+            $productId = Uuid::fromString($productId);
+
+            $quantity = $request->get('quantity');
+
+            $productId = Ulid::fromString($productId);
+            $cartId = Ulid::fromString($cartId);
+
+            $cart = $this->cartService->addProductToCart($cartId, $productId, $quantity ?? 1);
 
             return Response::json($cart->jsonSerialize(), HttpStatus::CREATED);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
-    */
 
-    #[Route('/carts/{id}', name: 'update_cart', methods: ['PUT'])]
-    public function update(int $id, Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    #[Route('/carts', name: 'get_products_from_cart', methods: ['GET'])]
+    public function getProducts(ClientService $clientService): Response
+    {
+
+        $email = $this->getUser()->getUserIdentifier();
+
+        $client = $clientService->getClientByEmail($email);
+
+        if (!$client) {
+            return Response::error("Cet utilisateur n'existe pas", HttpStatus::NOT_FOUND);
+        }
+
+        $cartId = Ulid::fromString($client->getCart()->getId());
+
+        try {
+            $products = $this->cartService->getProductsFromCart($cartId);
+
+            return Response::json($products, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/carts/{productId}', name: 'delete_product_from_cart', methods: ['DELETE'])]
+    public function deleteProduct($productId, ClientService $clientService, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
         try {
-            $cart = $serializer->deserialize($request->getContent(), Cart::class, 'json');
-            $errors = $validator->validate($cart);
 
-            if (count($errors) > 0) {
-                return Response::error($errors, HttpStatus::BAD_REQUEST);
+            $mail = $this->getUser()->getUserIdentifier();
+
+            $client = $clientService->getClientByEmail($mail);
+
+            if (!$client) {
+                return Response::error("Cet utilisateur n'existe pas", HttpStatus::NOT_FOUND);
             }
 
-            $this->cartService->update($id, $cart);
+            $cartId = Ulid::fromString($client->getCart()->getId());
 
-            return Response::json($cart->jsonSerialize(), HttpStatus::OK);
+            $productId = Ulid::fromString($productId);
+
+            $cart = $this->cartService->removeProductFromCart($cartId, $productId);
+
+            return Response::success("Produit retiré du panier.", HttpStatus::OK    );
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
-
-    #[Route('/carts/{id}', name: 'delete_cart', methods: ['DELETE'])]
-    public function delete(int $id): Response
-    {
-        try {
-
-            $this->cartService->delete($id);
-
-            return Response::json(null, HttpStatus::NO_CONTENT);
-        } catch (\Exception $e) {
-            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
-        }
-    }
+    
 }

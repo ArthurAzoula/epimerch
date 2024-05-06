@@ -28,6 +28,7 @@ const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element 
   
   async function refreshUser() {
     return await AuthService.getUser().then((response) => {
+      console.log(response);
       if ("error" in response) {
         setUser(null);
         setIsAdmin(false);
