@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import InputComponent from "./InputComponent";
 import BorderButton from "../Buttons/BorderButton";
 import Header from "../Header/Header";
 import { Link } from "react-router-dom";
 import LabelComponent from "./LabelComponent";
+import AuthContext from "../../context/AuthContext";
 
 type FormData = {
   firstName: string;
@@ -23,6 +24,15 @@ const RegisterComponent: React.FC = () => {
     password: "",
   });
 
+  const { register } = useContext(AuthContext);
+
+  const user = {
+    login: formData.email,
+    password: formData.password,
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    email: formData.email,
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -32,9 +42,10 @@ const RegisterComponent: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Formulaire soumis :", formData);
+    await register(user);
   };
 
   return (
