@@ -40,7 +40,7 @@ const entitiesConfig: EntityConfig[] = [
     create: ProductService.createProduct as (data: unknown) => Promise<Product | Error>,
     update: ProductService.updateProduct,
     delete: ProductService.deleteProduct as (id: string) => Promise<Success | Error>,
-    searchColumn: [['name']],
+    searchColumn: [['name'], ['description'], ['category'], ['genre']],
     order: 0,
     columns: [
       {
