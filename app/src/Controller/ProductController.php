@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
+use Symfony\Component\Uid\Ulid;
 
 class ProductController
 {
@@ -33,7 +34,7 @@ class ProductController
     }
 
     #[Route('/products/{id}', name: 'get_product', methods: ['GET'])]
-    public function get(int $id): Response
+    public function get(Ulid $id): Response
     {
         try {
             $product = $this->productService->getProductById($id);
@@ -71,7 +72,7 @@ class ProductController
     }
 
     #[Route('/products/{id}', name: 'update_product', methods: ['PUT'])]
-    public function update(int $id, Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    public function update(Ulid $id, Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
         try {
             $product = $serializer->deserialize($request->getContent(), Product::class, 'json');
@@ -91,12 +92,12 @@ class ProductController
     }
 
     #[Route('/products/{id}', name: 'delete_product', methods: ['DELETE'])]
-    public function delete(int $id): Response
+    public function delete(Ulid $id): Response
     {
         try {
             $this->productService->delete($id);
 
-            return Response::json(null, HttpStatus::NO_CONTENT);
+            return Response::success("Le produit a bien été supprimé.", HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
