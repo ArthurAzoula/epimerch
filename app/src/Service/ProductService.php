@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Ulid;
 
 class ProductService
 {
@@ -22,7 +23,7 @@ class ProductService
         return $this->productRepository->findAll();
     }
 
-    public function getProductById(int $id): ?Product
+    public function getProductById(Ulid $id): ?Product
     {
         return $this->productRepository->find($id);
     }
@@ -35,7 +36,7 @@ class ProductService
         return $product;
     }
 
-    public function update(int $id, Product $product): Product
+    public function update(Ulid $id, Product $product): Product
     {
         $existingProduct = $this->getProductById($id);
 
@@ -53,7 +54,7 @@ class ProductService
         return $existingProduct;
     }
 
-    public function delete(int $id): void
+    public function delete(Ulid $id): void
     {
         $product = $this->getProductById($id);
 

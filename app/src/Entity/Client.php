@@ -57,7 +57,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     private ?Collection $orders = null;
 
 
-    #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'client')]
+    #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'client', cascade: ['persist'])]
     #[Getter, Setter]
     private ?Cart $cart = null;
     
@@ -115,6 +115,13 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
         return $this;
     }
 
+    public function createCart(): self
+    {
+        $this->cart = new Cart();
+        $this->cart->setClient($this);
+        return $this;
+    }
+
     public function getPassword(): ?string
     {
         return $this->password;
@@ -132,7 +139,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
                     'lastname' => $this->lastname,
                     'addresses' => $this->addresses,
                     'orders' => $this->orders,
-                    'cart' => $this->cart,
+                    'cart' => $this->cart->jsonSerialize(),
                     'password' => '********'
                 )
             );

@@ -12,11 +12,11 @@ const LoginComponent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if(user){
-  //     navigate("/");
-  //   }
-  // }, [user, navigate]);
+  useEffect(() => {
+    if(user){
+      navigate("/");
+    }
+  }, [user, navigate]);
   
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);

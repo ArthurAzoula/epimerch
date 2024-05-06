@@ -61,6 +61,8 @@ class AuthController extends AbstractController
       $client->setLogin($params["login"]);
       $client->setFirstname($params["firstname"]);
       $client->setLastname($params["lastname"]);
+      $client->setRoles(["IS_AUTHENTICATED_FULLY"]);
+      $client->createCart();
 
       $hashedPassword = $passwordHasher->hashPassword(
         $client,
