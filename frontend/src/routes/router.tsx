@@ -1,4 +1,3 @@
-// routes/Router.js
 import { BrowserRouter as ReactRouter, Route, Routes} from 'react-router-dom';
 import routes from './config.routes';
 import { useContext } from 'react';

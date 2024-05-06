@@ -25,15 +25,14 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
     fetchAllData();
   }, [entity]);
   
-  function deepSearch(obj: object, path: string[][]) {
+  function deepSearch(obj: {[key: string]: never}, path: string[][]) {
     return path.map((p) => {
-      return p.reduce((acc, key) => acc && acc[key], obj)
+      return p.reduce((acc, key) => acc && acc[key], obj);
     });
   }
   
   useEffect(() => {
     entity.searchColumn
-    console.log('entity.searchColumn:', entity.searchColumn);
     const filtered = data.filter((row) => {
       if(search === '') {
         return true;
