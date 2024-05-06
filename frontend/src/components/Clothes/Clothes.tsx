@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProductService, { Product } from "../../service/product.service";
 import ReactPaginate from "react-paginate";
+import { ShoppingCart } from "lucide-react";
 
 const Clothes = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -49,6 +50,10 @@ const Clothes = () => {
             <p className="text-sm text-gray-500">
               Updated At: {new Date(product.updatedAt).toLocaleDateString()}
             </p>
+            <button className="flex border rounded-full border-black w-min py-2 px-4 hover:bg-black hover:text-white transition-all ease-in-out duration-400">
+              <span>Ajouter</span>
+              <ShoppingCart size={24} className="" />
+            </button>
           </li>
         ))}
       </ul>
@@ -75,7 +80,9 @@ const Clothes = () => {
           activeClassName={
             "bg-neutral-700 text-black relative inline-flex items-center px-4 py-2 border border-neutral-700 text-sm font-medium"
           }
-          pageLinkClassName={"w-full h-full absolute inset-0 flex items-center justify-center"}
+          pageLinkClassName={
+            "w-full h-full absolute inset-0 flex items-center justify-center"
+          }
         />
       </div>
     </div>
