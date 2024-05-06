@@ -27,6 +27,7 @@ services:
         arguments:
             - '%env(MAILER_DSN)%'
 
-    App\Controller\ProductController:
+    App\Controller\:
         tags: ['controller.service_arguments']
         public: true
+        resource: '../src/Controller/'

@@ -28,11 +28,7 @@ class OrderController
         try {
             $orders = $this->orderService->getAll();
 
-            foreach ($orders as $order) {
-                $data[] = $order->jsonSerialize();
-            }
-
-            return Response::json($data, HttpStatus::OK);
+            return Response::json($orders, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

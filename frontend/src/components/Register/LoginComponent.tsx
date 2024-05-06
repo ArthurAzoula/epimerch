@@ -1,12 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import InputComponent from "./InputComponent";
 import BorderButton from "../Buttons/BorderButton";
+import { AuthContext } from '../../context/AuthContext';
 
 const LoginComponent: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { user, login } = useContext(AuthContext);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   if(user){
+  //     navigate("/");
+  //   }
+  // }, [user, navigate]);
+  
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -15,11 +26,20 @@ const LoginComponent: React.FC = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Ajoutez ici la logique de soumission du formulaire
-    console.log("Adresse e-mail:", email);
-    console.log("Mot de passe:", password);
+    
+    if (!email || !password) {
+      setError("Veuillez remplir tous les champs");
+      return;
+    }
+    setError(null);
+    setLoading(true);
+    const result = await login({login: email, password});
+    setLoading(false);
+    if(result){
+      setError("Les identifiants de connexion sont incorrects");
+    }
   };
 
   return (
@@ -31,8 +51,8 @@ const LoginComponent: React.FC = () => {
         <form onSubmit={handleSubmit} className="px-16 py-4">
           <div>
             <InputComponent
-              name="email"
-              typeInput="email"
+              name="login"
+              typeInput="text"
               inputValue={email}
               handleOnChange={handleEmailChange}
               placeholder="Ex: henri@epitech.eu"

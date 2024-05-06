@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ChevronDown, ChevronUp, User, LockOpen, LogOut } from "lucide-react";
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
-type ProfilDropdownProps = {
-  client: {
-    name: string;
-    isAdmin: boolean;
-  };
-};
 
-const ProfilDropdown = ({ client }: ProfilDropdownProps) => {
+const ProfilDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { user, isAdmin, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+  
   return (
     <div className="relative">
       <button onClick={() => setIsOpen(!isOpen)} className="flex items-center">
-        {client.name}
+        {user?.firstname} {user?.lastname}
         {isOpen ? (
           <ChevronUp className="ml-2" />
         ) : (
@@ -29,23 +32,26 @@ const ProfilDropdown = ({ client }: ProfilDropdownProps) => {
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            <button
+            <Link
+              to='/profile'
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               role="menuitem"
             >
               <User size={18} className="mr-3" /> Voir mon profil
-            </button>
-            {client.isAdmin && (
-              <button
+            </Link>
+            {isAdmin && (
+              <Link
+                to='/admin'
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                 role="menuitem"
               >
                 <LockOpen size={18} className="mr-3" /> Administration
-              </button>
+              </Link>
             )}
             <button
               className="flex items-center px-4 py-2 text-sm text-red-700 hover:bg-red-100 w-full text-left"
               role="menuitem"
+              onClick={handleLogout}
             >
               <LogOut size={18} className="mr-3" /> Se déconnecter
             </button>

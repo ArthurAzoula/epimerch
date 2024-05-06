@@ -1,15 +1,12 @@
-import { Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
+import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData } from "./base.service";
 
-export type Product = {
-    id: string;
+export type Product = BaseEntityData & {
     name: string;
-    description: string;
+    description?: string;
     price: number;
-    photo: string;
+    photo?: string;
     category: string;
     genre: string;
-    createdAt: string;
-    updatedAt: string;
 };
 
 const ProductService = {
@@ -22,11 +19,11 @@ const ProductService = {
         return getRequest<Product>(`/products/${id}`);
     },
     
-    async createProduct(data: { name: string; price: number }): Promise<Product | Error> {
+    async createProduct(data: Product): Promise<Product | Error> {
         return postRequest<Product>("/products", data);
     },
     
-    async updateProduct(data: { id: string; name: string; price: number }): Promise<Product | Error> {
+    async updateProduct(data: Product): Promise<Product | Error> {
         return putRequest<Product>("/products", data);
     },
     

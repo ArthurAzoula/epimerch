@@ -26,11 +26,7 @@ class AddressController
         try {
             $addresses = $this->addressService->getAll();
 
-            foreach ($addresses as $address) {
-                $data[] = $address->jsonSerialize();
-            }
-
-            return Response::json($data, HttpStatus::OK);
+            return Response::json($addresses, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

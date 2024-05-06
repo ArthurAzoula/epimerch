@@ -9,6 +9,7 @@
 
 ::-webkit-scrollbar {
   width: 5px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -16,11 +17,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--primary-200);
-  border-radius: 14px;
+  background-color: rgb(150, 150, 150);
   transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--primary-300);
+  background-color: rgb(200, 200, 200);
 }

@@ -38,6 +38,10 @@ const AuthService = {
         return getRequest<User>("/me");
     },
     
+    async isAdmin(): Promise<Success | Error> {
+        return getRequest<Success>("/admin");
+    },
+    
 };
 
 export default AuthService;
