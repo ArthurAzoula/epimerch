@@ -1,8 +1,9 @@
 import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData, Success } from "./base.service";
+import { CartItem } from "./cartitem.service";
 import { Client } from './client.service';
 
 export type Cart = BaseEntityData & {
-    client: Client;
+    cartItems: CartItem[],
 };
 
 const CartService = {
@@ -25,6 +26,14 @@ const CartService = {
     
     async deleteCart(id: string): Promise<Success | Error> {
         return deleteRequest<Success>(`/carts/${id}`);
+    },
+
+    async getProductsFromCart(cartId: string): Promise<CartItem[] | Error> {
+        return getRequest<CartItem[]>(`/carts/${cartId}/products`);
+    },
+
+    async addProductToCart(cartId: string, productId: string, quantity: number): Promise<CartItem | Error> {
+        return postRequest<CartItem>(`/carts/${cartId}/products/${productId}`, { quantity });
     }
     
 };

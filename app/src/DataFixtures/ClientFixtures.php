@@ -26,6 +26,7 @@ class ClientFixtures extends Fixture
         $client->setFirstname('John');
         $client->setLastname('Doe');
         $client->setRoles(['IS_AUTHENTICATED_FULLY']);
+        $client->createCart();
 
         $manager->persist($client);
 
@@ -35,6 +36,7 @@ class ClientFixtures extends Fixture
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin'));
         $admin->setFirstname('Admin');
         $admin->setLastname('Admin');
+        $admin->createCart();
         $admin->setRoles(['ROLE_ADMIN', 'IS_AUTHENTICATED_FULLY']);
         
         $manager->persist($admin);

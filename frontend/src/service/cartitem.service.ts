@@ -3,7 +3,6 @@ import { Cart } from './cart.service';
 import { Product } from './product.service';
 
 export type CartItem = BaseEntityData & {
-    cart: Cart,
     product: Product,
     quantity: number,
 };

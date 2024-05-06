@@ -104,12 +104,12 @@ class Product extends AbstractEntity
     {
         return array_merge(parent::jsonSerialize(),
         array(
-            'name' => $this->getName(),
-            'description' => $this->getDescription(),
-            'photo' => $this->getPhoto(),
-            'price' => $this->getPrice(),
-            'category' => $this->getCategory(),
-            'genre' => $this->getGenre()
+            'name' => $this->name,
+            'description' => $this->description,
+            'photo' => $this->photo,
+            'price' => $this->price,
+            'category' => $this->category,
+            'genre' => $this->genre
         ));
     }
 }
