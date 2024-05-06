@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import AuthService, { Login, User, Register } from '../service/auth.service';
 
-export type AuthUser = User & {isAdmin: boolean};
-
 export const AuthContext = React.createContext<{
-  user: AuthUser | null, 
+  user: User | null,
+  isAdmin: boolean,
   refreshUser: () => Promise<boolean>,
   register: (user: Register) => Promise<boolean>,
   login: (user: Login) => Promise<boolean>,
   logout: () => Promise<boolean>,
 }>({
   user : null,
+  isAdmin: false,
   refreshUser: async () => false,
   register: async () => false,
   login: async () => false,
@@ -18,22 +18,32 @@ export const AuthContext = React.createContext<{
 });
 
 const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element => {
-  const [user, setUser] = React.useState<AuthUser | null>(null);
+  const [user, setUser] = React.useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
   
   useEffect(() => {
     refreshUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   async function refreshUser() {
     return await AuthService.getUser().then((response) => {
       if ("error" in response) {
         setUser(null);
+        setIsAdmin(false);
         return false;
       } else {
-        setUser(response as AuthUser);
+        setUser(response as User);
+        refreshAdmin();
         return true;
       }
     });
+  }
+  
+  async function refreshAdmin() {
+    return await AuthService.isAdmin().then((response) => {
+      setIsAdmin("success" in response);
+    })
   }
   
   async function register(user: Register) {
@@ -58,7 +68,7 @@ const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element 
   }
   
   return (
-    <AuthContext.Provider value={{user: user, refreshUser: refreshUser, register: register, login: login, logout: logout}}>
+    <AuthContext.Provider value={{user: user, isAdmin: isAdmin, refreshUser: refreshUser, register: register, login: login, logout: logout}}>
       {children}
     </AuthContext.Provider>
   );

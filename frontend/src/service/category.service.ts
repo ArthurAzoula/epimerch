@@ -1,10 +1,7 @@
-import { Error, getRequest, postRequest, putRequest, deleteRequest } from "./base.service";
+import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData } from "./base.service";
 
-export type Category = {
-    id: string;
+export type Category = BaseEntityData & {
     name: string;
-    createdAt: string;
-    updatedAt: string;
 };
 
 const CategoryService = {
@@ -17,12 +14,12 @@ const CategoryService = {
           return getRequest<Category>(`/categories/${id}`);
       },
       
-      async createCategory(data: { name: string }): Promise<Category | Error> {
+      async createCategory(data: Category): Promise<Category | Error> {
           return postRequest<Category>("/categories", data);
       },
       
-      async updateCategory(data: { id: string; name: string }): Promise<Category | Error> {
-          return putRequest<Category>("/categories", data);
+      async updateCategory(id: string, data: Category): Promise<Category | Error> {
+          return putRequest<Category>(`/categories/${id}`, data);
       },
       
       async deleteCategory(id: string): Promise<Category | Error> {

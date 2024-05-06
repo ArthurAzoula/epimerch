@@ -1,19 +1,19 @@
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
 import { ShoppingCart, Search } from "lucide-react";
 import MenuButtonComponent from "../Buttons/MenuButtonComponent";
 import LoginButton from "../Buttons/LoginButton";
 import { Link } from "react-router-dom";
 import ProfilDropdown from "./ProfilDropdown";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from '../../context/AuthContext';
 
 const Header = () => {
   const [activeMenu, setActiveMenu] = useState("");
-
   const { user } = useContext(AuthContext);
-
+  
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
   };
+  
   return (
     <header className="flex border-b-black border pb-4 pt-4 sticky bg-white top-0">
       <div className="flex w-1/3 justify-center items-center">
@@ -73,7 +73,7 @@ const Header = () => {
       </div>
       <div className="flex w-1/3 items-center justify-end gap-10 pr-8">
         {user ? (
-          <ProfilDropdown client={{ name: "Arthur Azoula", isAdmin: true }} />
+          <ProfilDropdown />
         ) : (
           <LoginButton className="hover:bg-black hover:text-white  transition-all ease-in-out duration-300" />
         )}
