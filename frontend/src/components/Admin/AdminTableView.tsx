@@ -90,8 +90,8 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
       </div>
       <div className='mt-auto flex justify-center'>
         <ReactPaginate
-          previousLabel={"Previous"}
-          nextLabel={"Next"}
+          previousLabel={"Avant"}
+          nextLabel={"Après"}
           breakLabel={"..."}
           breakClassName={"break-me"}
           pageCount={Math.ceil(data.length / 20)}
@@ -109,8 +109,9 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
             "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
           }
           activeClassName={
-            "bg-neutral-700 text-white relative inline-flex items-center px-4 py-2 border border-neutral-700 text-sm font-medium"
+            "bg-neutral-700 text-black relative inline-flex items-center px-4 py-2 border border-neutral-700 text-sm font-medium"
           }
+          pageLinkClassName={"w-full h-full absolute inset-0 flex items-center justify-center"}
         />
       </div>
     </div>

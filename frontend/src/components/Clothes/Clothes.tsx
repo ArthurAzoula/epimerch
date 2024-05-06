@@ -54,8 +54,8 @@ const Clothes = () => {
       </ul>
       <div className="flex w-full justify-center items-center my-10">
         <ReactPaginate
-          previousLabel={"Previous"}
-          nextLabel={"Next"}
+          previousLabel={"Avant"}
+          nextLabel={"Après"}
           breakLabel={"..."}
           breakClassName={"break-me"}
           pageCount={Math.ceil(products.length / productsPerPage)}
@@ -73,8 +73,9 @@ const Clothes = () => {
             "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
           }
           activeClassName={
-            "bg-neutral-700 text-white relative inline-flex items-center px-4 py-2 border border-neutral-700 text-sm font-medium"
+            "bg-neutral-700 text-black relative inline-flex items-center px-4 py-2 border border-neutral-700 text-sm font-medium"
           }
+          pageLinkClassName={"w-full h-full absolute inset-0 flex items-center justify-center"}
         />
       </div>
     </div>
