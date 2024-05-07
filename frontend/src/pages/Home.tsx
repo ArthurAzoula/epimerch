@@ -1,10 +1,12 @@
 import Header from "../components/Header/HeaderHomepage";
+import Pictures from "../components/Home/Pictures";
 
 const Home = () => {
   return (
-      <>
-          <Header />
-      </>
+    <>
+      <Header />
+      <Pictures />
+    </>
   );
 };
 
