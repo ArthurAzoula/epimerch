@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { CartContext } from "../../context/CartContext";
 import { AuthContext } from "../../context/AuthContext";
+import { useLocation } from "react-router-dom";
 
 const Clothes = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,17 +19,38 @@ const Clothes = () => {
   const productsPerPage = 10;
 
   const { addProductToCart } = useContext(CartContext);
-
   const { user } = useContext(AuthContext);
+
+  const location = useLocation();
 
   useEffect(() => {
     const fetchAllProducts = async () => {
+      const params = new URLSearchParams(location.search);
+      const category = params.get("category");
+      const genre = params.get("genre");
       const response = await ProductService.getProducts();
-      setProducts(response as Product[]);
+
+      if (Array.isArray(response)) {
+        let filteredProducts = response;
+
+        if (category) {
+          filteredProducts = filteredProducts.filter(
+            (product) => product.category === category
+          );
+        }
+
+        if (genre) {
+          filteredProducts = filteredProducts.filter(
+            (product) => product.genre === genre
+          );
+        }
+
+        setProducts(filteredProducts);
+      }
     };
 
     fetchAllProducts();
-  }, []);
+  }, [location.search]);
 
   const handlePageClick = (data: any) => {
     let selected = data.selected;
@@ -76,9 +98,7 @@ const Clothes = () => {
                 </div>
               </div>
               <div className="w-full flex justify-between items-center mt-3">
-                <p className="text-2xl mb-2">
-                  {product.price}€
-                </p>
+                <p className="text-2xl mb-2">{product.price}€</p>
                 <button
                   onClick={() => addProductToCart(product.id, 1)}
                   className="group flex gap-2 border rounded border-black py-2 px-4 hover:bg-black hover:text-white transition-all ease-in-out duration-400"

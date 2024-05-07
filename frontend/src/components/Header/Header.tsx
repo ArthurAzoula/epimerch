@@ -4,17 +4,17 @@ import MenuButtonComponent from "../Buttons/MenuButtonComponent";
 import LoginButton from "../Buttons/LoginButton";
 import { Link } from "react-router-dom";
 import ProfilDropdown from "./ProfilDropdown";
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from "../../context/AuthContext";
 import CartButton from "../Cart/CartButton";
 
 const Header = () => {
   const [activeMenu, setActiveMenu] = useState("");
   const { user } = useContext(AuthContext);
-  
+
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
   };
-  
+
   return (
     <header className="flex border-b-black border pb-4 pt-4 sticky bg-white top-0">
       <div className="flex w-1/3 justify-center items-center">
@@ -56,20 +56,20 @@ const Header = () => {
             uppercase={false}
           />
 
-          <MenuButtonComponent
-            handleMenuClick={() => handleMenuClick("explore")}
-            menuTitle="Explore"
-            activeMenu={activeMenu}
-            setActiveMenu={setActiveMenu}
-            uppercase={false}
-          />
+          <Link to="/clothes">
+            <MenuButtonComponent
+              handleMenuClick={() => handleMenuClick("explore")}
+              menuTitle="Explore"
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
+              uppercase={false}
+            />
+          </Link>
         </ul>
       </div>
       <div className="flex justify-center w-1/3">
         <h1 className="flex items-center justify-center uppercase text-3xl font-bold tracking-[0.7rem]">
-          <Link to={"/"}>
-            Epimerch
-          </Link>
+          <Link to={"/"}>Epimerch</Link>
         </h1>
       </div>
       <div className="flex w-1/3 items-center justify-end gap-10 pr-8">
