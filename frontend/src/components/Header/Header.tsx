@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ShoppingCart, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import MenuButtonComponent from "../Buttons/MenuButtonComponent";
 import LoginButton from "../Buttons/LoginButton";
 import { Link } from "react-router-dom";
@@ -14,7 +14,7 @@ const Header = () => {
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
   };
-
+  
   return (
     <header className="flex border-b-black border pb-4 pt-4 sticky bg-white top-0">
       <div className="flex w-1/3 justify-center items-center">
@@ -25,6 +25,16 @@ const Header = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
             uppercase={false}
+            categorie={[
+              "shirt",
+              "hat",
+              "skirt",
+              "dress",
+              "shorts",
+              "accessories",
+              "other",
+            ]}
+            genre=""
           />
           <MenuButtonComponent
             handleMenuClick={() => handleMenuClick("city")}
@@ -32,21 +42,55 @@ const Header = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
             uppercase={false}
+            categorie={[
+              "shirt",
+              "hat",
+              "skirt",
+              "dress",
+              "shorts",
+              "accessories",
+              "other",
+            ]}
+            genre=""
           />
-          <MenuButtonComponent
-            handleMenuClick={() => handleMenuClick("woman")}
-            uppercase={false}
-            menuTitle="Femme"
-            activeMenu={activeMenu}
-            setActiveMenu={setActiveMenu}
-          />
-          <MenuButtonComponent
-            handleMenuClick={() => handleMenuClick("man")}
-            menuTitle="Homme"
-            activeMenu={activeMenu}
-            setActiveMenu={setActiveMenu}
-            uppercase={false}
-          />
+          <Link to="/clothes?genre=female">
+            <MenuButtonComponent
+              handleMenuClick={() => handleMenuClick("woman")}
+              uppercase={false}
+              menuTitle="Femme"
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
+              categorie={[
+                "shirt",
+                "hat",
+                "skirt",
+                "dress",
+                "shorts",
+                "accessories",
+                "other",
+              ]}
+              genre="female"
+            />
+          </Link>
+          <Link to="/clothes?genre=male">
+            <MenuButtonComponent
+              handleMenuClick={() => handleMenuClick("man")}
+              menuTitle="Homme"
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
+              uppercase={false}
+              categorie={[
+                "shirt",
+                "hat",
+                "skirt",
+                "dress",
+                "shorts",
+                "accessories",
+                "other",
+              ]}
+              genre="male"
+            />
+          </Link>
 
           <MenuButtonComponent
             handleMenuClick={() => handleMenuClick("couture")}
@@ -54,6 +98,16 @@ const Header = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
             uppercase={false}
+            categorie={[
+              "shirt",
+              "hat",
+              "skirt",
+              "dress",
+              "shorts",
+              "accessories",
+              "other",
+            ]}
+            genre=""
           />
 
           <Link to="/clothes">
@@ -63,6 +117,16 @@ const Header = () => {
               activeMenu={activeMenu}
               setActiveMenu={setActiveMenu}
               uppercase={false}
+              categorie={[
+                "shirt",
+                "hat",
+                "skirt",
+                "dress",
+                "shorts",
+                "accessories",
+                "other",
+              ]}
+              genre=""
             />
           </Link>
         </ul>

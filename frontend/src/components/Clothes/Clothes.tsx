@@ -4,10 +4,7 @@ import ReactPaginate from "react-paginate";
 import {
   ShoppingCart,
   Tag,
-  Calendar,
   User,
-  Info,
-  PlusIcon,
 } from "lucide-react";
 import { CartContext } from "../../context/CartContext";
 import { AuthContext } from "../../context/AuthContext";
@@ -53,7 +50,7 @@ const Clothes = () => {
   }, [location.search]);
 
   const handlePageClick = (data: any) => {
-    let selected = data.selected;
+    const selected = data.selected;
     setCurrentPage(selected);
   };
 
