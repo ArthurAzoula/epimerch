@@ -48,12 +48,12 @@ const OrderPage = () => {
                         description: orderItem.product.description,
                         images: [orderItem.product.photo],
                     },
-                    unit_amount: orderItem.product.price * 100,
+                    unit_amount: orderItem.product.price* 100,
                 },
                 quantity: orderItem.quantity,
             })),
-            success_url: "http://localhost:3000/orders",
-            cancel_url: "http://localhost:3000/orders",
+            success_url: "http://localhost:5173/orders",
+            cancel_url: "http://localhost:5173/orders",
         })
 
         window.location.href = session.url as string;
