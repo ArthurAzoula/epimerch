@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import OrderService, { Order } from "../service/order.service";
 import Header from "../components/Header/Header";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ShoppingCart,
   Calendar,
@@ -10,6 +10,7 @@ import {
   Info,
   ArrowRight,
 } from "lucide-react";
+import { Location } from "react-router-dom";
 
 const OrdersPage = () => {
   const { user } = useContext(AuthContext);
@@ -27,7 +28,9 @@ const OrdersPage = () => {
     fetchOrders();
   }, []);
 
-  console.log(orders);
+  const location = useLocation();
+
+  const orderId = location?.state?.orderId ?? null;
 
   return (
     <>
@@ -38,11 +41,21 @@ const OrdersPage = () => {
           Résumé de tes commandes ({orders.length})
         </h1>
         {orders.map((order) => (
-          <div key={order.id} className="border p-4 mb-4 rounded shadow">
+          <div
+            key={order.id}
+            className={`border p-4 mb-4 rounded shadow ${
+              order.id === orderId ? "bg-orange-100" : ""
+            }`}
+          >
             <div className="flex items-start justify-between">
               <h2 className="flex items-center text-lg font-regular mb-2">
                 <Info size={18} className="inline-block mr-2" />
                 Numéro de commande: {order.id}
+                {order.id === orderId && (
+                  <span className="ml-2 inline-block bg-green-500 text-white px-2 py-1 rounded text-xs">
+                    Nouveau
+                  </span>
+                )}
               </h2>
               <p>
                 {new Date(order.createdAt.date).toLocaleDateString("fr-FR", {
@@ -52,7 +65,6 @@ const OrdersPage = () => {
                 })}
               </p>
             </div>
-
             <p
               className={`${order.isPaid ? "text-green-400" : "text-red-400"}`}
             >
@@ -66,7 +78,7 @@ const OrdersPage = () => {
                 Total: {order.totalPrice}€
               </p>
               <Link
-                state={ order }
+                state={order}
                 to={`/orders/${order.id}`}
                 className="mt-2 inline-block  text-black border border-black hover:text-white hover:bg-black transition-all ease-in-out duration-300 px-4 py-2 rounded items-center"
               >
