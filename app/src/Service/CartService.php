@@ -151,7 +151,7 @@ class CartService
         $this->entityManager->flush();
     }
 
-    public function validateCart(Ulid $cartId, Client $client): Cart
+    public function validateCart(Ulid $cartId, Client $client): Ulid
     {
         $cart = $this->getCartById($cartId);
 
@@ -179,6 +179,6 @@ class CartService
 
         $this->entityManager->flush();
 
-        return $cart;
+        return $order->getId();
     }
 }

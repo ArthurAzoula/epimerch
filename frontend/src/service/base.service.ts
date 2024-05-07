@@ -22,7 +22,7 @@ export function getRequest<T>(url: string): Promise<T | Error> {
   });
 }
 
-export function postRequest<T>(url: string, data: unknown): Promise<T | Error> {
+export function postRequest<T>(url: string, data?: unknown): Promise<T | Error> {
   return instance.post(url, data).then((response) => response.data).catch((error) => {
     console.error(error);
     return { error: error.message };

@@ -3,18 +3,22 @@
 namespace App\Service;
 
 use App\Entity\Order;
+use App\Repository\OrderItemRepository;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Ulid;
 
 class OrderService
 {
     private OrderRepository $orderRepository;
+    private OrderItemRepository $orderItemRepository;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(OrderRepository $orderRepository, EntityManagerInterface $entityManager)
+    public function __construct(OrderRepository $orderRepository, EntityManagerInterface $entityManager, OrderItemRepository $orderItemRepository)
     {
         $this->orderRepository = $orderRepository;
         $this->entityManager = $entityManager;
+        $this->orderItemRepository = $orderItemRepository;
     }
 
     public function getAll(): ?array
@@ -22,9 +26,19 @@ class OrderService
         return $this->orderRepository->findAll();
     }
 
-    public function getOrderById(int $id): ?Order
+    public function getOrderById(Ulid $id): ?Order
     {
         return $this->orderRepository->find($id);
+    }
+
+    public function getOrdersByClient(Ulid $clientId): ?array
+    {
+        return $this->orderRepository->getOrdersByClient($clientId);
+    }
+    
+    public function getProductsByOrder(Ulid $orderId): ?array
+    {
+        return $this->orderItemRepository->getProductsByOrder($orderId);
     }
 
     public function create(Order $order): Order
@@ -35,7 +49,7 @@ class OrderService
         return $order;
     }
 
-    public function update(int $id, Order $order): Order
+    public function update(Ulid $id, Order $order): Order
     {
         $existingOrder = $this->getOrderById($id);
 
@@ -52,7 +66,7 @@ class OrderService
         return $existingOrder;
     }
 
-    public function delete(int $id): void
+    public function delete(Ulid $id): void
     {
         $order = $this->getOrderById($id);
 
