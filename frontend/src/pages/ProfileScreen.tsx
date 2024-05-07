@@ -11,7 +11,7 @@ const ProfileScreen = () => {
     lastname: user?.lastname || "",
     login: user?.login || "",
     email: user?.email || "",
-    password: user?.password || ""
+    password: ""
   });
 
   const handleEditUser = (field: string, value: string) => {

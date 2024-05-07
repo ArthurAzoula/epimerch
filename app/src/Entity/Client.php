@@ -52,7 +52,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     #[Getter, Setter]
     private ?Collection $addresses = null;
 
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client')]
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client', cascade: ['persist'])]
     #[Getter, Setter]
     private ?Collection $orders = null;
 
@@ -77,7 +77,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     {
         if (!$this->addresses->contains($address)) {
             $this->addresses[] = $address;
-            $address->setUser($this);
+            $address->setClient($this);
         }
 
         return $this;
@@ -87,7 +87,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     {
         if ($this->addresses->removeElement($address)) {
             if ($address->getUser() === $this) {
-                $address->setUser(null);
+                $address->setClient(null);
             }
         }
 
@@ -98,7 +98,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     {
         if (!$this->orders->contains($order)) {
             $this->orders[] = $order;
-            $order->setUser($this);
+            $order->setClient($this);
         }
 
         return $this;
@@ -108,7 +108,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     {
         if ($this->orders->removeElement($order)) {
             if ($order->getUser() === $this) {
-                $order->setUser(null);
+                $order->setClient(null);
             }
         }
 
