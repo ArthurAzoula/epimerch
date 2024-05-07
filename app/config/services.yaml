@@ -31,3 +31,7 @@ services:
         tags: ['controller.service_arguments']
         public: true
         resource: '../src/Controller/'
+
+    App\Repository\:
+        resource: '../src/Repository/'
+        tags: ['doctrine.repository_service']

@@ -59,7 +59,7 @@ abstract class AbstractEntity extends \Lombok\Helper implements JsonSerializable
             'id' => $this->id,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'deletedAt' => $this->deletedAt
+            'deletedAt' => $this->deletedAt ? $this->deletedAt->format(DateTime::ATOM) : null
         );
     }
 }

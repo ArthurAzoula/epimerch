@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Cart;
 use App\Service\CartService;
 use App\Service\ClientService;
+use App\Service\OrderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,10 +20,12 @@ class CartController extends AbstractController
 {
 
     private CartService $cartService;
+    private OrderService $orderService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, OrderService $orderService)
     {
         $this->cartService = $cartService;
+        $this->orderService = $orderService;
     }
 
     #[Route('/carts/validate', name: 'validate_cart', methods: ['POST'])]
@@ -40,9 +43,9 @@ class CartController extends AbstractController
             
             $cartId = Ulid::fromString($client->getCart()->getId());
 
-            $order = $this->cartService->validateCart($cartId, $client);
+            $orderId = $this->cartService->validateCart($cartId, $client);
 
-            return Response::json($order->jsonSerialize(), HttpStatus::CREATED);
+            return Response::json($orderId->jsonSerialize(), HttpStatus::CREATED);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

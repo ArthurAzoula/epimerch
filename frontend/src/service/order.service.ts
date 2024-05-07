@@ -1,5 +1,6 @@
 import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData, Success } from "./base.service";
 import { Client } from './client.service';
+import { OrderItem } from "./orderitem.service";
 
 export type Order = BaseEntityData & {
   totalPrice: number,
@@ -27,6 +28,14 @@ const OrderService = {
     
     async deleteOrder(id: string): Promise<Success | Error> {
         return deleteRequest<Success>(`/orders/${id}`);
+    },
+
+    async getOrdersByClientId(clientId: string): Promise<Order[] | Error> {
+        return getRequest<Order[]>(`/orders/clients/${clientId}`);
+    },
+
+    async getOrderItems(orderId: string): Promise<OrderItem[] | Error> {
+        return getRequest<OrderItem[]>(`/orders/${orderId}/products`);
     }
     
 };

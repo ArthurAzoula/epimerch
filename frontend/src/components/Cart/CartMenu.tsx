@@ -1,14 +1,15 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CartContext } from "../../context/CartContext";
 import { AuthContext } from "../../context/AuthContext";
 import {
-  ShoppingCart,
   DollarSign,
   Box,
   PlusIcon,
   MinusIcon,
   XIcon,
 } from "lucide-react";
+import CartService from "../../service/cart.service";
+import { useNavigate } from "react-router-dom";
 
 const CartMenu = () => {
   const { cartItems, updateQuantity, removeItem } = useContext(CartContext);
@@ -20,6 +21,18 @@ const CartMenu = () => {
       0
     );
   };
+
+  let navigate = useNavigate();
+
+  const handleButtonClick = async () => {
+    const response = await CartService.validateCart();
+    
+    if (response) {
+        navigate(`/orders/${response}`,  {
+            state: { orderId: response }
+        });
+    }
+  }
 
   return (
     <div className="absolute right-0 w-96 mt-2 py-2 bg-white border rounded shadow-lg">
@@ -76,7 +89,7 @@ const CartMenu = () => {
       )}
       <div className="flex justify-between items-center px-4 py-2">
         <p className="text-lg font-semibold">Total: ${getTotal()}</p>
-        <button className="border border-solid border-black py-1 px-2 rounded hover:bg-black hover:text-white transition-all ease-in-out duration-300">
+        <button onClick={handleButtonClick} className="border border-solid border-black py-1 px-2 rounded hover:bg-black hover:text-white transition-all ease-in-out duration-300">
           Valider le panier
         </button>
       </div>

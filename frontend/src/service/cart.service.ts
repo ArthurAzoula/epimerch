@@ -1,6 +1,7 @@
 import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData, Success } from "./base.service";
 import { CartItem } from "./cartitem.service";
 import { Client } from './client.service';
+import { Order } from "./order.service";
 
 export type Cart = BaseEntityData & {
     cartItems: CartItem[],
@@ -42,7 +43,11 @@ const CartService = {
 
     async removeProductFromCart(productId: string): Promise<Success | Error> {
         return deleteRequest<Success>(`/carts/${productId}`);
-    }
+    },
+
+    async validateCart(): Promise<Order | Error> {
+        return postRequest<Order>("/carts/validate");
+    },
     
 };
 

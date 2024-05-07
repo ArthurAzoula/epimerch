@@ -1,19 +1,25 @@
 import React, { useContext, useState } from "react";
-import { ChevronDown, ChevronUp, User, LockOpen, LogOut } from "lucide-react";
-import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
-
+import {
+  ChevronDown,
+  ChevronUp,
+  User,
+  LockOpen,
+  LogOut,
+  Box,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const ProfilDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, isAdmin, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
-  
+
   return (
     <div className="relative">
       <button onClick={() => setIsOpen(!isOpen)} className="flex items-center">
@@ -33,15 +39,22 @@ const ProfilDropdown = () => {
             aria-labelledby="options-menu"
           >
             <Link
-              to='/profile'
+              to="/profile"
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               role="menuitem"
             >
               <User size={18} className="mr-3" /> Voir mon profil
             </Link>
+            <Link
+              to="/orders"
+              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              role="menuitem"
+            >
+              <Box size={18} className="mr-3" /> Mes commandes
+            </Link>
             {isAdmin && (
               <Link
-                to='/admin'
+                to="/admin"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                 role="menuitem"
               >
