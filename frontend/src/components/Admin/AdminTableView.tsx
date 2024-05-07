@@ -4,6 +4,7 @@ import { EntityConfig } from '../../config/entities.config';
 import { Pen, PlusCircleIcon, TrashIcon } from 'lucide-react';
 import AdminTableCell from './AdminTableCell';
 import Modal from '../Modal/Modal';
+import AdminModal from './AdminModal';
 
 const limit = 20;
 
@@ -12,7 +13,7 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
   const [filteredData, setFilteredData] = useState<[]>([]);
   const [search, setSearch] = useState<string>('');
   const [page, setPage] = useState<number>(0);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modal, setModal] = useState<{show: boolean, defaultValue: object, type: 'create' | 'update'}>({show: false, defaultValue: {}, type: 'create'});
   
   useEffect(() => {
     setData([]);
@@ -57,8 +58,16 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
     setSearch(event.target.value);
   }
   
-  const handleShowModal = () => {
-    setShowModal(v => !v);
+  const handleShowModal = (defaultValue?: object, type : 'create' | 'update' = 'create') => {
+    setModal(v => ({
+      show: !v.show,
+      defaultValue: defaultValue ?? {},
+      type: type
+    }));
+  }
+  
+  const handleCreate = (e: React.FormEvent<Element>) => {
+    e.preventDefault();
   }
   
   return (
@@ -123,14 +132,14 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
           pageLinkClassName={"w-full h-full absolute inset-0 flex items-center justify-center"}
         />
       </div>
-      <Modal showModal={showModal} handleShowModal={handleShowModal} title={`Créer`}>
-        <div>
-          <h2>Modal</h2>
-        </div>
-        <div>
-          <p>Modal content</p>
-        </div>
-      </Modal>
+      <AdminModal 
+        type={modal.type}
+        handleShowModal={handleShowModal}
+        showModal={modal.show}
+        handleSubmit={handleCreate}
+        columnsConfig={entity.columns}
+        defaultValue={modal.defaultValue}
+      />
     </div>
   );
 };

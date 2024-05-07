@@ -5,7 +5,7 @@ const AdminTableCell = ({type, value}: {type: string, value: string | object}) =
     <>
       {
         value === null ? <span className='text-red-500 font-semibold'>VIDE</span>
-        : type === 'datetime' ? <span>{new Date((value as {date: string})?.date).toLocaleString()}</span>
+        : type === 'date' ? <span>{new Date((value as {date: string})?.date).toLocaleString()}</span>
         : <span>{String(value)}</span>
       }
     </>

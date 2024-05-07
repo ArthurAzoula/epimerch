@@ -116,7 +116,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: 'createdAt',
         display: 'Created At',
-        type: 'datetime',
+        type: 'date',
         order: 8,
         editable: false,
         required: true,
@@ -125,7 +125,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: 'updatedAt',
         display: 'Updated At',
-        type: 'datetime',
+        type: 'date',
         order: 9,
         editable: false,
         required: true,
@@ -134,7 +134,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: 'deletedAt',
         display: 'Deleted At',
-        type: 'datetime',
+        type: 'date',
         order: 10,
         editable: false,
         required: false,
@@ -205,7 +205,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 6,
         editable: false,
         required: true,
@@ -214,7 +214,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 7,
         editable: false,
         required: true,
@@ -223,7 +223,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 8,
         editable: false,
         required: false,
@@ -264,7 +264,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 2,
         editable: false,
         required: true,
@@ -273,7 +273,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 3,
         editable: false,
         required: true,
@@ -282,7 +282,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 4,
         editable: false,
         required: false,
@@ -343,7 +343,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 5,
         editable: false,
         required: true,
@@ -352,7 +352,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 6,
         editable: false,
         required: true,
@@ -361,7 +361,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 7,
         editable: false,
         required: false,
@@ -432,7 +432,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 7,
         editable: false,
         required: true,
@@ -441,7 +441,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 8,
         editable: false,
         required: true,
@@ -450,7 +450,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 9,
         editable: false,
         required: false,
@@ -511,7 +511,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 5,
         editable: false,
         required: true,
@@ -520,7 +520,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 6,
         editable: false,
         required: true,
@@ -529,7 +529,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 7,
         editable: false,
         required: false,
@@ -620,7 +620,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 8,
         editable: false,
         required: true,
@@ -629,7 +629,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 9,
         editable: false,
         required: true,
@@ -638,7 +638,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 10,
         editable: false,
         required: false,

@@ -5,13 +5,13 @@ const Modal = ({children, title, showModal, handleShowModal}: {children: JSX.Ele
   return (
     <>
       {showModal &&
-        <div className='fixed top-0 left-0 z-40 bg-gray-950 bg-opacity-50 flex justify-center items-center h-screen w-screen' onClick={handleShowModal}>
-          <div className='bg-white pointer-events-auto p-2 rounded-full flex justify-between' onClick={(e) => {e.stopPropagation()}}>
-            <div>
-              <h2>{title}</h2>
-              <button onClick={handleShowModal}><XIcon /></button>
+        <div className='fixed top-0 left-0 z-20 bg-gray-950 bg-opacity-70 flex justify-center items-center h-screen w-screen' onClick={handleShowModal}>
+          <div className='bg-white pointer-events-auto rounded-md flex justify-between flex-col' onClick={(e) => {e.stopPropagation()}}>
+            <div className='flex justify-between items-center border-b border-black p-4 gap-24'>
+              <h2 className='text-xl font-semibold'>{title}</h2>
+              <button onClick={handleShowModal}><XIcon className='hover:scale-110 transition-all' /></button>
             </div>
-            <div>
+            <div className='p-4'>
               {children}
             </div>
           </div>
