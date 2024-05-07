@@ -3,9 +3,12 @@
 namespace App\Service;
 
 use App\Entity\Cart;
+use App\Entity\Order;
+use App\Entity\OrderItem;
 use App\Repository\CartRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\CartItem;
+use App\Entity\Client;
 use App\Entity\Product;
 use App\Repository\CartItemRepository;
 use App\Repository\ProductRepository;
@@ -69,7 +72,7 @@ class CartService
         $cartItem->setPrice($product->getPrice());
 
 
-        $cart->addCartItem($cartItem);  
+        $cart->addCartItem($cartItem);
 
         $this->entityManager->persist($cartItem);
         $this->entityManager->flush();
@@ -107,7 +110,7 @@ class CartService
             throw new \Exception("Cart with id $id not found");
         }
 
-        $existingCart->setUser($cart->getUser());
+        $existingCart->setClient($cart->getClient());
         $existingCart->setTotalAmount($cart->getTotalAmount());
 
         $this->entityManager->flush();
@@ -145,7 +148,37 @@ class CartService
         }
 
         $this->entityManager->remove($cart);
-        $this->entityManager->flush();   
+        $this->entityManager->flush();
+    }
+
+    public function validateCart(Ulid $cartId, Client $client): Cart
+    {
+        $cart = $this->getCartById($cartId);
+
+        if ($cart === null) {
+            throw new \Exception("Cart with id $cartId not found");
+        }
+
+        $order = new Order();
+
+        foreach ($cart->getCartItems() as $cartItem) {
+            $orderItem = new OrderItem();
+            $orderItem->setProduct($cartItem->getProduct());
+            $orderItem->setQuantity($cartItem->getQuantity());
+            $orderItem->setPrice($cartItem->getPrice());
+            $orderItem->setTotal($cartItem->getPrice() * $cartItem->getQuantity());
+            $order->addOrderItem($orderItem);
+            $order->setTotalPrice($order->getTotalPrice() + $orderItem->getTotal());
+        }
+
+        $client->addOrder($order);
+
+        $order->setClient($client);
+
+        $this->entityManager->persist($order);
+
+        $this->entityManager->flush();
+
+        return $cart;
     }
 }
-

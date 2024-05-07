@@ -25,6 +25,29 @@ class CartController extends AbstractController
         $this->cartService = $cartService;
     }
 
+    #[Route('/carts/validate', name: 'validate_cart', methods: ['POST'])]
+    public function validateCart(ClientService $clientService): Response
+    {
+        try {
+
+            $mail = $this->getUser()->getUserIdentifier();
+
+            $client = $clientService->getClientByEmail($mail);
+
+            if (!$client) {
+                return Response::error("Cet utilisateur n'existe pas", HttpStatus::NOT_FOUND);
+            }
+            
+            $cartId = Ulid::fromString($client->getCart()->getId());
+
+            $order = $this->cartService->validateCart($cartId, $client);
+
+            return Response::json($order->jsonSerialize(), HttpStatus::CREATED);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+
     #[Route('/carts/{productId}', name: 'add_product_to_cart', methods: ['POST'])]
     public function addProduct($productId, Request $request, ClientService $clientService, SerializerInterface $serializer, ValidatorInterface $validator): Response
     {
