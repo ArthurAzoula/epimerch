@@ -1,32 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Modal from '../Modal/Modal';
 import { EntityColumnConfig } from '../../config/entities.config';
 import AdminModalInput from './AdminModalInput';
 
 type AdminModalProps = {
   type: 'create' | 'update';
-  defaultValue: object;
+  defaultValue: {[key: string]: string | number | readonly string[] | undefined};
   handleSubmit: (e: React.FormEvent) => void;
   showModal: boolean;
   handleShowModal: () => void;
   columnsConfig: EntityColumnConfig[];
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const AdminModal = ({type, defaultValue, handleSubmit, showModal,handleShowModal, columnsConfig}: AdminModalProps) => {
-  const [data, setData] = useState(defaultValue ?? {});
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData(d => ({...d, [e.target.name]: e.target.value}));
-  }
-  
+const AdminModal = ({type, defaultValue, handleSubmit, showModal, handleShowModal, columnsConfig, handleChange}: AdminModalProps) => {
   return (
     <Modal title={type === 'create' ? 'Créer' : 'Mise à jour'} showModal={showModal} handleShowModal={handleShowModal}>
       <form className='flex flex-col gap-16' onSubmit={handleSubmit}>
         <div className='flex flex-col gap-8'>
           {columnsConfig
-          .filter((col) => type === 'update' || col.editable)
+          .filter(c => type === 'update' || c.editable)
           .map((col) => (
-            <AdminModalInput col={col} handleChange={handleChange}/>
+            <AdminModalInput col={col} handleChange={handleChange} data={defaultValue[col.name]}/>
           ))}
         </div>
         <div className='flex justify-end items-center gap-4'>

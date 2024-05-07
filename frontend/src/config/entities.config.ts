@@ -27,9 +27,11 @@ export type EntityColumnConfig = {
   order: number,
   regex?: string,
   fetch?: () => Promise<unknown | Error>,
+  fetchValue?: string,
   editable: boolean,
   required: boolean
-  unique: boolean
+  unique: boolean,
+  removeFromUpdate?: boolean
 }
 
 const entitiesConfig: EntityConfig[] = [
@@ -96,9 +98,8 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: 'category',
         display: 'Category',
-        type: 'async',
+        type: 'text',
         order: 6,
-        fetch: CategoryService.getCategories,
         editable: true,
         required: true,
         unique: false
@@ -257,6 +258,7 @@ const entitiesConfig: EntityConfig[] = [
         type: "async",
         order: 2,
         fetch: ClientService.getClients,
+        fetchValue: 'email',
         editable: true,
         required: true,
         unique: false
@@ -316,6 +318,7 @@ const entitiesConfig: EntityConfig[] = [
         type: "async",
         order: 2,
         fetch: CartService.getCarts,
+        fetchValue: 'name',
         editable: true,
         required: true,
         unique: false
@@ -326,6 +329,7 @@ const entitiesConfig: EntityConfig[] = [
         type: "async",
         order: 3,
         fetch: ProductService.getProducts,
+        fetchValue: 'name',
         editable: true,
         required: true,
         unique: false
@@ -427,7 +431,8 @@ const entitiesConfig: EntityConfig[] = [
         regex: "^[A-Za-z0-9 ]{1,255}$",
         editable: true,
         required: true,
-        unique: false
+        unique: false,
+        removeFromUpdate: true
       },
       {
         name: "createdAt",
@@ -504,6 +509,7 @@ const entitiesConfig: EntityConfig[] = [
         type: "async",
         order: 4,
         fetch: ClientService.getClients,
+        fetchValue: 'email',
         editable: true,
         required: true,
         unique: false
@@ -600,9 +606,8 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "category",
         display: "Category",
-        type: "async",
+        type: "text",
         order: 6,
-        fetch: CategoryService.getCategories,
         editable: true,
         required: true,
         unique: false
@@ -610,7 +615,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "genre",
         display: "Genre",
-        type: "async",
+        type: "string",
         order: 7,
         regex: "^[A-Za-z0-9 ]{1,255}$",
         editable: true,

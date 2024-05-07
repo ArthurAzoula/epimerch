@@ -66,8 +66,30 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
     }));
   }
   
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setModal(v => ({
+      ...v,
+      defaultValue: {
+        ...v.defaultValue,
+        [e.target.name]: e.target.value
+      }
+    }));
+  }
+  
   const handleCreate = (e: React.FormEvent<Element>) => {
     e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target as HTMLFormElement));
+  }
+  
+  const handleUpdate = (e: React.FormEvent<Element>) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target as HTMLFormElement));
+    
+    for(const key in entity.columns){
+      if(entity.columns[key].removeFromUpdate){
+        delete data[entity.columns[key].name];
+      }
+    }
   }
   
   return (
@@ -89,15 +111,15 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
           </thead>
           <tbody>
             {filteredData.map((row, index) => (
-              <tr key={index}>
+              <tr key={`${row['id']}-${index}`}>
                 {entity.columns.map((column, index) => (
-                  <td key={index} className={`text-nowrap max-w-20 overflow-hidden text-ellipsis px-2 py-2 border border-black ${index == 0 ? 'border-s-0' : ''}`}>
+                  <td key={`${row['id']}-${column.name}`} className={`text-nowrap max-w-20 overflow-hidden text-ellipsis px-2 py-2 border border-black ${index == 0 ? 'border-s-0' : ''}`}>
                     <AdminTableCell type={column.type} value={row[column.name]} />
                   </td>
                 ))}
                 <td className={`w-30 max-w-30 text-ellipsis px-2 py-2 border border-black`}>
                   <div className='flex justify-evenly items-center'>
-                    <button><Pen className='text-blue-700 hover:text-blue-800 transition-all hover:scale-110' size={28} /></button>
+                    <button onClick={() => {handleShowModal(row, 'update')}}><Pen className='text-blue-700 hover:text-blue-800 transition-all hover:scale-110' size={28} /></button>
                     <button><TrashIcon className='text-red-700 hover:text-red-800 transition-all hover:scale-110' size={28}/></button>
                   </div>
                 </td>
@@ -135,10 +157,11 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
       <AdminModal 
         type={modal.type}
         handleShowModal={handleShowModal}
+        handleChange={handleChange}
         showModal={modal.show}
-        handleSubmit={handleCreate}
+        handleSubmit={modal.type === 'create' ? handleCreate : handleUpdate}
         columnsConfig={entity.columns}
-        defaultValue={modal.defaultValue}
+        defaultValue={modal.defaultValue as { [key: string]: string | number | readonly string[] | undefined }}
       />
     </div>
   );
