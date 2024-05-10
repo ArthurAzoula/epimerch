@@ -23,7 +23,7 @@ class Order extends AbstractEntity
     #[Getter, Setter]
     private ?bool $isPaid = false;
 
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order')]
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['persist'])]
     #[Getter, Setter]
     private Collection $orderItems;
 
@@ -96,8 +96,7 @@ class Order extends AbstractEntity
             array(
                 'totalPrice' => $this->totalPrice,
                 'isPaid' => $this->isPaid,
-                'orderItems' => $this->orderItems,
-                'client' => $this->client
+                'orderItems' => $this->orderItems
             )
         );
     }

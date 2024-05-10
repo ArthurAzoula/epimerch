@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Cart;
 use App\Service\CartService;
 use App\Service\ClientService;
+use App\Service\OrderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,10 +20,35 @@ class CartController extends AbstractController
 {
 
     private CartService $cartService;
+    private OrderService $orderService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, OrderService $orderService)
     {
         $this->cartService = $cartService;
+        $this->orderService = $orderService;
+    }
+
+    #[Route('/carts/validate', name: 'validate_cart', methods: ['POST'])]
+    public function validateCart(ClientService $clientService): Response
+    {
+        try {
+
+            $mail = $this->getUser()->getUserIdentifier();
+
+            $client = $clientService->getClientByEmail($mail);
+
+            if (!$client) {
+                return Response::error("Cet utilisateur n'existe pas", HttpStatus::NOT_FOUND);
+            }
+            
+            $cartId = Ulid::fromString($client->getCart()->getId());
+
+            $orderId = $this->cartService->validateCart($cartId, $client);
+
+            return Response::json($orderId->jsonSerialize(), HttpStatus::CREATED);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
     }
 
     #[Route('/carts/{productId}', name: 'add_product_to_cart', methods: ['POST'])]

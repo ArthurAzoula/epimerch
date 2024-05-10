@@ -8,6 +8,8 @@ import RegisterPage from "../pages/RegisterPage";
 import ConnexionPage from "../pages/ConnexionPage";
 import Clothes from "../pages/ClothesPage";
 import AdminPage from '../pages/AdminPage';
+import OrdersPage from "../pages/OrdersPage";
+import OrderPage from "../pages/OrderPage";
 
 type RouteType = {
     path: string;
@@ -55,6 +57,16 @@ const routes: RouteType = [
         path: "/admin",
         requiresAdmin: true,
         component: AdminPage,
+    },
+    {
+        path: "/orders",
+        requiresAuth: true,
+        component: OrdersPage,
+    },
+    {
+        path: "/orders/:id",
+        requiresAuth: true,
+        component: OrderPage,
     },
     {
         path: "/*",

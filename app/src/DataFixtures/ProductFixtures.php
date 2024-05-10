@@ -18,7 +18,7 @@ class ProductFixtures extends Fixture
             $prd->setName('Product ' . $i);
             $prd->setPrice(mt_rand(10, 100));
             $prd->setDescription('Description of product ' . $i);
-            $prd->setPhoto('https://source.unsplash.com/random/?clothing');
+            $prd->setPhoto('https://source.unsplash.com/random/?clothing&unique=' . time() . $i);
             $prd->setCategory(Category::getRandom());
             $prd->setGenre(Genre::getRandom());
             $manager->persist($prd);

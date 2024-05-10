@@ -18,6 +18,7 @@ class OrderController
 {
 
     private OrderService $orderService;
+    
 
     public function __construct(OrderService $orderService)
     {
@@ -50,6 +51,30 @@ class OrderController
             $data = $order->jsonSerialize();
 
             return Response::json($data, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/orders/clients/{id}', name: 'get_users_order', methods: ['GET'])] 
+    public function getOrdersByClient(Ulid $id): Response
+    {
+        try {
+            $orders = $this->orderService->getOrdersByClient($id);
+
+            return Response::json($orders, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/orders/{id}/products', name: 'get_order_products', methods: ['GET'])]
+    public function getProductsByOrder(Ulid $id): Response
+    {
+        try {
+            $products = $this->orderService->getProductsByOrder($id);
+
+            return Response::json($products, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

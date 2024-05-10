@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import CartService from "../../service/cart.service";
+import { Link } from "react-router-dom";
 
 type NavMenuProps = {
-  categorie: string;
+  genre?: string;
+  categorie?: string[];
 };
 
-const NavMenu = ({ categorie }: NavMenuProps) => {
-  const [sousCategories, setSousCategories] = useState<string[]>([]);
-
+const NavMenu = ({ genre, categorie }: NavMenuProps) => {
   return (
-    <div className="flex">
-      <ul className="absolute  bg-red-500 w-44 -left-16">
-        {sousCategories &&
-          sousCategories?.map((sousCategorie, index) => (
+    <div className="flex justify-around">
+      <ul className="border border-solid border-black absolute  bg-white0 w-32">
+        {categorie &&
+          categorie?.map((sousCategorie, index) => (  
             <li key={index} className="text-center">
-              {sousCategorie}
+              <Link to={`/clothes?genre=${genre}&category=${sousCategorie}`}>
+                {sousCategorie}
+              </Link>
             </li>
           ))}
       </ul>

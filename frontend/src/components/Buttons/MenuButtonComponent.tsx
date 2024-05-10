@@ -7,6 +7,8 @@ type MenuButtonComponentProps = {
   activeMenu: string;
   setActiveMenu: Dispatch<SetStateAction<string>>;
   uppercase: boolean;
+  categorie: string[];
+  genre?: string;
 };
 
 const MenuButtonComponent = ({
@@ -15,6 +17,8 @@ const MenuButtonComponent = ({
   activeMenu,
   setActiveMenu,
   uppercase,
+  categorie,
+  genre
 }: MenuButtonComponentProps) => {
   const handleClick = () => {
     handleMenuClick();
@@ -32,7 +36,7 @@ const MenuButtonComponent = ({
         >
           {menuTitle}{" "}
         </button>
-        {activeMenu === menuTitle && <NavMenu categorie={activeMenu} />}
+        {activeMenu === menuTitle && <NavMenu genre={genre} categorie={categorie} />}
       </li>
     </>
   );

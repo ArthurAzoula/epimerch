@@ -53,7 +53,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     #[Getter, Setter]
     private ?Collection $addresses = null;
 
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client')]
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client', cascade: ['persist'])]
     #[Getter, Setter]
     private ?Collection $orders = null;
 

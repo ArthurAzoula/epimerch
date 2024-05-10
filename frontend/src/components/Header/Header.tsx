@@ -1,16 +1,16 @@
 import { useContext, useState } from "react";
-import { ShoppingCart, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import MenuButtonComponent from "../Buttons/MenuButtonComponent";
 import LoginButton from "../Buttons/LoginButton";
 import { Link } from "react-router-dom";
 import ProfilDropdown from "./ProfilDropdown";
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from "../../context/AuthContext";
 import CartButton from "../Cart/CartButton";
 
 const Header = () => {
   const [activeMenu, setActiveMenu] = useState("");
   const { user } = useContext(AuthContext);
-  
+
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
   };
@@ -25,6 +25,16 @@ const Header = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
             uppercase={false}
+            categorie={[
+              "shirt",
+              "hat",
+              "skirt",
+              "dress",
+              "shorts",
+              "accessories",
+              "other",
+            ]}
+            genre=""
           />
           <MenuButtonComponent
             handleMenuClick={() => handleMenuClick("city")}
@@ -32,21 +42,55 @@ const Header = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
             uppercase={false}
+            categorie={[
+              "shirt",
+              "hat",
+              "skirt",
+              "dress",
+              "shorts",
+              "accessories",
+              "other",
+            ]}
+            genre=""
           />
-          <MenuButtonComponent
-            handleMenuClick={() => handleMenuClick("woman")}
-            uppercase={false}
-            menuTitle="Femme"
-            activeMenu={activeMenu}
-            setActiveMenu={setActiveMenu}
-          />
-          <MenuButtonComponent
-            handleMenuClick={() => handleMenuClick("man")}
-            menuTitle="Homme"
-            activeMenu={activeMenu}
-            setActiveMenu={setActiveMenu}
-            uppercase={false}
-          />
+          <Link to="/clothes?genre=female">
+            <MenuButtonComponent
+              handleMenuClick={() => handleMenuClick("woman")}
+              uppercase={false}
+              menuTitle="Femme"
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
+              categorie={[
+                "shirt",
+                "hat",
+                "skirt",
+                "dress",
+                "shorts",
+                "accessories",
+                "other",
+              ]}
+              genre="female"
+            />
+          </Link>
+          <Link to="/clothes?genre=male">
+            <MenuButtonComponent
+              handleMenuClick={() => handleMenuClick("man")}
+              menuTitle="Homme"
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
+              uppercase={false}
+              categorie={[
+                "shirt",
+                "hat",
+                "skirt",
+                "dress",
+                "shorts",
+                "accessories",
+                "other",
+              ]}
+              genre="male"
+            />
+          </Link>
 
           <MenuButtonComponent
             handleMenuClick={() => handleMenuClick("couture")}
@@ -54,22 +98,42 @@ const Header = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
             uppercase={false}
+            categorie={[
+              "shirt",
+              "hat",
+              "skirt",
+              "dress",
+              "shorts",
+              "accessories",
+              "other",
+            ]}
+            genre=""
           />
 
-          <MenuButtonComponent
-            handleMenuClick={() => handleMenuClick("explore")}
-            menuTitle="Explore"
-            activeMenu={activeMenu}
-            setActiveMenu={setActiveMenu}
-            uppercase={false}
-          />
+          <Link to="/clothes">
+            <MenuButtonComponent
+              handleMenuClick={() => handleMenuClick("explore")}
+              menuTitle="Explore"
+              activeMenu={activeMenu}
+              setActiveMenu={setActiveMenu}
+              uppercase={false}
+              categorie={[
+                "shirt",
+                "hat",
+                "skirt",
+                "dress",
+                "shorts",
+                "accessories",
+                "other",
+              ]}
+              genre=""
+            />
+          </Link>
         </ul>
       </div>
       <div className="flex justify-center w-1/3">
         <h1 className="flex items-center justify-center uppercase text-3xl font-bold tracking-[0.7rem]">
-          <Link to={"/"}>
-            Epimerch
-          </Link>
+          <Link to={"/"}>Epimerch</Link>
         </h1>
       </div>
       <div className="flex w-1/3 items-center justify-end gap-10 pr-8">
