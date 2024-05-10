@@ -27,6 +27,7 @@ export const CartContextProvider = ({children} : {children: JSX.Element}): JSX.E
     async function refreshCartItems() {
         const response = await CartService.getProductsFromCart();
         if (!("error" in response)) {
+            response.sort((a, b) => a.product.name.localeCompare(b.product.name));
             setCartItems(response);
         }
     }

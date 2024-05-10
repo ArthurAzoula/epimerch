@@ -28,7 +28,7 @@ const CartMenu = () => {
     const response = await CartService.validateCart();
     
     if (response) {
-        navigate(`/orders/${response}`,  {
+        navigate(`/orders`,  {
             state: { orderId: response }
         });
     }
@@ -63,7 +63,7 @@ const CartMenu = () => {
             </div>
             <div className="absolute right-2 bottom-4 flex gap-2">
               <MinusIcon
-                onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                onClick={() => item.quantity > 1 ? updateQuantity(item.product.id, item.quantity - 1) : null}
                 className="text-red-700 hover:text-red-800 transition-all hover:scale-110 border rounded-full"
                 size={20}
               />
@@ -75,7 +75,7 @@ const CartMenu = () => {
             </div>
             <div className="absolute top-2 right-2">
               <XIcon
-                onClick={() => removeItem(item.id)}
+                onClick={() => removeItem(item.product.id)}
                 className="text-gray-500 hover:text-gray-600 transition-all hover:scale-110 border rounded-full"
                 size={20}
               />
