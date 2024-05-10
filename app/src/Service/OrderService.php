@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Order;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Ulid;
 
 class OrderService
 {
@@ -22,7 +23,7 @@ class OrderService
         return $this->orderRepository->findAll();
     }
 
-    public function getOrderById(int $id): ?Order
+    public function getOrderById(Ulid $id): ?Order
     {
         return $this->orderRepository->find($id);
     }
@@ -35,24 +36,32 @@ class OrderService
         return $order;
     }
 
-    public function update(int $id, Order $order): Order
+    public function update(Ulid $id, Order $order): Order
     {
         $existingOrder = $this->getOrderById($id);
 
         if ($existingOrder === null) {
             throw new \Exception("Order with id $id not found");
         }
-
-        $existingOrder->setOrderDate($order->getOrderDate());
-        $existingOrder->setOrderStatus($order->getOrderStatus());
-        $existingOrder->setTotalAmount($order->getTotalAmount());
+        
+        if($order->getTotalPrice() !== null) {
+            $existingOrder->setTotalPrice($order->getTotalPrice());
+        }
+        
+        if($order->isPaid() !== null) {
+            $existingOrder->setIsPaid($order->isPaid());
+        }
+        
+        if($order->getClient() !== null) {
+            $existingOrder->setClient($order->getClient());
+        }
 
         $this->entityManager->flush();
 
         return $existingOrder;
     }
 
-    public function delete(int $id): void
+    public function delete(Ulid $id): void
     {
         $order = $this->getOrderById($id);
 

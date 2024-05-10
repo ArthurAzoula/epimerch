@@ -10,6 +10,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Uid\Ulid;
 
 class ClientController
 {
@@ -34,7 +37,7 @@ class ClientController
     }
 
     #[Route('/users/{id}', name: 'get_user', methods: ['GET'])]
-    public function get(int $id): Response
+    public function get(Ulid $id): Response
     {
         try {
             $client = $this->clientService->getClientById($id);
@@ -52,10 +55,9 @@ class ClientController
     }
 
     #[Route('/users/{id}', name: 'delete_user', methods: ['DELETE'])]
-    public function delete(int $id)
+    public function delete(Ulid $id)
     {
         try {
-
             $this->clientService->delete($id);
 
             return Response::json(null, HttpStatus::NO_CONTENT);
@@ -65,11 +67,14 @@ class ClientController
     }
 
     #[Route('/users', name: 'add_user', methods: ['POST'])]
-    public function add(Request $request, ValidatorInterface $validator, SerializerInterface $serializer): Response
+    public function add(Request $request, ValidatorInterface $validator, UserPasswordHasherInterface $ph): Response
     {
         try {
-            $data = $request->getContent();
-            $client = $serializer->deserialize($data, Client::class, 'json');
+            $data = json_decode($request->getContent(), true);
+            
+            $client = new Client();
+            
+            $client->jsonDeserialize($data, $ph);
 
             $errors = $validator->validate($client);
 
@@ -78,30 +83,36 @@ class ClientController
             }
 
             $client = $this->clientService->create($client);
+            $client->createCart();
 
             return Response::json($client, HttpStatus::CREATED);
         } catch (\Exception $e) {
+            (new ConsoleOutput())->writeln($e->getMessage());
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/users/{id}', name: 'update_user', methods: ['PUT'])]
-    public function update(int $id, Request $request, ValidatorInterface $validator, SerializerInterface $serializer): Response
+    public function update(Ulid $id, Request $request, ValidatorInterface $validator, ClientService $clientService, UserPasswordHasherInterface $ph): Response
     {
         try {
-            $data = $request->getContent();
-            $updatedClient = $serializer->deserialize($data, Client::class, 'json');
+            $data = json_decode($request->getContent(), true);
+            
+            $client = $clientService->getClientById($id);
+            
+            $client->jsonDeserialize($data, $ph);
 
-            $errors = $validator->validate($updatedClient);
-
+            $errors = $validator->validate($client);
+            
             if (count($errors) > 0) {
                 return Response::error($errors, HttpStatus::BAD_REQUEST);
             }
 
-            $client = $this->clientService->update($id, $updatedClient);
+            $client = $this->clientService->update($id, $client);
 
             return Response::json($client, HttpStatus::OK);
         } catch (\Exception $e) {
+            (new ConsoleOutput())->writeln($e->getMessage());
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }

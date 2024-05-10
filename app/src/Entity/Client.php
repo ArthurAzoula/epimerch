@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Types\UlidType;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -77,7 +78,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     {
         if (!$this->addresses->contains($address)) {
             $this->addresses[] = $address;
-            $address->setUser($this);
+            $address->setClient($this);
         }
 
         return $this;
@@ -87,7 +88,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     {
         if ($this->addresses->removeElement($address)) {
             if ($address->getUser() === $this) {
-                $address->setUser(null);
+                $address->setClient(null);
             }
         }
 
@@ -98,7 +99,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     {
         if (!$this->orders->contains($order)) {
             $this->orders[] = $order;
-            $order->setUser($this);
+            $order->setClient($this);
         }
 
         return $this;
@@ -107,8 +108,8 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     public function removeOrder(Order $order): static
     {
         if ($this->orders->removeElement($order)) {
-            if ($order->getUser() === $this) {
-                $order->setUser(null);
+            if ($order->getClient() === $this) {
+                $order->setClient(null);
             }
         }
 
@@ -127,6 +128,51 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
         return $this->password;
     }
 
+    public function jsonDeserialize(array $data, UserPasswordHasherInterface $ph): void
+    {
+        if (isset($data['login'])) {
+            $this->login = $data['login'];
+        }
+
+        if (isset($data['email'])) {
+            $this->email = $data['email'];
+        }
+
+        if (isset($data['password'])) {
+            $this->password = $ph->hashPassword($this, $data['password']);
+        }
+
+        if (isset($data['firstname'])) {
+            $this->firstname = $data['firstname'];
+        }
+
+        if (isset($data['lastname'])) {
+            $this->lastname = $data['lastname'];
+        }
+
+        if (isset($data['addresses'])) {
+            $this->addresses = [];
+            foreach ($data['addresses'] as $address) {
+                $this->addAddress($address);
+            }
+        }
+
+        if (isset($data['orders'])) {
+            $this->orders = [];
+            foreach ($data['orders'] as $order) {
+                $this->addOrder($order);
+            }
+        }
+
+        if (isset($data['cart'])) {
+            $this->cart = $data['cart'];
+        }
+        
+        if(isset($data['roles'])) {
+            $this->roles = $data['roles'];
+        }
+    }
+    
     public function jsonSerialize(): mixed
     {
         return
@@ -139,7 +185,8 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
                     'lastname' => $this->lastname,
                     'addresses' => $this->addresses,
                     'orders' => $this->orders,
-                    'cart' => $this->cart->jsonSerialize(),
+                    'roles' => $this->roles,
+                    'cart' => isset($this->cart) ? $this->cart->jsonSerialize() : null,
                     'password' => '********'
                 )
             );

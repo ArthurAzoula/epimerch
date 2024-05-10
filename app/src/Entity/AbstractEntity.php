@@ -45,6 +45,10 @@ abstract class AbstractEntity extends \Lombok\Helper implements JsonSerializable
             $this->createdAt = $currentTime;
         }
         
+        if(empty($this->deletedAt)) {
+            $this->deletedAt = null;
+        }
+        
         $this->updatedAt = $currentTime;
     }
 
@@ -52,14 +56,14 @@ abstract class AbstractEntity extends \Lombok\Helper implements JsonSerializable
     {
         $this->deletedAt = date_create('now', timezone: new DateTimeZone('EUROPE/Paris'));
     }
-
+    
     public function jsonSerialize(): mixed
     {
         return array(
-            'id' => $this->id,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-            'deletedAt' => $this->deletedAt
+            'id' => isset($this->id) ? $this->id : null,
+            'createdAt' => isset($this->createdAt) ? $this->createdAt : null,
+            'updatedAt' => isset($this->updatedAt) ? $this->updatedAt : null,
+            'deletedAt' => isset($this->deletedAt) ? $this->deletedAt : null
         );
     }
 }

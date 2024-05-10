@@ -21,9 +21,9 @@ const AdminPage = () => {
               
               return orderSort;
             })
-            .map((entity, index) => (
+            .map((entity) => (
               <button
-                key={index}
+                key={entity.name}
                 onClick={() => setCurrentEntity(entity)}
                 className={`block w-full text-left py-4 px-8 ${currentEntity === entity ? 'bg-gray-200 hover:bg-gray-200' : 'hover:bg-gray-100'}`}
               >

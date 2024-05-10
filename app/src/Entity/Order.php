@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use App\Service\ClientService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Lombok\Getter;
 use Lombok\Setter;
+use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
@@ -47,13 +49,44 @@ class Order extends AbstractEntity
     public function removeOrderItem(OrderItem $orderItem): static
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
             if ($orderItem->getOrder() === $this) {
                 $orderItem->setOrder(null);
             }
         }
 
         return $this;
+    }
+    
+    public function isPaid(): bool
+    {
+        return $this->isPaid;
+    }
+    
+    public function setPaid(bool $isPaid): void
+    {
+        $this->isPaid = $isPaid;
+    }
+    
+    public function jsonDeserialize(array $data, ClientService $clientService): void
+    {        
+        if(isset($data['totalPrice']))
+            $this->totalPrice = $data['totalPrice'];
+        
+        if(isset($data['isPaid']))
+            $this->isPaid = $data['isPaid'] === 'true';
+        
+        if(isset($data['orderItems'])){
+            $this->orderItems = [];
+            foreach($data['orderItems'] as $orderItem){
+                $this->addOrderItem($orderItem);
+            }
+        }
+        
+        if(isset($data['client']) && !empty($data['client'])){
+            $client = $clientService->getClientById(Ulid::fromBase32($data['client']));
+            if($client !== null)
+                $this->client = $client;
+        }
     }
 
     public function jsonSerialize(): mixed
