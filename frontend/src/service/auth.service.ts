@@ -16,12 +16,13 @@ export type Register = {
 }
 
 export type User = {
+  id?: string,
   firstname: string,
   lastname: string,
   login: string,
   email: string,
   cart: Cart,
-  addresses: Address
+  addresses: Address[]
 }
 
 export type Token = {

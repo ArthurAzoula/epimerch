@@ -58,6 +58,8 @@ class ClientController
     public function delete(Ulid $id)
     {
         try {
+            
+            
             $this->clientService->delete($id);
 
             return Response::json(null, HttpStatus::NO_CONTENT);
@@ -67,14 +69,25 @@ class ClientController
     }
 
     #[Route('/users', name: 'add_user', methods: ['POST'])]
-    public function add(Request $request, ValidatorInterface $validator, UserPasswordHasherInterface $ph): Response
+    public function add(Request $request, ValidatorInterface $validator, UserPasswordHasherInterface $ph, ClientService $clientService): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
             
+            $existingClient = $clientService->getClientByEmail($data["email"]);
+            if ($existingClient) {
+                return Response::error("Cet email existe déjà !", HttpStatus::BAD_REQUEST);
+            }
+            
+            $existingClient = $clientService->getClientByLogin($data["login"]);
+            if ($existingClient) {
+                return Response::error("Ce login existe déjà !", HttpStatus::BAD_REQUEST);
+            }
+            
             $client = new Client();
             
             $client->jsonDeserialize($data, $ph);
+            $client->createCart();
 
             $errors = $validator->validate($client);
 
@@ -83,7 +96,6 @@ class ClientController
             }
 
             $client = $this->clientService->create($client);
-            $client->createCart();
 
             return Response::json($client, HttpStatus::CREATED);
         } catch (\Exception $e) {

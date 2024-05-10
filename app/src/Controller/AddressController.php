@@ -10,9 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Uid\Ulid;
 
-class AddressController 
+class AddressController extends AbstractController
 {
     private AddressService $addressService;
 
@@ -22,7 +24,26 @@ class AddressController
     }
 
     #[Route('/addresses', name: 'addresses', methods: ['GET'])]
-    public function index(): Response
+    public function index(ClientService $clientService): Response
+    {
+        try {
+            $client = $this->getUser()->getUserIdentifier();
+            $client = $clientService->getClientByEmail($client);
+            
+            if($client === null) {
+                return Response::error('Utilisateur pas trouvé !', HttpStatus::NOT_FOUND);
+            }
+            
+            $addresses = $this->addressService->getAddressesByClient($client);
+
+            return Response::json($addresses, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    #[Route('admin/addresses', name: 'admin_addresses', methods: ['GET'])]
+    public function adminIndex(): Response
     {
         try {
             $addresses = $this->addressService->getAll();

@@ -10,10 +10,12 @@ export type Error = {
 
 export type BaseEntityData = {
   id: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
+  createdAt: PHPDate;
+  updatedAt: PHPDate;
+  deletedAt: PHPDate | null;
 }
+
+export type PHPDate = {date: string, timezone_type: number, timezone: string};
 
 export function getRequest<T>(url: string): Promise<T | Error> {
   return instance.get(url).then((response) => response.data).catch((error) => {

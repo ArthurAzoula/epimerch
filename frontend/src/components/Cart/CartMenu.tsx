@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { CartContext } from "../../context/CartContext";
 import { AuthContext } from "../../context/AuthContext";
 import {
@@ -8,8 +8,7 @@ import {
   MinusIcon,
   XIcon,
 } from "lucide-react";
-import CartService from "../../service/cart.service";
-import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const CartMenu = () => {
   const { cartItems, updateQuantity, removeItem } = useContext(CartContext);
@@ -22,26 +21,14 @@ const CartMenu = () => {
     );
   };
 
-  let navigate = useNavigate();
-
-  const handleButtonClick = async () => {
-    const response = await CartService.validateCart();
-    
-    if (response) {
-        navigate(`/orders`,  {
-            state: { orderId: response }
-        });
-    }
-  }
-
   return (
-    <div className="absolute right-0 w-96 mt-2 py-2 bg-white border rounded shadow-lg">
+    <div className="absolute right-0 w-96 mt-2 py-2 bg-white border rounded shadow-lg z-20">
       <h1 className="text-center mb-4">
         Hey <span className="font-medium">{user?.firstname}</span>, votre panier
         semble avoir faim !
       </h1>{" "}
       {cartItems?.length ? (
-        cartItems.map((item, index) => (
+        cartItems.map((item) => (
           <div
             key={item.product.id}
             className="relative flex items-center px-4 py-2 gap-4 border-b w-full last:border-b-0"
@@ -64,16 +51,16 @@ const CartMenu = () => {
             <div className="absolute right-2 bottom-4 flex gap-2">
               <MinusIcon
                 onClick={() => item.quantity > 1 ? updateQuantity(item.product.id, item.quantity - 1) : null}
-                className="text-red-700 hover:text-red-800 transition-all hover:scale-110 border rounded-full"
+                className="text-red-700 hover:text-red-800 transition-all hover:scale-110 border rounded-full cursor-pointer"
                 size={20}
               />
               <PlusIcon
                 onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                className="text-green-700 hover:text-green-800 transition-all hover:scale-110 border rounded-full"
+                className="text-green-700 hover:text-green-800 transition-all hover:scale-110 border rounded-full cursor-pointer"
                 size={20}
               />
             </div>
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2 cursor-pointer">
               <XIcon
                 onClick={() => removeItem(item.product.id)}
                 className="text-gray-500 hover:text-gray-600 transition-all hover:scale-110 border rounded-full"
@@ -89,9 +76,9 @@ const CartMenu = () => {
       )}
       <div className="flex justify-between items-center px-4 py-2">
         <p className="text-lg font-semibold">Total: ${getTotal()}</p>
-        <button onClick={handleButtonClick} className="border border-solid border-black py-1 px-2 rounded hover:bg-black hover:text-white transition-all ease-in-out duration-300">
+        <Link to={'/cart'} className="border border-solid border-black py-1 px-2 rounded hover:bg-black hover:text-white transition-all ease-in-out duration-300">
           Valider le panier
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import AuthService, { Login, User, Register } from '../service/auth.service';
 export const AuthContext = React.createContext<{
   user: User | null,
   isAdmin: boolean,
+  loading: boolean,
   refreshUser: () => Promise<boolean>,
   register: (user: Register) => Promise<boolean>,
   login: (user: Login) => Promise<boolean>,
@@ -11,6 +12,7 @@ export const AuthContext = React.createContext<{
 }>({
   user : null,
   isAdmin: false,
+  loading: false,
   refreshUser: async () => false,
   register: async () => false,
   login: async () => false,
@@ -18,6 +20,7 @@ export const AuthContext = React.createContext<{
 });
 
 const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element => {
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [user, setUser] = React.useState<User | null>(null);
   const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
   
@@ -27,6 +30,7 @@ const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element 
   }, []);
   
   async function refreshUser() {
+    setLoading(true);
     return await AuthService.getUser().then((response) => {
       if ("error" in response) {
         setUser(null);
@@ -43,7 +47,7 @@ const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element 
   async function refreshAdmin() {
     return await AuthService.isAdmin().then((response) => {
       setIsAdmin("success" in response);
-    })
+    }).finally(() => setLoading(false));
   }
   
   async function register(user: Register) {
@@ -68,7 +72,7 @@ const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element 
   }
   
   return (
-    <AuthContext.Provider value={{user: user, isAdmin: isAdmin, refreshUser: refreshUser, register: register, login: login, logout: logout}}>
+    <AuthContext.Provider value={{user: user, isAdmin: isAdmin, loading: loading, refreshUser: refreshUser, register: register, login: login, logout: logout}}>
       {children}
     </AuthContext.Provider>
   );

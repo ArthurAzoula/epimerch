@@ -1,13 +1,13 @@
 import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData, Success } from "./base.service";
 
-export type OrderItem = BaseEntityData & {
+export type OrderItem = BaseEntityData & {quantity: number, product: {
   name: string,
   description: string,
   photo: string,
   price: number,
   category: string,
   genre: string,
-};
+}};
 
 const OrderItemService = {
   

@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Address;
+use App\Entity\Client;
 use App\Repository\AddressRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
@@ -21,6 +22,11 @@ class AddressService
     public function getAll(): ?array
     {
         return $this->addressRepository->findAll();
+    }
+    
+    public function getAddressesByClient(Client $client): ?array
+    {
+        return $this->addressRepository->findBy(['client' => $client]);
     }
 
     public function getAddressById(Ulid $id): ?Address

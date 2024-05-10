@@ -6,23 +6,30 @@ import AdminTableCell from './AdminTableCell';
 import AdminModal from './AdminModal';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../context/AuthContext';
+import { useSearchParams } from 'react-router-dom';
 
 const limit = 20;
 
-const AdminTableView = ({entity}: {entity: EntityConfig}) => {
+const AdminTableView = ({entity, handleSearchParams}: {entity: EntityConfig, handleSearchParams: (key: string, value: string) => void}) => {
   const [data, setData] = useState<[]>([]);
   const [filteredData, setFilteredData] = useState<[]>([]);
+  const [searchParams] = useSearchParams();
+  const [modal, setModal] = useState<{show: boolean, defaultValue: object, type: 'create' | 'update'}>({show: false, defaultValue: {}, type: 'create'});
+  const {refreshUser} = useContext(AuthContext);
   const [search, setSearch] = useState<string>('');
   const [page, setPage] = useState<number>(0);
-  const [modal, setModal] = useState<{show: boolean, defaultValue: object, type: 'create' | 'update'}>({show: false, defaultValue: {}, type: 'create'});
-  const { refreshUser } = useContext(AuthContext);
+  
+  useEffect(() => {
+    setSearch(searchParams.get('search') || '');
+    setPage(Number(searchParams.get('page')) || 0);
+  }, [searchParams]);
   
   useEffect(() => {
     setData([]);
-    setSearch('');
     const fetchAllData = async () => {
       entity.fetch().then((response) => {
         if(response == undefined || typeof response === 'object' && 'error' in response) {
+          console.log('error:', response)
           setData([]);
         } else {
           setData(response as []);
@@ -41,7 +48,7 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
   
   useEffect(() => {
     const filtered = data.filter((row) => {
-      if(search === '') {
+      if(search === '' || search === undefined || search === null) {
         return true;
       }
       
@@ -56,7 +63,7 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
   };
   
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
+    handleSearchParams('search', event.target.value);
   }
   
   const handleShowModal = (defaultValue?: object, type : 'create' | 'update' = 'create') => {
@@ -80,7 +87,6 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
   const handleCreate = (e: React.FormEvent<Element>) => {
     e.preventDefault();
     const dataObject = {...modal.defaultValue} as { [key: string]: string | number | string[] | undefined };
-    console.log('data:', dataObject);
 
     if(entity.deleteColumnsFromCreate){
       for(const key in entity.deleteColumnsFromCreate){
@@ -134,7 +140,6 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
   const handleUpdate = (e: React.FormEvent<Element>) => {
     e.preventDefault();
     const dataObject = {...modal.defaultValue} as { [key: string]: string | number | string[] | undefined };
-    console.log('d:', dataObject);
     
     if(entity.deleteColumnsFromUpdate){
       for(const key in entity.deleteColumnsFromUpdate){

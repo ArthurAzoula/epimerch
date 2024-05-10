@@ -26,6 +26,7 @@ export type EntityColumnConfig = {
   regex?: string,
   fetch?: () => Promise<unknown | Error>,
   fetchValue?: string,
+  entity?: string,
   values?: string[],
   multiple?: boolean,
   editable: boolean,
@@ -42,7 +43,7 @@ const entitiesConfig: EntityConfig[] = [
     create: ProductService.createProduct as (data: unknown) => Promise<Product | Error>,
     update: ProductService.updateProduct,
     delete: ProductService.deleteProduct as (id: string) => Promise<Success | Error>,
-    searchColumn: [['name'], ['description'], ['category'], ['genre']],
+    searchColumn: [['id'], ['name'], ['description'], ['category'], ['genre']],
     order: 0,
     columns: [
       {
@@ -118,7 +119,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: 'createdAt',
         display: 'Created At',
-        type: 'date',
+        type: 'datetime-local',
         order: 8,
         editable: false,
         required: true,
@@ -127,7 +128,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: 'updatedAt',
         display: 'Updated At',
-        type: 'date',
+        type: 'datetime-local',
         order: 9,
         editable: false,
         required: true,
@@ -136,7 +137,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: 'deletedAt',
         display: 'Deleted At',
-        type: 'date',
+        type: 'datetime-local',
         order: 10,
         editable: false,
         required: false,
@@ -147,11 +148,11 @@ const entitiesConfig: EntityConfig[] = [
   {
     name: "adresse",
     display: "Adresses",
-    fetch: AddressService.getAddresses,
+    fetch: AddressService.getAdminAddresses,
     create: AddressService.createAddress as (data: unknown) => Promise<Address | Error>,
     update: AddressService.updateAddress,
     delete: AddressService.deleteAddress as (id: string) => Promise<Success | Error>,
-    searchColumn: [['city'], ['name'], ['country'], ['code'], ['client', 'email']],
+    searchColumn: [['id'], ['city'], ['name'], ['country'], ['code'], ['client', 'email']],
     order: 1,
     columns: [
       {
@@ -211,14 +212,15 @@ const entitiesConfig: EntityConfig[] = [
         order: 6,
         fetch: ClientService.getClients,
         fetchValue: 'email',
+        entity: 'client',
         editable: true,
-        required: true,
+        required: false,
         unique: false
       },
       {
         name: "createdAt",
         display: "Created At",
-        type: "date",
+        type: "datetime-local",
         order: 6,
         editable: false,
         required: true,
@@ -227,7 +229,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "date",
+        type: "datetime-local",
         order: 7,
         editable: false,
         required: true,
@@ -236,7 +238,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "date",
+        type: "datetime-local",
         order: 8,
         editable: false,
         required: false,
@@ -251,7 +253,7 @@ const entitiesConfig: EntityConfig[] = [
     create: ClientService.createClient as (data: unknown) => Promise<Client | Error>,
     update: ClientService.updateClient,
     delete: ClientService.deleteClient as (id: string) => Promise<Success | Error>,
-    searchColumn: [['firstname'], ['lastname'], ['email']],
+    searchColumn: [['id'], ['firstname'], ['lastname'], ['email']],
     deleteColumnsFromCreate: ['cart', 'addresses', 'orders'],
     deleteColumnsFromUpdate: ['password', 'cart', 'addresses', 'orders'],
     order: -10,
@@ -331,7 +333,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "date",
+        type: "datetime-local",
         order: 7,
         editable: false,
         required: true,
@@ -340,7 +342,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "date",
+        type: "datetime-local",
         order: 8,
         editable: false,
         required: true,
@@ -349,7 +351,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "date",
+        type: "datetime-local",
         order: 9,
         editable: false,
         required: false,
@@ -364,7 +366,7 @@ const entitiesConfig: EntityConfig[] = [
     create: OrderService.createOrder as (data: unknown) => Promise<Order | Error>,
     update: OrderService.updateOrder,
     delete: OrderService.deleteOrder as (id: string) => Promise<Success | Error>,
-    searchColumn: [['client', 'email']],
+    searchColumn: [['id'], ['client', 'email']],
     deleteColumnsFromCreate: ['orderItems'],
     deleteColumnsFromUpdate: ['orderItems'],
     order: 5,
@@ -406,6 +408,19 @@ const entitiesConfig: EntityConfig[] = [
         order: 4,
         fetch: ClientService.getClients,
         fetchValue: 'email',
+        entity: 'client',
+        editable: true,
+        required: false,
+        unique: false
+      },
+      {
+        name: "address",
+        display: "Adresse",
+        type: "async",
+        order: 5,
+        fetch: AddressService.getAdminAddresses,
+        fetchValue: 'name',
+        entity: 'adresse',
         editable: true,
         required: true,
         unique: false
@@ -413,7 +428,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "date",
+        type: "datetime-local",
         order: 5,
         editable: false,
         required: true,
@@ -422,7 +437,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "date",
+        type: "datetime-local",
         order: 6,
         editable: false,
         required: true,
@@ -431,7 +446,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "date",
+        type: "datetime-local",
         order: 7,
         editable: false,
         required: false,

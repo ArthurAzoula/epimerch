@@ -3,20 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import InputComponent from "./InputComponent";
 import BorderButton from "../Buttons/BorderButton";
 import { AuthContext } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const LoginComponent: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, login } = useContext(AuthContext);
-  const [error, setError] = useState<string | null>(null);
+  const { login } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if(user){
-      navigate("/");
-    }
-  }, [user, navigate]);
   
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -29,17 +23,31 @@ const LoginComponent: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password) {
-      setError("Veuillez remplir tous les champs");
+    if(loading){
       return;
     }
-    setError(null);
-    setLoading(true);
-    const result = await login({login: email, password});
-    setLoading(false);
-    if(result){
-      setError("Les identifiants de connexion sont incorrects");
+    
+    if (!email || !password) {
+      toast.error("Veuillez remplir tous les champs");
+      return;
     }
+    
+    setLoading(true);
+    
+    toast.promise(login({login: email, password}).then(response => {
+      setLoading(false);
+      
+      if(!response){
+        throw new Error("Erreur lors de la connexion");
+      }
+      
+      navigate("/");
+      return response;
+    }), {
+      pending: 'Connexion en cours...',
+      success: 'Connexion réussie',
+      error: 'Erreur lors de la connexion',
+    });
   };
 
   return (
@@ -75,6 +83,7 @@ const LoginComponent: React.FC = () => {
             <div className="justify-end pt-8">
               <BorderButton
                 text="Se connecter"
+                disabled={loading}
                 className="hover:bg-black hover:text-white transition-all ease-in-out duration-400"
               />
             </div>

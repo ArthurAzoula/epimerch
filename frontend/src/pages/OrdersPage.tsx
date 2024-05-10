@@ -1,21 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useEffect, useState } from "react";
 import OrderService, { Order } from "../service/order.service";
 import Header from "../components/Header/Header";
 import { Link, useLocation } from "react-router-dom";
 import {
   ShoppingCart,
-  Calendar,
   DollarSign,
   Info,
   ArrowRight,
 } from "lucide-react";
-import { Location } from "react-router-dom";
 
 const OrdersPage = () => {
-  const { user } = useContext(AuthContext);
-
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[] | null>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -38,9 +33,9 @@ const OrdersPage = () => {
       <div className="p-4">
         <h1 className="flex items-center text-2xl font-regular mb-4">
           <ShoppingCart size={24} className="inline-block mr-2" />
-          Résumé de tes commandes ({orders.length})
+          Résumé de tes commandes ({orders?.length ?? 0})
         </h1>
-        {orders.map((order) => (
+        {orders?.map((order) => (
           <div
             key={order.id}
             className={`border p-4 mb-4 rounded shadow ${

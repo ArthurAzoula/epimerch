@@ -5,7 +5,7 @@ const Modal = ({children, title, showModal, handleShowModal}: {children: JSX.Ele
   return (
     <>
       {showModal &&
-        <div className='fixed top-0 left-0 z-20 bg-gray-950 bg-opacity-70 flex justify-center items-center h-screen w-screen' onClick={handleShowModal}>
+        <div className='fixed top-0 left-0 z-30 bg-gray-950 bg-opacity-70 flex justify-center items-center h-screen w-screen' onClick={handleShowModal}>
           <div className='bg-white pointer-events-auto rounded-md flex justify-between flex-col' onClick={(e) => {e.stopPropagation()}}>
             <div className='flex justify-between items-center border-b border-black p-4 gap-24'>
               <h2 className='text-xl font-semibold'>{title}</h2>

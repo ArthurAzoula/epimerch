@@ -65,9 +65,7 @@ class OrderService
             $existingOrder->setIsPaid($order->isPaid());
         }
         
-        if($order->getClient() !== null) {
-            $existingOrder->setClient($order->getClient());
-        }
+        $existingOrder->setClient($order->getClient());
 
         $this->entityManager->flush();
 

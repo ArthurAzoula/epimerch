@@ -2,9 +2,10 @@ import React, { useContext, useState } from "react";
 import InputComponent from "./InputComponent";
 import BorderButton from "../Buttons/BorderButton";
 import Header from "../Header/Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LabelComponent from "./LabelComponent";
 import { AuthContext } from "../../context/AuthContext";
+import { toast } from 'react-toastify';
 
 type FormData = {
   firstname: string;
@@ -22,6 +23,8 @@ const RegisterComponent: React.FC = () => {
     login: "",
     password: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const { register } = useContext(AuthContext);
 
@@ -43,8 +46,33 @@ const RegisterComponent: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Formulaire soumis :", formData);
-    await register(user);
+    
+    if(loading){
+      return;
+    }
+    
+    if (!formData.firstname || !formData.lastname || !formData.email || !formData.login || !formData.password) {
+      toast.error("Veuillez remplir tous les champs");
+      return;
+    }
+    
+    setLoading(true);
+    
+    toast.promise(register(user).then(response => {
+      setLoading(false);
+      
+      if(!response){
+        throw new Error("Erreur lors de la création du compte");
+      }
+      
+      navigate("/login");
+      
+      return response;
+    }), {
+      pending: 'Création du compte en cours...',
+      success: 'Compte créé avec succès',
+      error: 'Erreur lors de la création du compte',
+    });
   };
 
   return (
@@ -126,6 +154,7 @@ const RegisterComponent: React.FC = () => {
               <div className="justify-end pt-8">
                 <BorderButton
                   text="Créer le compte"
+                  disabled={loading}
                   className="hover:bg-black hover:text-white transition-all ease-in-out duration-400"
                 />
               </div>

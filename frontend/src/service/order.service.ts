@@ -1,3 +1,4 @@
+import { Address } from './address.service';
 import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData, Success } from "./base.service";
 import { Client } from './client.service';
 import { OrderItem } from "./orderitem.service";
@@ -6,12 +7,17 @@ export type Order = BaseEntityData & {
   totalPrice: number,
   isPaid: boolean,
   client: Client,
+  address: Address,
 };
 
 const OrderService = {
 
     async getOrders(): Promise<Order[] | Error> {
         return getRequest<Order[]>("/orders");
+    },
+    
+    async getOrderById(id: string): Promise<Order | Error> {
+        return getRequest<Order>(`/orders/${id}`);
     },
     
     async getAdminOrders(): Promise<Order[] | Error> {
@@ -40,7 +46,7 @@ const OrderService = {
 
     async getOrderItems(orderId: string): Promise<OrderItem[] | Error> {
         return getRequest<OrderItem[]>(`/orders/${orderId}/products`);
-    }
+    },
     
 };
 

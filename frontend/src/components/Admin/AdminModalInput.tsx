@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { EntityColumnConfig } from '../../config/entities.config';
 import AsyncSelect, { MultiValue, OptionsOrGroups, PropsValue, SingleValue } from 'react-select';
+import { createDateAsUTC } from '../../utils/DateUtils';
 
 type AdminModalInputType = {
   type: 'create' | 'update';
   col: EntityColumnConfig;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  data: string | number | string[] | undefined | {date: string} | {id: string, [key: string]: string} | {value: string, label: string} | {value: string, label: string}[] | boolean | null;
+  data: string | number | string[] | undefined | {date: string, timezone_type: number, timezone: string} | {id: string, [key: string]: string} | {value: string, label: string} | {value: string, label: string}[] | boolean | null;
 }
 
 const AdminModalInput = ({type, col, handleChange, data}: AdminModalInputType) => {
@@ -28,11 +29,12 @@ const AdminModalInput = ({type, col, handleChange, data}: AdminModalInputType) =
     }
   }, [col, data]);
   
-  if(col.type === 'date') {
-    const day = ("0" + new Date((data as {date: string})?.date).getDate()).slice(-2);
-    const month = ("0" + (new Date((data as {date: string})?.date).getMonth() + 1)).slice(-2);
-    const year = new Date((data as {date: string})?.date).getFullYear();
-    data = `${year}-${month}-${day}`;
+  if(col.type === 'datetime-local') {
+    data = data as {date: string, timezone_type: number, timezone: string} | null | undefined;
+    
+    if(data){
+      data = createDateAsUTC(new Date(data.date)).toISOString().slice(0, 16);
+    }
   }
   
   if(col.type === 'async' && data != null && typeof data === 'object' && 'id' in data){
@@ -66,11 +68,8 @@ const AdminModalInput = ({type, col, handleChange, data}: AdminModalInputType) =
   return (
     <div className='grid grid-cols-3 gap-8 justify-between items-center'>
       <label htmlFor={col.name}>{col.display}{col.required && <sup className='text-red-600'>*</sup>}</label>
-      {col.type === 'async' ?
-        <AsyncSelect id={col.name} name={col.name} isDisabled={!col.editable || col.removeFromUpdate} options={fetchData} defaultValue={data as PropsValue<string> | undefined} className='border border-b col-span-2 h-full ms-auto w-full' required={col.required} isClearable={!col.required} onChange={handleAsyncChange} value={data as PropsValue<string> | undefined}/>
-        :
-        col.type === 'enum' ?
-        <AsyncSelect id={col.name} name={col.name} isDisabled={!col.editable || col.removeFromUpdate} options={fetchData} defaultValue={data as PropsValue<string> | undefined}  className='border border-b col-span-2 h-full ms-auto w-full' required={col.required} isClearable={!col.required} isMulti={col.multiple} onChange={handleAsyncChange} value={data as PropsValue<string> | undefined}/>
+      {col.type === 'async' || col.type === 'enum' ?
+        <AsyncSelect id={col.name} name={col.name} isDisabled={!col.editable || col.removeFromUpdate} options={fetchData} defaultValue={data as PropsValue<string> | undefined} className='border border-b col-span-2 h-full ms-auto w-full' required={col.required} isClearable={!col.required} isMulti={col.multiple} onChange={handleAsyncChange} value={data as PropsValue<string> | undefined}/>
         :
         col.type === 'checkbox' && typeof data === 'boolean'  ?
         <input id={col.name} name={col.name} className='border border-b col-span-2 h-full w-full px-2 py-1' onChange={handleChange} defaultChecked={data} checked={data} type={col.type} disabled={!col.editable || (type === 'update' && col.removeFromUpdate)} required={col.required}/>

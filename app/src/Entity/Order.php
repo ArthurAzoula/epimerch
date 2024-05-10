@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use App\Service\AddressService;
 use App\Service\ClientService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Lombok\Getter;
 use Lombok\Setter;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -28,8 +30,13 @@ class Order extends AbstractEntity
     private Collection $orderItems;
 
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     #[Getter, Setter]
     private ?Client $client = null;
+    
+    #[ORM\OneToOne(targetEntity: Address::class, cascade: ['persist'])]
+    #[Getter, Setter]
+    private Address $address;
 
     public function __construct()
     {
@@ -67,7 +74,7 @@ class Order extends AbstractEntity
         $this->isPaid = $isPaid;
     }
     
-    public function jsonDeserialize(array $data, ClientService $clientService): void
+    public function jsonDeserialize(array $data, ClientService $clientService, AddressService $addressService): void
     {        
         if(isset($data['totalPrice']))
             $this->totalPrice = $data['totalPrice'];
@@ -82,10 +89,19 @@ class Order extends AbstractEntity
             }
         }
         
-        if(isset($data['client']) && !empty($data['client'])){
+        if(!isset($data['client']) || empty($data['client'])){
+            $this->client = null;
+        } else {
             $client = $clientService->getClientById(Ulid::fromBase32($data['client']));
             if($client !== null)
                 $this->client = $client;
+        }
+        
+        if(isset($data['address'])){
+            $address = $addressService->getAddressById(Ulid::fromBase32($data['address']));
+            if($address !== null){
+                $this->address = $address;
+            }
         }
     }
 
@@ -97,7 +113,8 @@ class Order extends AbstractEntity
                 'totalPrice' => $this->totalPrice,
                 'isPaid' => $this->isPaid,
                 'orderItems' => $this->orderItems,
-                'client' => isset($this->client) ? $this->client : null
+                'client' => isset($this->client) ? $this->client : null,
+                'address' => isset($this->address) ? $this->address : null
             )
         );
     }

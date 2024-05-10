@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Service\AddressService;
 use App\Service\ClientService;
 use App\Service\OrderService;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,14 +102,14 @@ class OrderController extends AbstractController
     }
 
     #[Route('/orders', name: 'create_order', methods: ['POST'])]
-    public function create(Request $request, ValidatorInterface $validator, ClientService $clientService): Response
+    public function create(Request $request, ValidatorInterface $validator, ClientService $clientService, AddressService $addressService): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
             
             $order = new Order();
             
-            $order->jsonDeserialize($data, $clientService);
+            $order->jsonDeserialize($data, $clientService, $addressService);
             
             $errors = $validator->validate($order);
 
@@ -126,14 +127,14 @@ class OrderController extends AbstractController
     }
 
     #[Route('/orders/{id}', name: 'update_order', methods: ['PUT'])]
-    public function update(Ulid $id, Request $request, ValidatorInterface $validator, OrderService $orderService, ClientService $clientService): Response
+    public function update(Ulid $id, Request $request, ValidatorInterface $validator, OrderService $orderService, ClientService $clientService, AddressService $addressService): Response
     {
         try {
             $data = json_decode($request->getContent(), true);
             
             $order = $orderService->getOrderById($id);
             
-            $order->jsonDeserialize($data, $clientService);
+            $order->jsonDeserialize($data, $clientService, $addressService);
             
             $errors = $validator->validate($order);
 

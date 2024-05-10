@@ -57,6 +57,8 @@ class Address extends AbstractEntity
             if($client !== null){
                 $this->client = $client;
             }
+        } else {
+            $this->client = null;
         }
     }
     

@@ -16,7 +16,7 @@ class Cart extends AbstractEntity
     #[Getter, Setter]
     private ?Client $client = null;
 
-    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart', cascade: ['persist', 'remove'])]
     #[Getter, Setter]
     private ?Collection $cartItems = null;
 

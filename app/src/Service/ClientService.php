@@ -32,6 +32,11 @@ class ClientService
     {
         return $this->clientRepository->findClientByEmail($email);
     }
+    
+    public function getClientByLogin(string $login): ?Client
+    {
+        return $this->clientRepository->findClientByLogin($login);
+    }
 
     public function create(Client $client): Client
     {

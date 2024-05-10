@@ -101,7 +101,7 @@ const ProfileScreen = () => {
         <div className="bg-white border rounded p-4 mb-4">
           <h2 className="text-xl font-semibold mb-2">Vos adresses</h2>
           {user && Object.values(user.addresses).map((address, index) => (
-            <p key={index} className="mb-2">{address}</p>
+            <p key={index} className="mb-2">{`${address.name}, ${address.code} ${address.country}, ${address.country}`}</p>
           ))}
           <div className="flex items-center">
             <input

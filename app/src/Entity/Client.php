@@ -6,7 +6,7 @@ use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AbstractEntity;
-
+use App\Service\OrderService;
 use Lombok\Getter;
 use Lombok\Setter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -49,7 +49,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'client')]
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
     #[Getter, Setter]
     private ?Collection $addresses = null;
 
@@ -58,7 +58,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     private ?Collection $orders = null;
 
 
-    #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'client', cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: Cart::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
     #[Getter, Setter]
     private ?Cart $cart = null;
     
@@ -67,13 +67,13 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     #[ORM\Column(type: UlidType::NAME, nullable: true)]
     #[Getter, Setter]
     private ?Ulid $resetPassword = null;
-
+    
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
         $this->orders = new ArrayCollection();
     }
-
+    
     public function addAddress(Address $address): static
     {
         if (!$this->addresses->contains($address)) {

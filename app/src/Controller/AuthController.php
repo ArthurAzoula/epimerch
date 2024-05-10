@@ -53,6 +53,11 @@ class AuthController extends AbstractController
       if ($verifyClientExist) {
         return Response::error("Cette adresse mail existe déjà", HttpStatus::BAD_REQUEST);
       }
+      
+      $verifyClientExist = $clientService->getClientByLogin($params["login"]);
+      if ($verifyClientExist) {
+        return Response::error("Ce login existe déjà", HttpStatus::BAD_REQUEST);
+      }
 
       $plainedTextPassword = $params["password"];
 
