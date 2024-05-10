@@ -96,7 +96,8 @@ class Order extends AbstractEntity
             array(
                 'totalPrice' => $this->totalPrice,
                 'isPaid' => $this->isPaid,
-                'orderItems' => $this->orderItems
+                'orderItems' => $this->orderItems,
+                'client' => isset($this->client) ? $this->client : null
             )
         );
     }

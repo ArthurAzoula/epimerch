@@ -169,8 +169,8 @@ const AdminTableView = ({entity}: {entity: EntityConfig}) => {
             dataObject[entity.columns[key].name] = columnValue.value;
           }
         } else {
-          const columnValue = dataObject[entity.columns[key].name] as {value: string, label: string} | {value: string, label: string}[] | undefined;
-          if(columnValue && 'value' in columnValue){
+          const columnValue = dataObject[entity.columns[key].name] as {value: string, label: string} | {value: string, label: string}[] | undefined  | string;
+          if(typeof columnValue !== 'string' && columnValue && 'value' in columnValue){
             dataObject[entity.columns[key].name] = columnValue.value;
           }
         }

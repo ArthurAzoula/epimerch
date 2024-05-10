@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Genre;
 use Lombok\Getter;
 use Lombok\Setter;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product extends AbstractEntity
@@ -97,8 +98,33 @@ class Product extends AbstractEntity
 
         return $this;
     }
-
-
+    
+    public function jsonDeserialize(array $data): void
+    {
+        if(isset($data['name'])){
+            $this->name = $data['name'];
+        }
+        
+        if(isset($data['description'])){
+            $this->description = $data['description'];
+        }
+        
+        if(isset($data['photo'])){
+            $this->photo = $data['photo'];
+        }
+        
+        if(isset($data['price'])){
+            $this->price = $data['price'];
+        }
+        
+        if(isset($data['category']) && Category::isValid($data['category'])){
+            $this->category = Category::from($data['category']);
+        }
+        
+        if(isset($data['genre']) && Genre::isValid($data['genre'])){
+            $this->genre = Genre::from($data['genre']);
+        }
+    }
 
     public function jsonSerialize(): mixed
     {

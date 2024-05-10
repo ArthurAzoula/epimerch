@@ -10,10 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Uid\Ulid;
 
-class OrderController
+class OrderController extends AbstractController
 {
 
     private OrderService $orderService;
@@ -26,11 +27,31 @@ class OrderController
 
 
     #[Route('/orders', name: 'orders', methods: ['GET'])]
-    public function index(): Response
+    public function index(ClientService $clientService): Response
+    {
+        try {
+            $mail = $this->getUser()->getUserIdentifier();
+            
+            $client = $clientService->getClientByEmail($mail);
+
+            if (!$client) {
+                return Response::error("Cet utilisateur n'existe pas", HttpStatus::NOT_FOUND);
+            }
+            
+            $orders = $this->orderService->getOrdersByClient($client->getId());
+            
+            return Response::json($orders, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    #[Route('/admin/orders', name: 'admin_orders', methods: ['GET'])]
+    public function adminIndex(): Response
     {
         try {
             $orders = $this->orderService->getAll();
-
+            
             return Response::json($orders, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { EntityColumnConfig } from '../../config/entities.config';
-import AsyncSelect, { ActionMeta, MultiValue, OptionsOrGroups, PropsValue, SingleValue } from 'react-select';
+import AsyncSelect, { MultiValue, OptionsOrGroups, PropsValue, SingleValue } from 'react-select';
 
 type AdminModalInputType = {
   type: 'create' | 'update';

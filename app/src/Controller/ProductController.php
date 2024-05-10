@@ -52,10 +52,14 @@ class ProductController
     }
 
     #[Route('/products', name: 'create_product', methods: ['POST'])]
-    public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    public function create(Request $request, ValidatorInterface $validator): Response
     {
         try {
-            $product = $serializer->deserialize($request->getContent(), Product::class, 'json');
+            $data = json_decode($request->getContent(), true);
+            
+            $product = new Product();
+        
+            $product->jsonDeserialize($data);
 
             $errors = $validator->validate($product);
 
@@ -65,17 +69,21 @@ class ProductController
 
             $this->productService->create($product);
 
-            return Response::json($product->jsonSerialize(), HttpStatus::CREATED);
+            return Response::json($product, HttpStatus::CREATED);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/products/{id}', name: 'update_product', methods: ['PUT'])]
-    public function update(Ulid $id, Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    public function update(Ulid $id, Request $request, ValidatorInterface $validator, ProductService $productService): Response
     {
         try {
-            $product = $serializer->deserialize($request->getContent(), Product::class, 'json');
+            $data = json_decode($request->getContent(), true);
+            
+            $product = $productService->getProductById($id);
+            
+            $product->jsonDeserialize($data);
 
             $errors = $validator->validate($product);
 
@@ -85,7 +93,7 @@ class ProductController
 
             $product = $this->productService->update($id, $product);
 
-            return Response::json($product->jsonSerialize(), HttpStatus::OK);
+            return Response::json($product, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

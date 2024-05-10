@@ -1,10 +1,7 @@
 import ClientService, { Client } from '../service/client.service';
-import CartService, { Cart } from '../service/cart.service'
 import AddressService, {Address} from '../service/address.service';
 import { Success } from '../service/base.service';
-import CartItemService, { CartItem } from '../service/cartitem.service';
 import OrderService, { Order } from '../service/order.service';
-import OrderItemService, { OrderItem } from '../service/orderitem.service';
 import ProductService, { Product } from '../service/product.service';
 
 export type EntityConfig = {
@@ -101,8 +98,9 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: 'category',
         display: 'Category',
-        type: 'text',
+        type: 'enum',
         order: 6,
+        values: ['shirt', 'pants', 'shoes', 'hat', 'suits', 'dress', 'skirt', 'jacket', 'coat', 'sweater', 'shorts', 'accessories', 'other'],
         editable: true,
         required: true,
         unique: false
@@ -112,7 +110,7 @@ const entitiesConfig: EntityConfig[] = [
         display: 'Genre',
         type: 'enum',
         order: 7,
-        values: ['male', 'female', 'kids', 'unisex'],
+        values: ['male', 'female', 'kids', 'unisex', 'other'],
         editable: true,
         required: true,
         unique: false
@@ -362,7 +360,7 @@ const entitiesConfig: EntityConfig[] = [
   {
     name: "order",
     display: "Achats",
-    fetch: OrderService.getOrders,
+    fetch: OrderService.getAdminOrders,
     create: OrderService.createOrder as (data: unknown) => Promise<Order | Error>,
     update: OrderService.updateOrder,
     delete: OrderService.deleteOrder as (id: string) => Promise<Success | Error>,
