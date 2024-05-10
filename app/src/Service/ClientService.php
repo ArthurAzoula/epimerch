@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Client;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Ulid;
 
 class ClientService
 {
@@ -22,7 +23,7 @@ class ClientService
         return $this->clientRepository->findAll();
     }
 
-    public function getClientById(int $id): ?Client
+    public function getClientById(Ulid $id): ?Client
     {
         return $this->clientRepository->find($id);
     }
@@ -40,23 +41,40 @@ class ClientService
         return $client;
     }
 
-    public function update(int $id, Client $client): Client
+    public function update(Ulid $id, Client $client): Client
     {
         $existingClient = $this->getClientById($id);
 
         if ($existingClient === null) {
             throw new \Exception("User with id $id not found");
         }
-
-        $existingClient->setEmail($client->getEmail());
-        $existingClient->setPassword($client->getPassword());
+        
+        if($client->getEmail() !== null) {
+            $existingClient->setEmail($client->getEmail());
+        }
+        
+        if($client->getFirstname() !== null) {
+            $existingClient->setFirstname($client->getFirstname());
+        }
+        
+        if($client->getLastname() !== null) {
+            $existingClient->setLastname($client->getLastname());
+        }
+        
+        if($client->getPassword() !== null) {
+            $existingClient->setPassword($client->getPassword());
+        }
+        
+        if($client->getLogin() !== null) {
+            $existingClient->setLogin($client->getLogin());
+        }
 
         $this->entityManager->flush();
 
         return $existingClient;
     }
 
-    public function delete(int $id): void
+    public function delete(Ulid $id): void
     {
         $client = $this->getClientById($id);
 

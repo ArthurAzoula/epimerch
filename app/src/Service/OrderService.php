@@ -56,10 +56,18 @@ class OrderService
         if ($existingOrder === null) {
             throw new \Exception("Order with id $id not found");
         }
-
-        $existingOrder->setOrderDate($order->getOrderDate());
-        $existingOrder->setOrderStatus($order->getOrderStatus());
-        $existingOrder->setTotalAmount($order->getTotalAmount());
+        
+        if($order->getTotalPrice() !== null) {
+            $existingOrder->setTotalPrice($order->getTotalPrice());
+        }
+        
+        if($order->isPaid() !== null) {
+            $existingOrder->setIsPaid($order->isPaid());
+        }
+        
+        if($order->getClient() !== null) {
+            $existingOrder->setClient($order->getClient());
+        }
 
         $this->entityManager->flush();
 

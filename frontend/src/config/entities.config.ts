@@ -1,12 +1,8 @@
 import ClientService, { Client } from '../service/client.service';
-import CartService, { Cart } from '../service/cart.service'
 import AddressService, {Address} from '../service/address.service';
 import { Success } from '../service/base.service';
-import CartItemService, { CartItem } from '../service/cartitem.service';
 import OrderService, { Order } from '../service/order.service';
-import OrderItemService, { OrderItem } from '../service/orderitem.service';
-import ProductService from '../service/product.service';
-import CategoryService from '../service/category.service';
+import ProductService, { Product } from '../service/product.service';
 
 export type EntityConfig = {
   name: string,
@@ -15,6 +11,8 @@ export type EntityConfig = {
   create: (data: unknown) => Promise<unknown | Error>,
   update: (id: string, data: Partial<unknown>) => Promise<unknown | Error>,
   delete: (id: string) => Promise<Success | Error>,
+  deleteColumnsFromCreate?: string[],
+  deleteColumnsFromUpdate?: string[],
   searchColumn: string[][],
   order: number,
   columns: EntityColumnConfig[]
@@ -27,26 +25,139 @@ export type EntityColumnConfig = {
   order: number,
   regex?: string,
   fetch?: () => Promise<unknown | Error>,
+  fetchValue?: string,
+  values?: string[],
+  multiple?: boolean,
   editable: boolean,
   required: boolean
-  unique: boolean
+  unique: boolean,
+  removeFromUpdate?: boolean
 }
 
 const entitiesConfig: EntityConfig[] = [
   {
+    name: 'product',
+    display: 'Produits',
+    fetch: ProductService.getProducts,
+    create: ProductService.createProduct as (data: unknown) => Promise<Product | Error>,
+    update: ProductService.updateProduct,
+    delete: ProductService.deleteProduct as (id: string) => Promise<Success | Error>,
+    searchColumn: [['name'], ['description'], ['category'], ['genre']],
+    order: 0,
+    columns: [
+      {
+        name: 'id',
+        display: 'ID',
+        type: 'id',
+        order: 1,
+        regex: '^[0-9A-Z]{26}$',
+        editable: false,
+        required: true,
+        unique: true
+      },
+      {
+        name: 'name',
+        display: 'Name',
+        type: 'text',
+        order: 2,
+        regex: '^[A-Za-z0-9 ]{1,255}$',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'description',
+        display: 'Description',
+        type: 'text',
+        order: 3,
+        regex: '^[A-Za-z0-9 ]{1,255}$',
+        editable: true,
+        required: false,
+        unique: false
+      },
+      {
+        name: 'photo',
+        display: 'Photo',
+        type: 'url',
+        order: 4,
+        regex: '^(http|https)://[a-zA-Z0-9./?=_-]*$',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'price',
+        display: 'Price',
+        type: 'number',
+        order: 5,
+        regex: '^[0-9]{1,255}$',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'category',
+        display: 'Category',
+        type: 'enum',
+        order: 6,
+        values: ['shirt', 'pants', 'shoes', 'hat', 'suits', 'dress', 'skirt', 'jacket', 'coat', 'sweater', 'shorts', 'accessories', 'other'],
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'genre',
+        display: 'Genre',
+        type: 'enum',
+        order: 7,
+        values: ['male', 'female', 'kids', 'unisex', 'other'],
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'createdAt',
+        display: 'Created At',
+        type: 'date',
+        order: 8,
+        editable: false,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'updatedAt',
+        display: 'Updated At',
+        type: 'date',
+        order: 9,
+        editable: false,
+        required: true,
+        unique: false
+      },
+      {
+        name: 'deletedAt',
+        display: 'Deleted At',
+        type: 'date',
+        order: 10,
+        editable: false,
+        required: false,
+        unique: false
+      }
+    ]
+  },
+  {
     name: "adresse",
-    display: "Adresse",
+    display: "Adresses",
     fetch: AddressService.getAddresses,
     create: AddressService.createAddress as (data: unknown) => Promise<Address | Error>,
     update: AddressService.updateAddress,
     delete: AddressService.deleteAddress as (id: string) => Promise<Success | Error>,
-    searchColumn: [['city'], ['name'], ['country'], ['code']],
+    searchColumn: [['city'], ['name'], ['country'], ['code'], ['client', 'email']],
     order: 1,
     columns: [
       {
         name: "id",
         display: "ID",
-        type: "text",
+        type: "id",
         order: 1,
         regex: "^[0-9A-Z]{26}$",
         editable: false,
@@ -94,9 +205,20 @@ const entitiesConfig: EntityConfig[] = [
         unique: false
       },
       {
+        name: "client",
+        display: "Utilisateur",
+        type: "async",
+        order: 6,
+        fetch: ClientService.getClients,
+        fetchValue: 'email',
+        editable: true,
+        required: true,
+        unique: false
+      },
+      {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 6,
         editable: false,
         required: true,
@@ -105,7 +227,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 7,
         editable: false,
         required: true,
@@ -114,7 +236,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 8,
         editable: false,
         required: false,
@@ -123,157 +245,21 @@ const entitiesConfig: EntityConfig[] = [
     ]
   },
   {
-    name: "cart",
-    display: "Cart",
-    fetch: CartService.getCarts,
-    create: CartService.createCart as (data: unknown) => Promise<Cart | Error>,
-    update: CartService.updateCart,
-    delete: CartService.deleteCart as (id: string) => Promise<Success | Error>,
-    searchColumn: [['client'], ['name']],
-    order: 2,
-    columns: [
-      {
-        name: "id",
-        display: "ID",
-        type: "text",
-        order: 1,
-        regex: "^[0-9A-Z]{26}$",
-        editable: false,
-        required: true,
-        unique: true
-      },
-      {
-        name: "client",
-        display: "Client",
-        type: "async",
-        order: 2,
-        fetch: ClientService.getClients,
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "createdAt",
-        display: "Created At",
-        type: "datetime",
-        order: 2,
-        editable: false,
-        required: true,
-        unique: false
-      },
-      {
-        name: "updatedAt",
-        display: "Updated At",
-        type: "datetime",
-        order: 3,
-        editable: false,
-        required: true,
-        unique: false
-      },
-      {
-        name: "deletedAt",
-        display: "Deleted At",
-        type: "datetime",
-        order: 4,
-        editable: false,
-        required: false,
-        unique: false
-      }
-    ]
-  },
-  {
-    name: "cartItem",
-    display: "CartItem",
-    fetch: CartItemService.getCartItems,
-    create: CartItemService.createCartItem as (data: unknown) => Promise<CartItem | Error>,
-    update: CartItemService.updateCartItem,
-    delete: CartItemService.deleteCartItem as (id: string) => Promise<Success | Error>,
-    searchColumn: [['cart', 'product'], ['product', 'name']],
-    order: 3,
-    columns: [
-      {
-        name: "id",
-        display: "ID",
-        type: "text",
-        order: 1,
-        regex: "^[0-9A-Z]{26}$",
-        editable: false,
-        required: true,
-        unique: true
-      },
-      {
-        name: "cart",
-        display: "Cart",
-        type: "async",
-        order: 2,
-        fetch: CartService.getCarts,
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "product",
-        display: "Product",
-        type: "async",
-        order: 3,
-        fetch: ProductService.getProducts,
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "quantity",
-        display: "Quantity",
-        type: "number",
-        order: 4,
-        regex: "^[0-9]{1,255}$",
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "createdAt",
-        display: "Created At",
-        type: "datetime",
-        order: 5,
-        editable: false,
-        required: true,
-        unique: false
-      },
-      {
-        name: "updatedAt",
-        display: "Updated At",
-        type: "datetime",
-        order: 6,
-        editable: false,
-        required: true,
-        unique: false
-      },
-      {
-        name: "deletedAt",
-        display: "Deleted At",
-        type: "datetime",
-        order: 7,
-        editable: false,
-        required: false,
-        unique: false
-      }
-    ]
-  },
-  {
     name: "client",
-    display: "Client",
+    display: "Utilisateurs",
     fetch: ClientService.getClients,
     create: ClientService.createClient as (data: unknown) => Promise<Client | Error>,
     update: ClientService.updateClient,
     delete: ClientService.deleteClient as (id: string) => Promise<Success | Error>,
     searchColumn: [['firstname'], ['lastname'], ['email']],
-    order: 4,
+    deleteColumnsFromCreate: ['cart', 'addresses', 'orders'],
+    deleteColumnsFromUpdate: ['password', 'cart', 'addresses', 'orders'],
+    order: -10,
     columns: [
       {
         name: "id",
         display: "ID",
-        type: "text",
+        type: "id",
         order: 1,
         regex: "^[0-9A-Z]{26}$",
         editable: false,
@@ -301,6 +287,16 @@ const entitiesConfig: EntityConfig[] = [
         unique: false
       },
       {
+        name: "login",
+        display: "Login",
+        type: "text",
+        order: 4,
+        regex: "^[A-Za-z0-9 ]{1,255}$",
+        editable: true,
+        required: true,
+        unique: true
+      },
+      {
         name: "email",
         display: "Email",
         type: "text",
@@ -318,12 +314,24 @@ const entitiesConfig: EntityConfig[] = [
         regex: "^[A-Za-z0-9 ]{1,255}$",
         editable: true,
         required: true,
+        unique: false,
+        removeFromUpdate: true
+      },
+      {
+        name: 'roles',
+        display: 'Roles',
+        type: 'enum',
+        order: 6,
+        values: ['IS_AUTHENTICATED_FULLY', 'ROLE_ADMIN'],
+        multiple: true,
+        editable: true,
+        required: false,
         unique: false
       },
       {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 7,
         editable: false,
         required: true,
@@ -332,7 +340,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 8,
         editable: false,
         required: true,
@@ -341,7 +349,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 9,
         editable: false,
         required: false,
@@ -351,18 +359,20 @@ const entitiesConfig: EntityConfig[] = [
   },
   {
     name: "order",
-    display: "Order",
-    fetch: OrderService.getOrders,
+    display: "Achats",
+    fetch: OrderService.getAdminOrders,
     create: OrderService.createOrder as (data: unknown) => Promise<Order | Error>,
     update: OrderService.updateOrder,
     delete: OrderService.deleteOrder as (id: string) => Promise<Success | Error>,
     searchColumn: [['client', 'email']],
+    deleteColumnsFromCreate: ['orderItems'],
+    deleteColumnsFromUpdate: ['orderItems'],
     order: 5,
     columns: [
       {
         name: "id",
         display: "ID",
-        type: "text",
+        type: "id",
         order: 1,
         regex: "^[0-9A-Z]{26}$",
         editable: false,
@@ -381,20 +391,21 @@ const entitiesConfig: EntityConfig[] = [
       },
       {
         name: "isPaid",
-        display: "Is Paid",
+        display: "Payé",
         type: "checkbox",
         order: 3,
         regex: "^(true|false)$",
         editable: true,
-        required: true,
+        required: false,
         unique: false
       },
       {
         name: "client",
-        display: "Client",
+        display: "Utilisateur",
         type: "async",
         order: 4,
         fetch: ClientService.getClients,
+        fetchValue: 'email',
         editable: true,
         required: true,
         unique: false
@@ -402,7 +413,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "createdAt",
         display: "Created At",
-        type: "datetime",
+        type: "date",
         order: 5,
         editable: false,
         required: true,
@@ -411,7 +422,7 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "updatedAt",
         display: "Updated At",
-        type: "datetime",
+        type: "date",
         order: 6,
         editable: false,
         required: true,
@@ -420,117 +431,8 @@ const entitiesConfig: EntityConfig[] = [
       {
         name: "deletedAt",
         display: "Deleted At",
-        type: "datetime",
+        type: "date",
         order: 7,
-        editable: false,
-        required: false,
-        unique: false
-      }
-    ]
-  },
-  {
-    name: "orderItem",
-    display: "OrderItem",
-    fetch: OrderItemService.getOrderItems,
-    create: OrderItemService.createOrderItem as (data: unknown) => Promise<OrderItem | Error>,
-    update: OrderItemService.updateOrderItem,
-    delete: OrderItemService.deleteOrderItem as (id: string) => Promise<Success | Error>,
-    searchColumn: [['name'], ['description'], ['category'], ['genre']],
-    order: 6,
-    columns: [
-      {
-        name: "id",
-        display: "ID",
-        type: "text",
-        order: 1,
-        regex: "^[0-9A-Z]{26}$",
-        editable: false,
-        required: true,
-        unique: true
-      },
-      {
-        name: "name",
-        display: "Name",
-        type: "text",
-        order: 2,
-        regex: "^[A-Za-z0-9 ]{1,255}$",
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "description",
-        display: "Description",
-        type: "text",
-        order: 3,
-        regex: "^[A-Za-z0-9 ]{1,255}$",
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "photo",
-        display: "Photo",
-        type: "url",
-        order: 4,
-        regex: "^(http|https)://[a-zA-Z0-9./?=_-]*$",
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "price",
-        display: "Price",
-        type: "number",
-        order: 5,
-        regex: "^[0-9]{1,255}$",
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "category",
-        display: "Category",
-        type: "async",
-        order: 6,
-        fetch: CategoryService.getCategories,
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "genre",
-        display: "Genre",
-        type: "async",
-        order: 7,
-        regex: "^[A-Za-z0-9 ]{1,255}$",
-        editable: true,
-        required: true,
-        unique: false
-      },
-      {
-        name: "createdAt",
-        display: "Created At",
-        type: "datetime",
-        order: 8,
-        editable: false,
-        required: true,
-        unique: false
-      },
-      {
-        name: "updatedAt",
-        display: "Updated At",
-        type: "datetime",
-        order: 9,
-        editable: false,
-        required: true,
-        unique: false
-      },
-      {
-        name: "deletedAt",
-        display: "Deleted At",
-        type: "datetime",
-        order: 10,
         editable: false,
         required: false,
         unique: false

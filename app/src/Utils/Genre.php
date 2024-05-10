@@ -12,4 +12,9 @@ enum Genre: string {
         $values = self::cases();
         return $values[array_rand($values)];
     }
+    
+    public static function isValid(string $genre): bool {
+        return Genre::tryFrom($genre) != null;
+    }
+    
 }

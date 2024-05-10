@@ -14,6 +14,10 @@ const OrderService = {
         return getRequest<Order[]>("/orders");
     },
     
+    async getAdminOrders(): Promise<Order[] | Error> {
+        return getRequest<Order[]>("/admin/orders");
+    },
+    
     async getOrdersByUserId(userId: string): Promise<Order[] | Error> {
         return getRequest<Order[]>(`/orders/${userId}`);
     },

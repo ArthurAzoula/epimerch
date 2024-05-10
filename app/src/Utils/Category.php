@@ -19,6 +19,10 @@ enum Category: string {
         $values = self::cases();
         return $values[array_rand($values)];
     }
+    
+    public static function isValid(string $category): bool {
+        return Category::tryFrom($category) != null;
+    }
 
 }
 
