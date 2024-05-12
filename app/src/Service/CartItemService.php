@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\CartItem;
 use App\Repository\CartItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Ulid;
 
 class CartItemService
 {
@@ -22,7 +23,7 @@ class CartItemService
         return $this->cartItemRepository->findAll();
     }
 
-    public function getCartItemById(int $id): ?CartItem
+    public function getCartItemById(Ulid $id): ?CartItem
     {
         return $this->cartItemRepository->find($id);
     }
@@ -35,7 +36,7 @@ class CartItemService
         return $cartItem;
     }
 
-    public function update(int $id, CartItem $cartItem): CartItem
+    public function update(Ulid $id, CartItem $cartItem): CartItem
     {
         $existingCartItem = $this->getCartItemById($id);
 
@@ -53,7 +54,7 @@ class CartItemService
         return $existingCartItem;
     }
 
-    public function delete(int $id): void
+    public function delete(Ulid $id): void
     {
         $cartItem = $this->getCartItemById($id);
 

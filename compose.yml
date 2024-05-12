@@ -15,7 +15,7 @@ services:
       dockerfile: Dockerfile
       args:
         TIMEZONE: ${TIMEZONE}
-    command: ~/var/www/symfony/startup.sh
+    command: bash -c "composer install && php bin/console doctrine:database:create --if-not-exists && php bin/console doctrine:migrations:migrate --no-interaction && php bin/console lexik:jwt:generate-keypair --skip-if-exists && php-fpm"
     volumes:
       - ./app:/var/www/symfony:cached
       - symfony_app_var:/var/www/symfony/var

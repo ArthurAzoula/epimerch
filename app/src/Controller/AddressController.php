@@ -4,14 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Service\AddressService;
+use App\Service\ClientService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Uid\Ulid;
 
-class AddressController 
+class AddressController extends AbstractController
 {
     private AddressService $addressService;
 
@@ -21,23 +24,38 @@ class AddressController
     }
 
     #[Route('/addresses', name: 'addresses', methods: ['GET'])]
-    public function index(): Response
+    public function index(ClientService $clientService): Response
+    {
+        try {
+            $client = $this->getUser()->getUserIdentifier();
+            $client = $clientService->getClientByEmail($client);
+            
+            if($client === null) {
+                return Response::error('Utilisateur pas trouvé !', HttpStatus::NOT_FOUND);
+            }
+            
+            $addresses = $this->addressService->getAddressesByClient($client);
+
+            return Response::json($addresses, HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    #[Route('admin/addresses', name: 'admin_addresses', methods: ['GET'])]
+    public function adminIndex(): Response
     {
         try {
             $addresses = $this->addressService->getAll();
 
-            foreach ($addresses as $address) {
-                $data[] = $address->jsonSerialize();
-            }
-
-            return Response::json($data, HttpStatus::OK);
+            return Response::json($addresses, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/addresses/{id}', name: 'get_address', methods: ['GET'])]
-    public function get(int $id): Response
+    public function get(Ulid $id): Response
     {
         try {
             $address = $this->addressService->getAddressById($id);
@@ -55,10 +73,14 @@ class AddressController
     }
 
     #[Route('/addresses', name: 'create_address', methods: ['POST'])]
-    public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    public function create(Request $request, ValidatorInterface $validator, ClientService $clientService): Response
     {
         try {
-            $address = $serializer->deserialize($request->getContent(), Address::class, 'json');
+            $data = json_decode($request->getContent(), true);
+            
+            $address = new Address();
+            
+            $address->jsonDeserialize($data, $clientService);
 
             $errors = $validator->validate($address);
 
@@ -66,22 +88,45 @@ class AddressController
                 return Response::error($errors, HttpStatus::BAD_REQUEST);
             }
 
-            $this->addressService->create($address);
+            $address = $this->addressService->create($address);
 
             return Response::json($address->jsonSerialize(), HttpStatus::CREATED);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
-
-    #[Route('/addresses/{id}', name: 'delete_address', methods: ['DELETE'])]
-    public function delete(int $id)
+    
+    #[Route('/addresses/{id}', name: 'update_address', methods: ['PUT'])]
+    public function update(Ulid $id, Request $request, ValidatorInterface $validator, AddressService $addressService, ClientService $clientService): Response
     {
         try {
+            $data = json_decode($request->getContent(), true);
+            
+            $address = $addressService->getAddressById($id);
+            
+            $address->jsonDeserialize($data, $clientService);
+            
+            $errors = $validator->validate($address);
 
+            if (count($errors) > 0) {
+                return Response::error($errors, HttpStatus::BAD_REQUEST);
+            }
+
+            $address = $this->addressService->update($id, $address);
+
+            return Response::json($address->jsonSerialize(), HttpStatus::OK);
+        } catch (\Exception $e) {
+            return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/addresses/{id}', name: 'delete_address', methods: ['DELETE'])]
+    public function delete(Ulid $id)
+    {
+        try {
             $this->addressService->delete($id);
 
-            return Response::json(null, HttpStatus::NO_CONTENT);
+            return Response::success('Address deleted successfully', HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

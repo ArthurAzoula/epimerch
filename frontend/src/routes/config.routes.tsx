@@ -3,53 +3,74 @@ import Home from "../pages/Home";
 import ProfileScreen from "../pages/ProfileScreen";
 import Cart from "../components/Cart";
 import Details from "../components/Details";
-import Err from "../components/Err";
+import ErrorPage from "../pages/ErrorPage";
 import RegisterPage from "../pages/RegisterPage";
 import ConnexionPage from "../pages/ConnexionPage";
+import Clothes from "../pages/ClothesPage";
+import AdminPage from '../pages/AdminPage';
+import OrdersPage from "../pages/OrdersPage";
+import OrderPage from "../pages/OrderPage";
 
 type RouteType = {
     path: string;
-    exact: boolean;
+    requiresAuth?: boolean;
+    requiresGuest?: boolean;
+    requiresAdmin?: boolean;
     component: React.FC;
 }[];
 
 const routes: RouteType = [
     {
         path: "/",
-        exact: true,
         component: Home,
     },
-
     {
         path: "/register",
-        exact: true,
+        requiresGuest: true,
         component: RegisterPage,
     },
 
     {
         path: "/login",
-        exact: true,
+        requiresGuest: true,
         component: ConnexionPage,
     },
     {
         path: "/profile",
-        exact: true,
+        requiresAuth: true,
         component: ProfileScreen,
     },
     {
+        path: "/clothes",
+        component: Clothes,
+    },
+    {
         path: "/cart",
-        exact: true,
+        requiresAuth: true,
         component: Cart,
     },
     {
         path: "/details/:id",
-        exact: true,
         component: Details,
     },
     {
+        path: "/admin",
+        requiresAdmin: true,
+        component: AdminPage,
+    },
+    {
+        path: "/orders",
+        requiresAuth: true,
+        component: OrdersPage,
+    },
+    {
+        path: "/orders/:id",
+        requiresAuth: true,
+        component: OrderPage,
+    },
+    {
         path: "/*",
-        exact: false,
-        component: Err,
+        component: ErrorPage,
     }
 ];
 

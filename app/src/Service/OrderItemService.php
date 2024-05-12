@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\OrderItem;
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Ulid;
 
 class OrderItemService
 {
@@ -22,7 +23,7 @@ class OrderItemService
         return $this->orderItemRepository->findAll();
     }
 
-    public function getOrderItemById(int $id): ?OrderItem
+    public function getOrderItemById(Ulid $id): ?OrderItem
     {
         return $this->orderItemRepository->find($id);
     }
@@ -35,7 +36,7 @@ class OrderItemService
         return $orderItem;
     }
 
-    public function update(int $id, OrderItem $orderItem): OrderItem
+    public function update(Ulid $id, OrderItem $orderItem): OrderItem
     {
         $existingOrderItem = $this->getOrderItemById($id);
 
@@ -53,7 +54,7 @@ class OrderItemService
         return $existingOrderItem;
     }
 
-    public function delete(int $id): void	
+    public function delete(Ulid $id): void	
     {
         $orderItem = $this->getOrderItemById($id);
 

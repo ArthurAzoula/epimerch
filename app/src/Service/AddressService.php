@@ -3,8 +3,10 @@
 namespace App\Service;
 
 use App\Entity\Address;
+use App\Entity\Client;
 use App\Repository\AddressRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Ulid;
 
 class AddressService
 {
@@ -21,8 +23,13 @@ class AddressService
     {
         return $this->addressRepository->findAll();
     }
+    
+    public function getAddressesByClient(Client $client): ?array
+    {
+        return $this->addressRepository->findBy(['client' => $client]);
+    }
 
-    public function getAddressById(int $id): ?Address
+    public function getAddressById(Ulid $id): ?Address
     {
         return $this->addressRepository->find($id);
     }
@@ -35,25 +42,40 @@ class AddressService
         return $address;
     }
 
-    public function update(int $id, Address $address): Address
+    public function update(Ulid $id, Address $address): Address
     {
         $existingAddress = $this->getAddressById($id);
 
         if ($existingAddress === null) {
             throw new \Exception("Address with id $id not found");
         }
-
-        $existingAddress->setName($address->getName());
-        $existingAddress->setCity($address->getCity());
-        $existingAddress->setCode($address->getCode());
-        $existingAddress->setCountry($address->getCountry());
+        
+        if($address->getName() !== null) {
+            $existingAddress->setName($address->getName());
+        }
+        
+        if($address->getCity() !== null) {
+            $existingAddress->setCity($address->getCity());
+        }
+        
+        if($address->getCode() !== null) {
+            $existingAddress->setCode($address->getCode());
+        }
+        
+        if($address->getCountry() !== null) {
+            $existingAddress->setCountry($address->getCountry());
+        }
+        
+        if($address->getClient() !== null) {
+            $existingAddress->setClient($address->getClient());
+        }
 
         $this->entityManager->flush();
 
         return $existingAddress;
     }
 
-    public function delete(int $id): void
+    public function delete(Ulid $id): void
     {
         $address = $this->getAddressById($id);
 

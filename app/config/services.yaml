@@ -26,3 +26,12 @@ services:
         class: App\Service\Mailer
         arguments:
             - '%env(MAILER_DSN)%'
+
+    App\Controller\:
+        tags: ['controller.service_arguments']
+        public: true
+        resource: '../src/Controller/'
+
+    App\Repository\:
+        resource: '../src/Repository/'
+        tags: ['doctrine.repository_service']

@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import InputComponent from "./InputComponent";
-import BorderButton from "../Header/BorderButton";
+import BorderButton from "../Buttons/BorderButton";
+import { AuthContext } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const LoginComponent: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const { login } = useContext(AuthContext);
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -15,45 +20,86 @@ const LoginComponent: React.FC = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Ajoutez ici la logique de soumission du formulaire
-    console.log("Adresse e-mail:", email);
-    console.log("Mot de passe:", password);
+    
+    if(loading){
+      return;
+    }
+    
+    if (!email || !password) {
+      toast.error("Veuillez remplir tous les champs");
+      return;
+    }
+    
+    setLoading(true);
+    
+    toast.promise(login({login: email, password}).then(response => {
+      setLoading(false);
+      
+      if(!response){
+        throw new Error("Erreur lors de la connexion");
+      }
+      
+      navigate("/");
+      return response;
+    }), {
+      pending: 'Connexion en cours...',
+      success: 'Connexion réussie',
+      error: 'Erreur lors de la connexion',
+    });
   };
 
   return (
-    <div>
-      <div className="flex justify-center">
-        <h2 className="text-3xl">Connexion</h2>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <InputComponent
-            typeInput="email"
-            inputValue={email}
-            handleOnChange={handleEmailChange}
-            placeholder="Ex: henri@epitech.eu"
-            isRequired={true}
-            className=""
-          />
-        </div>
-        <div>
-          <InputComponent
-            typeInput="password"
-            inputValue={password}
-            handleOnChange={handlePasswordChange}
-            placeholder="Mot de passe"
-            isRequired={true}
-            className=""
-          />
-        </div>
-        <BorderButton text="Se connecter" />
-      </form>
-      <div>
-        <p>
-          Nouveau client ? <Link to="/register">Créer un compte</Link>
-        </p>
+    <div className="flex-grow flex justify-center min-h-full h-full">
+      <div className="md:w-2/5 lg:w-2/5 sm:w-full md:border-l lg:border-l md:border-r lg:border-r border-zinc-900 min-h-full h-full">
+        <h1 className="text-center flex items-center justify-center pt-24 pb-8 text-3xl font-bold">
+          Connectez-vous à l'élégance
+        </h1>
+        <form onSubmit={handleSubmit} className="px-16 py-4">
+          <div>
+            <InputComponent
+              name="login"
+              typeInput="text"
+              inputValue={email}
+              handleOnChange={handleEmailChange}
+              placeholder="Ex: henri@epitech.eu"
+              isRequired={true}
+              className="sm:w-full md:w-2/3"
+            />
+          </div>
+          <div>
+            <InputComponent
+              name="password"
+              typeInput="password"
+              inputValue={password}
+              handleOnChange={handlePasswordChange}
+              placeholder="Mot de passe"
+              isRequired={true}
+              className="w-2/3"
+            />
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <div className="justify-end pt-8">
+              <BorderButton
+                text="Se connecter"
+                disabled={loading}
+                className="hover:bg-black hover:text-white transition-all ease-in-out duration-400"
+              />
+            </div>
+          </div>
+          <div className="flex justify-between pt-12 p-4 gap-4">
+            <Link
+              className="hover:underline underline-offset-2"
+              to={"/forgot_password"}
+            >
+              <p>Mot de passe oublié ?</p>
+            </Link>
+            <Link className="hover:underline underline-offset-2" to="/register">
+              <p>Pas encore de compte ?</p>
+            </Link>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 type InputComponentProps = {
+  name: string;
   typeInput: string;
   inputValue: string;
   handleOnChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -8,6 +9,7 @@ type InputComponentProps = {
 };
 
 const InputComponent = ({
+  name,
   typeInput,
   inputValue,
   handleOnChange,
@@ -18,12 +20,13 @@ const InputComponent = ({
   return (
     <label className="flex justify-center mr-6">
       <input
+        name={name}
         type={typeInput}
         value={inputValue}
         onChange={handleOnChange}
         required={isRequired}
         placeholder={placeholder}
-        className={`text-sm w-full px-4 py-2 m-2 border border-solid border-black rounded ${className}`}
+        className={`text-sm w-full px-4 py-2 m-2 mt-0 border border-solid border-black rounded-md ${className}`}
       />
     </label>
   );

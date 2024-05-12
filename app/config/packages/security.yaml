@@ -8,9 +8,7 @@ security:
 
     providers:
         app_user_provider:
-            entity:
-                class: App\Entity\Client
-                property: email
+            id: App\Security\ClientProvider
 
     firewalls:
         login:
@@ -19,7 +17,7 @@ security:
             provider: app_user_provider
             json_login:
                 check_path: /api/login
-                username_path: email
+                username_path: login
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
@@ -37,6 +35,8 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/api/products, roles: PUBLIC_ACCESS }
+        - { path: ^/api/admin, roles: ROLE_ADMIN }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

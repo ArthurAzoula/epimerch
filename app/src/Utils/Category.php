@@ -14,4 +14,16 @@ enum Category: string {
     case SHORTS = "shorts";
     case ACCESSORIES = "accessories";
     case OTHER = "other";
+
+    public static function getRandom(): self {
+        $values = self::cases();
+        return $values[array_rand($values)];
+    }
+    
+    public static function isValid(string $category): bool {
+        return Category::tryFrom($category) != null;
+    }
+
 }
+
+

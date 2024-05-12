@@ -30,6 +30,16 @@ class ClientRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+    
+    public function findClientByLogin(string $login): ?Client
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.login = :login')
+            ->setParameter('login', $login)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 
     public function findClientByUsername(string $username): ?Client
     {

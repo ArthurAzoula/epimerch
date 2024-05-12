@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
+use Symfony\Component\Uid\Ulid;
 
 class ProductController
 {
@@ -26,18 +27,14 @@ class ProductController
         try {
             $products = $this->productService->getAll();
 
-            foreach ($products as $product) {
-                $data[] = $product->jsonSerialize();
-            }
-
-            return Response::json($data, HttpStatus::OK);
+            return Response::json($products, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/products/{id}', name: 'get_product', methods: ['GET'])]
-    public function get(int $id): Response
+    public function get(Ulid $id): Response
     {
         try {
             $product = $this->productService->getProductById($id);
@@ -55,10 +52,14 @@ class ProductController
     }
 
     #[Route('/products', name: 'create_product', methods: ['POST'])]
-    public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    public function create(Request $request, ValidatorInterface $validator): Response
     {
         try {
-            $product = $serializer->deserialize($request->getContent(), Product::class, 'json');
+            $data = json_decode($request->getContent(), true);
+            
+            $product = new Product();
+        
+            $product->jsonDeserialize($data);
 
             $errors = $validator->validate($product);
 
@@ -68,17 +69,21 @@ class ProductController
 
             $this->productService->create($product);
 
-            return Response::json($product->jsonSerialize(), HttpStatus::CREATED);
+            return Response::json($product, HttpStatus::CREATED);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/products/{id}', name: 'update_product', methods: ['PUT'])]
-    public function update(int $id, Request $request, SerializerInterface $serializer, ValidatorInterface $validator): Response
+    public function update(Ulid $id, Request $request, ValidatorInterface $validator, ProductService $productService): Response
     {
         try {
-            $product = $serializer->deserialize($request->getContent(), Product::class, 'json');
+            $data = json_decode($request->getContent(), true);
+            
+            $product = $productService->getProductById($id);
+            
+            $product->jsonDeserialize($data);
 
             $errors = $validator->validate($product);
 
@@ -88,19 +93,19 @@ class ProductController
 
             $product = $this->productService->update($id, $product);
 
-            return Response::json($product->jsonSerialize(), HttpStatus::OK);
+            return Response::json($product, HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
 
     #[Route('/products/{id}', name: 'delete_product', methods: ['DELETE'])]
-    public function delete(int $id): Response
+    public function delete(Ulid $id): Response
     {
         try {
             $this->productService->delete($id);
 
-            return Response::json(null, HttpStatus::NO_CONTENT);
+            return Response::success("Le produit a bien été supprimé.", HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
