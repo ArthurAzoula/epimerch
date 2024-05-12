@@ -74,7 +74,6 @@ const GroupButtonComponent = () => {
             "pants",
             "hat",
             "shoes",
-            "skirt",
             "suits",
             "shorts",
             "accessories",
