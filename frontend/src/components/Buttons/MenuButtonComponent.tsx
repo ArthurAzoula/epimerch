@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import NavMenu from "../Header/NavMenu";
+import { Link } from 'react-router-dom';
 
 type MenuButtonComponentProps = {
   handleMenuClick: () => void;
@@ -24,7 +25,22 @@ const MenuButtonComponent = ({
     handleMenuClick();
     setActiveMenu(menuTitle);
   };
+  const ref = useRef(null);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref?.current && !(ref.current as HTMLElement).contains(event.target as Node)) {
+        setActiveMenu("");
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+  
   return (
     <>
       <li className="relative">
@@ -36,7 +52,20 @@ const MenuButtonComponent = ({
         >
           {menuTitle}{" "}
         </button>
-        {activeMenu === menuTitle && <NavMenu genre={genre} categorie={categorie} />}
+        {activeMenu === menuTitle && (
+          <div ref={ref} className={`flex justify-around`}>
+            <ul className="border border-solid border-black absolute bg-white w-32">
+              {categorie &&
+                categorie?.map((sousCategorie, index) => (  
+                  <li key={index} className="text-center py-1">
+                    <Link to={`/clothes?genre=${genre}&category=${sousCategorie}`}>
+                      {sousCategorie}
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
       </li>
     </>
   );

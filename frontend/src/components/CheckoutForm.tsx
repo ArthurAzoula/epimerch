@@ -24,7 +24,7 @@ const CheckoutForm = ({order}: {order: Order}) => {
   
   return (
     <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-      <PaymentElement className='z-10' />
+      <PaymentElement />
       <button disabled={!stripe || !elements} type="submit" className='border flex gap-2 justify-center items-center px-2 py-2 bg-green-600 text-white hover:bg-green-700 transition-all rounded-md'>
         <span>Payer</span>
         <ArrowRightIcon size={20}/>

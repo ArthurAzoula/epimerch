@@ -274,20 +274,19 @@ const AdminTableView = ({entity, handleSearchParams}: {entity: EntityConfig, han
           marginPagesDisplayed={2}
           pageRangeDisplayed={3}
           onPageChange={handlePageChange}
-          containerClassName={"flex space-x-2"}
+          containerClassName={"flex gap-2 justify-center mt-4"}
           pageClassName={
-            "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            "border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 py-2 *:px-4 *py-2"
           }
           previousClassName={
-            "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            "border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 py-2 *:px-4 *py-2"
           }
           nextClassName={
-            "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            "border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 py-2 *:px-4 *py-2"
           }
           activeClassName={
-            "bg-neutral-700 text-black relative inline-flex items-center px-4 py-2 border border-neutral-700 text-sm font-medium"
+            "bg-neutral-700 text-black border border-neutral-700 text-sm font-medium py-2 *:px-4 *py-2"
           }
-          pageLinkClassName={"w-full h-full absolute inset-0 flex items-center justify-center"}
         />
       </div>
       <AdminModal 
