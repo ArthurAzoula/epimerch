@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import ProductService, { Product } from "../../service/product.service";
 import ReactPaginate from "react-paginate";
 import {
+  SearchIcon,
   ShoppingCart,
   Tag,
   User,
@@ -12,24 +13,30 @@ import { useLocation } from "react-router-dom";
 
 const Clothes = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const productsPerPage = 10;
+  const productsPerPage = 12;
 
   const { addProductToCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
+  const [search, setSearch] = useState();
+  const [searchParams] = useState(new URLSearchParams());
 
   const location = useLocation();
 
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  }
+  
   useEffect(() => {
     const fetchAllProducts = async () => {
-      const params = new URLSearchParams(location.search);
-      const category = params.get("category");
-      const genre = params.get("genre");
       const response = await ProductService.getProducts();
+      const category = searchParams.get("category");
+      const genre = searchParams.get("genre");
 
       if (Array.isArray(response)) {
         let filteredProducts = response;
-
+        
         if (category) {
           filteredProducts = filteredProducts.filter(
             (product) => product.category === category
@@ -48,21 +55,36 @@ const Clothes = () => {
 
     fetchAllProducts();
   }, [location.search]);
-
+  
+  useEffect(() => {
+    setFilteredProducts(products.filter(p => p.name.includes(search ?? '')));
+  }, [search, products]);
+  
   const handlePageClick = (data: any) => {
     const selected = data.selected;
     setCurrentPage(selected);
   };
 
   const offset = currentPage * productsPerPage;
-  const currentProducts = products.slice(offset, offset + productsPerPage);
+  const currentProducts = filteredProducts.slice(offset, offset + productsPerPage);
 
   return (
-    <div className="p-10 w-full">
-      <h1 className="text-2xl mb-10">
-        {user?.firstname}, prêt(e) à faire sauter la banque pour un nouveau
-        vêtement ?
-      </h1>{" "}
+    <div className="p-10 w-full overflow-hidden h-full">
+      <div className='flex justify-between items-center mb-10 overflow-hidden h-full'>
+        <h1 className="text-2xl">
+          {user?.firstname ? user.firstname + ', ' : ''} prêt(e) à faire sauter la banque pour un nouveau
+          vêtement ?
+        </h1>
+        <div className='relative flex items-center -z-10'>
+          <SearchIcon size={24} className="absolute ms-1 pointer-events-none" />
+          <input
+            type="text"
+            id="search"
+            value={search}
+            onChange={handleSearch}
+            className="border border-black rounded px-2 py-1 ps-8"/>
+        </div>
+      </div>
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full">
         {currentProducts.map((product, index) => (
           <li
@@ -110,31 +132,28 @@ const Clothes = () => {
           </li>
         ))}
       </ul>
-      <div className="flex w-full justify-center items-center my-10">
+      <div className="">
         <ReactPaginate
           previousLabel={"Précédent"}
           nextLabel={"Suivant"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          pageCount={Math.ceil(products.length / productsPerPage)}
+          pageCount={Math.ceil(filteredProducts.length / productsPerPage)}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={handlePageClick}
-          containerClassName={"flex space-x-2"}
+          containerClassName={"flex gap-2 justify-center mt-4"}
           pageClassName={
-            "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            "border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 py-2 *:px-4 *py-2"
           }
           previousClassName={
-            "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            "border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 py-2 *:px-4 *py-2"
           }
           nextClassName={
-            "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            "border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 py-2 *:px-4 *py-2"
           }
           activeClassName={
-            "bg-neutral-700 text-black relative inline-flex items-center px-4 py-2 border border-neutral-700 text-sm font-medium"
-          }
-          pageLinkClassName={
-            "w-full h-full absolute inset-0 flex items-center justify-center"
+            "bg-neutral-700 text-black border border-neutral-700 text-sm font-medium py-2 *:px-4 *py-2"
           }
         />
       </div>

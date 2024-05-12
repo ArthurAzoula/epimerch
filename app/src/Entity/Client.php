@@ -49,7 +49,7 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'client', cascade: ['persist'])]
     #[Getter, Setter]
     private ?Collection $addresses = null;
 
@@ -183,10 +183,9 @@ class Client extends AbstractEntity implements UserInterface, PasswordAuthentica
                     'email' => $this->email,
                     'firstname' => $this->firstname,
                     'lastname' => $this->lastname,
-                    'addresses' => $this->addresses,
-                    'orders' => $this->orders,
+                    'addresses' => isset($this->addresses) ? $this->addresses : null,
+                    'orders' => isset($this->orders) ? $this->orders : null,
                     'roles' => $this->roles,
-                    'cart' => isset($this->cart) ? $this->cart->jsonSerialize() : null,
                     'password' => '********'
                 )
             );

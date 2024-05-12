@@ -75,10 +75,14 @@ const CartMenu = () => {
         </p>
       )}
       <div className="flex justify-between items-center px-4 py-2">
-        <p className="text-lg font-semibold">Total: ${getTotal()}</p>
-        <Link to={'/cart'} className="border border-solid border-black py-1 px-2 rounded hover:bg-black hover:text-white transition-all ease-in-out duration-300">
-          Valider le panier
-        </Link>
+        {cartItems && cartItems?.length > 0 && (
+          <>
+            <p className="text-lg font-semibold">Total: ${getTotal()}</p>
+            <Link to={'/cart'} className="border border-solid border-black py-1 px-2 rounded hover:bg-black hover:text-white transition-all ease-in-out duration-300">
+              Valider le panier
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

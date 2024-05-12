@@ -19,6 +19,10 @@ class StripeController extends AbstractController {
   public function getClientSecret(Ulid $orderId, OrderService $orderService): Response {
     try {
       $order = $orderService->getOrderById($orderId);
+      
+      if($order === null) {
+        return Response::error('Achats non trouvés', HttpStatus::BAD_REQUEST);
+      }
     
       $totalAmount = 0;
       
@@ -39,9 +43,42 @@ class StripeController extends AbstractController {
         'amount' => $totalAmount,
         'currency' => 'eur',
         'payment_method_types' => ['card', 'paypal'],
+        'metadata' => [
+          'orderId' => $orderId
+        ],
       ]);
       
       return Response::json(['client_secret' => $intent->client_secret], HttpStatus::OK);
+    } catch(\Exception $e) {
+      (new ConsoleOutput())->writeln($e->getMessage());
+      return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
+    }
+  }
+  
+  #[Route('/stripe/validate/{paymentIntent}', name: 'stripe_validate', methods: ['get'])]
+  public function validatePayment(string $paymentIntent, OrderService $orderService): Response {
+    try {
+      $dotenv = new Dotenv();
+      $dotenv->loadEnv(__DIR__.'/../../.env');
+      
+      Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+      
+      $intent = PaymentIntent::retrieve($paymentIntent);
+      
+      $orderId = Ulid::fromString($intent->metadata->orderId);
+      $order = $orderService->getOrderById($orderId);
+      
+      if($order === null) {
+        return Response::error('Achats non trouvés', HttpStatus::BAD_REQUEST);
+      }
+      
+      $isPaid = $intent->status === 'succeeded';
+      
+      $order->setPaid($isPaid);
+      
+      $order = $orderService->update($order->getId(), $order);
+      
+      return Response::json($order, HttpStatus::OK);
     } catch(\Exception $e) {
       (new ConsoleOutput())->writeln($e->getMessage());
       return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);

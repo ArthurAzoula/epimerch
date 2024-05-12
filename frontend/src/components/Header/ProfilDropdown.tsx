@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -14,7 +14,22 @@ const ProfilDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, isAdmin, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const ref = useRef(null);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref?.current && !(ref.current as HTMLElement).contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref])
+  
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -31,7 +46,7 @@ const ProfilDropdown = () => {
         )}
       </button>
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+        <div ref={ref} className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div
             className="py-1 w-full h-max"
             role="menu"

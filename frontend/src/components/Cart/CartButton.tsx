@@ -1,13 +1,27 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
 import CartMenu from "./CartMenu";
 import { CartContext } from "../../context/CartContext";
 
 const CartButton = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef(null);
+  const { cartItems } = useContext(CartContext);
 
-    const { cartItems } = useContext(CartContext);
-
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref?.current && !(ref.current as HTMLElement).contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref])
+  
   const handleButtonClick = () => {
     setIsOpen(!isOpen);
   };
@@ -21,7 +35,9 @@ const CartButton = () => {
           {cartItems?.reduce((acc, item) => acc + item.quantity, 0) ?? 0}
         </span>{" "}
       </button>
-      {isOpen && <CartMenu />}
+      <div ref={ref}>
+        {isOpen && <CartMenu />}
+      </div>
     </div>
   );
 };

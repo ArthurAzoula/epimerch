@@ -16,21 +16,22 @@ class Address extends AbstractEntity
 
     #[ORM\Column(length: 255)]
     #[Getter, Setter]
-    private ?string $city = null;
+    private string $city;
 
     #[ORM\Column(length: 255)]
     #[Getter, Setter]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(length: 255)]
     #[Getter, Setter]
-    private ?string $country = null;
+    private string $country;
 
     #[ORM\Column(length: 255)]
     #[Getter, Setter]
-    private ?string $code = null;
+    private string $code;
     
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'addresses')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     #[Getter, Setter]
     private ?Client $client = null;
 

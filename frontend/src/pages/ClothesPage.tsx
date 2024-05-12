@@ -6,7 +6,7 @@ const ClothesPage = () => {
   return (
     <div className="overflow-hidden flex flex-col">
       <Header />
-      <div className="flex-grow">
+      <div className="flex-grow overflow-hidden">
         <Clothes />
       </div>
       

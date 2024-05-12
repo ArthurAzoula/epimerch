@@ -26,6 +26,7 @@ const OrderPage = () => {
   const [order, setOrder] = useState<Order | null>(location.state as Order | null);
   const { user } = useContext(AuthContext);
   const [searchParams] = useSearchParams();
+  const [paymentLoading, setPaymentLoading] = useState<boolean>(false);
   
   useEffect(() => {
     setLoading(true);
@@ -40,13 +41,34 @@ const OrderPage = () => {
     }
   }, [id])
   
-  useEffect(() => {
-    if(searchParams && searchParams.has('redirect_status')){
-      if(searchParams.get('redirect_status') === 'succeeded'){
-        toast.success('Paiement effectué avec succès');
-      } else if(searchParams.get('redirect_status') === 'failed'){
-        toast.error('Erreur lors du paiement');
+  useEffect(() => {    
+    if(searchParams && searchParams.has('payment_intent')){
+      setPaymentLoading(true);
+      const paymentIntent = searchParams.get('payment_intent');
+      if(!paymentIntent){
+        return;
       }
+      
+      toast.promise(StripeService.validatePayment(paymentIntent as string).then(response => {
+        console.log('response:', response);
+        setPaymentLoading(false);
+        if('error' in response){
+          setOrder(p => p ? ({...p, isPaid: false}) : null);
+          throw new Error();
+        }
+        
+        if(response.id === id){
+          setOrder(response);
+        } else {
+          throw new Error();
+        }
+        
+        return response;
+      }), {
+        pending: 'Validation du paiement...',
+        success: 'Paiement validé avec succès',
+        error: 'Erreur lors de la validation du paiement',
+      });
     }
     
     return () => {
@@ -92,9 +114,10 @@ const OrderPage = () => {
             </h1>
             <div className="flex flex-col lg:flex-row justify-center w-full gap-4">
               <div className="w-2/5 p-4 shadow-md bg-gray-100">
-                <h2 className="text-lg font-regular mb-4">
-                  Informations de la commande
-                </h2>
+                <div className='flex justify-between items-center mb-4'>
+                  <h2 className="text-lg font-regular">Informations de la commande</h2>
+                  <span className={`${order?.isPaid ? 'text-green-600' : 'text-red-600'}`}>{order?.isPaid ? 'Payé' : 'Non payé'}</span>
+                </div>
                 {orderItems &&
                   orderItems.map((orderItem) => (
                     <div key={orderItem.id} className="px-4 py-2 rounded">
@@ -157,28 +180,20 @@ const OrderPage = () => {
                       <p>Paypal</p>
                     </div>
                   </div>
-                  {/* <div className="w-full flex items-center justify-center mt-8 mb-2">
-                    <button disabled={order.isPaid} className={`border border-black rounded ${!order.isPaid ? 'hover:text-white hover:bg-black' : ''} transition-all ease-in-out duration-300 px-2 py-1 flex justify-between items-center gap-2`}>
-                      {order.isPaid ?
-                      <>
-                        <span>Commande payée</span>
-                        <CheckIcon size={20}/>
-                      </>
-                      :
-                      <>
-                        <span>Payer {order.totalPrice}€</span>
-                        <ArrowRightIcon size={20}/>
-                      </>
-                      }
-                    </button>
-                  </div> */}
                 </div>
               </div>
               {order && !order.isPaid && clientSecret && (
                 <div className='min-w-96 p-4 h-min shadow-md bg-gray-100'>
                   <Elements stripe={stripePromise} options={{clientSecret: clientSecret}}>
-                    <CheckoutForm order={order}/>
-                  </Elements> 
+                  {paymentLoading ? (
+                    <div className='flex justify-center items-center h-full gap-4'>
+                      <span>En attente dy payment</span>
+                      <Loader2Icon size={20} className='animate-spin text-black'/>
+                    </div>
+                    ) : (
+                      <CheckoutForm order={order}/>
+                    )}
+                  </Elements>
                 </div>
               )}
             </div>

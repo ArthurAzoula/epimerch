@@ -6,7 +6,6 @@ use App\Entity\Client;
 use App\Service\ClientService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Utils\Response;
 use App\Utils\HttpStatus;
@@ -58,12 +57,11 @@ class ClientController
     public function delete(Ulid $id)
     {
         try {
-            
-            
             $this->clientService->delete($id);
 
             return Response::json(null, HttpStatus::NO_CONTENT);
         } catch (\Exception $e) {
+            (new ConsoleOutput())->writeln($e->getMessage());
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
@@ -99,7 +97,6 @@ class ClientController
 
             return Response::json($client, HttpStatus::CREATED);
         } catch (\Exception $e) {
-            (new ConsoleOutput())->writeln($e->getMessage());
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
@@ -124,7 +121,6 @@ class ClientController
 
             return Response::json($client, HttpStatus::OK);
         } catch (\Exception $e) {
-            (new ConsoleOutput())->writeln($e->getMessage());
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }

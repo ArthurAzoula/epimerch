@@ -23,10 +23,6 @@ const OrdersPage = () => {
     fetchOrders();
   }, []);
 
-  const location = useLocation();
-
-  const orderId = location?.state?.orderId ?? null;
-
   return (
     <>
       <Header />
@@ -35,20 +31,20 @@ const OrdersPage = () => {
           <ShoppingCart size={24} className="inline-block mr-2" />
           Résumé de tes commandes ({orders?.length ?? 0})
         </h1>
-        {orders?.map((order) => (
+        {orders?.sort((a, b) => new Date(a?.createdAt.date) >= new Date(b.createdAt.date) ? 1 : 0).map((order, index) => (
           <div
             key={order.id}
             className={`border p-4 mb-4 rounded shadow ${
-              order.id === orderId ? "bg-orange-100" : ""
+              index === 0 ? "bg-orange-100" : ""
             }`}
           >
             <div className="flex items-start justify-between">
               <h2 className="flex items-center text-lg font-regular mb-2">
                 <Info size={18} className="inline-block mr-2" />
                 Numéro de commande: {order.id}
-                {order.id === orderId && (
+                {index === 0 && (
                   <span className="ml-2 inline-block bg-green-500 text-white px-2 py-1 rounded text-xs">
-                    Nouveau
+                    Dernière commande
                   </span>
                 )}
               </h2>
