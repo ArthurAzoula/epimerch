@@ -22,7 +22,7 @@ const CartMenu = () => {
   };
 
   return (
-    <div className="absolute right-0 w-96 mt-2 py-2 bg-white border rounded shadow-lg z-20">
+    <div className="absolute right-0 w-96 mt-2 py-2 bg-white border rounded shadow-lg">
       <h1 className="text-center mb-4">
         Hey <span className="font-medium">{user?.firstname}</span>, votre panier
         semble avoir faim !

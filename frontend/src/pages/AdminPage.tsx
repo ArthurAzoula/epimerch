@@ -28,8 +28,8 @@ const AdminPage = () => {
   return (
     <div className="flex min-h-screen max-h-screen h-screen overflow-hidden flex-col w-screen">
       <Header />
-      <div className="flex-grow flex w-full h-full max-h-full">
-        <div className='border-r border-black'>
+      <div className="flex-grow flex flex-col lg:flex-row w-full h-full max-h-full">
+        <div className='flex lg:block border-r border-b lg:border-b-0 border-black overflow-auto'>
           {entities
             .sort((a, b) => {
               const orderSort = a.order - b.order;
@@ -40,7 +40,7 @@ const AdminPage = () => {
               
               return orderSort;
             })
-            .map((entity) => (
+            .map((entity, index) => (
               <button
                 key={entity.name}
                 onClick={() => {
@@ -50,7 +50,7 @@ const AdminPage = () => {
                     return newSearchParams;
                   });
                 }}
-                className={`block w-full text-left py-4 px-8 ${currentEntity === entity ? 'bg-gray-200 hover:bg-gray-200' : 'hover:bg-gray-100'}`}
+                className={`block w-full text-left py-4 px-8 ${index === 0 ? '' : 'border-s'} border-black lg:border-0 ${currentEntity === entity ? 'bg-gray-200 hover:bg-gray-200' : 'hover:bg-gray-100'}`}
               >
                 {entity.display}
               </button>

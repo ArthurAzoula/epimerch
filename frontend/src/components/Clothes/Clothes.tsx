@@ -75,7 +75,7 @@ const Clothes = () => {
           {user?.firstname ? user.firstname + ', ' : ''} prêt(e) à faire sauter la banque pour un nouveau
           vêtement ?
         </h1>
-        <div className='relative flex items-center -z-10'>
+        <div className='relative flex items-center'>
           <SearchIcon size={24} className="absolute ms-1 pointer-events-none" />
           <input
             type="text"

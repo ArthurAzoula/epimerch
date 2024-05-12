@@ -135,8 +135,8 @@ const Cart = () => {
   return (
     <div className='flex flex-col'>
       <Header />
-      <div className='flex gap-8 justify-center flex-grow p-8'>
-        <div className='flex flex-col gap-4 w-2/5 bg-gray-100 rounded-md p-4 h-min'>
+      <div className='flex flex-col lg:flex-row gap-8 justify-center flex-grow items-center lg:items-start p-8'>
+        <div className='flex flex-col gap-4 w-4/5 lg:w-2/5 bg-gray-100 rounded-md p-4 h-min'>
           <h1 className='text-2xl font-semibold'>Votre panier</h1>
           {
             cartItems?.length ? (
@@ -156,42 +156,42 @@ const Cart = () => {
           }
         </div>
         {cartItems && cartItems?.length > 0 && (
-          <div className='flex flex-col gap-8 w-2/5 self-start h-min'>
-          <div className='flex flex-col gap-8 bg-gray-100 rounded-md p-4'>
-            <ReactSelect className='z-0' onChange={handleAddressChange} required={false} isClearable={true} value={selectedAddress} options={adresses} noOptionsMessage={() => 'Vous devez créer une adresse !'} placeholder='Choisissez une adresse'/>
-            <h1 className='text-2xl font-semibold'>Total: {getTotal()}€</h1>
-            <button onClick={handleSubmit} className='bg-green-600 hover:bg-green-700 transition-all text-white p-2 cursor-pointer rounded-md flex gap-2 justify-center items-center'>
-              <span>Valider le panier</span>
-              <CheckIcon size={20} />
-            </button>
-          </div>
-          <details className='flex flex-col gap-8 bg-gray-100 rounded-md p-4'>
-            <summary className='text-2xl font-semibold cursor-pointer select-none mb-8'>Créer une nouvelle adresse de livraison</summary>
-            <form onSubmit={handleAddressSubmit} className='flex flex-col gap-4'>
-              <div className='grid grid-cols-3 gap-2 items-center'>
-                <label htmlFor="name">Numéro et rue</label>
-                <input type="text" id='name' name='name' className='p-2 col-span-2 rounded-md' placeholder='15 rue exemple' required/>
-              </div>
-              <div className='grid grid-cols-3 gap-2 items-center'>
-                <label htmlFor="code">Code Postal</label>
-                <input type="text" id='code' name='code' className='p-2 col-span-2 rounded-md' placeholder='59000' required/>
-              </div>
-              <div className='grid grid-cols-3 gap-2 items-center'>
-                <label htmlFor="city">Ville</label>
-                <input type="text" id='city' name='city' className='p-2 col-span-2 rounded-md' placeholder='Lille' required/>
-              </div>
-              <div className='grid grid-cols-3 gap-2 items-center'>
-                <label htmlFor="country">Pays</label>
-                <input type="text" id='country' name='country' className='p-2 col-span-2 rounded-md' placeholder='France' required/>
-              </div>
-              <button className='bg-green-600 hover:bg-green-700 transition-all text-white p-2 cursor-pointer rounded-md flex gap-2 justify-center items-center'>
-                <span>Créer</span>
-                <PlusIcon size={20} />
+          <div className='flex flex-col gap-8 w-4/5 lg:w-2/5 self-center lg:self-start h-min'>
+            <div className='flex flex-col gap-8 bg-gray-100 rounded-md p-4 w-full'>
+              <ReactSelect onChange={handleAddressChange} required={false} isClearable={true} value={selectedAddress} options={adresses} noOptionsMessage={() => 'Vous devez créer une adresse !'} placeholder='Choisissez une adresse'/>
+              <h1 className='text-2xl font-semibold'>Total: {getTotal()}€</h1>
+              <button onClick={handleSubmit} className='bg-green-600 hover:bg-green-700 transition-all text-white p-2 cursor-pointer rounded-md flex gap-2 justify-center items-center'>
+                <span>Valider le panier</span>
+                <CheckIcon size={20} />
               </button>
-            </form>
-          </details>
-        </div>
-      )}
+            </div>
+            <details className='flex flex-col gap-8 bg-gray-100 rounded-md p-4'>
+              <summary className='text-2xl font-semibold cursor-pointer select-none mb-8'>Créer une nouvelle adresse de livraison</summary>
+              <form onSubmit={handleAddressSubmit} className='flex flex-col gap-4'>
+                <div className='grid grid-cols-3 gap-2 items-center'>
+                  <label htmlFor="name">Numéro et rue</label>
+                  <input type="text" id='name' name='name' className='p-2 col-span-2 rounded-md' placeholder='15 rue exemple' required/>
+                </div>
+                <div className='grid grid-cols-3 gap-2 items-center'>
+                  <label htmlFor="code">Code Postal</label>
+                  <input type="text" id='code' name='code' className='p-2 col-span-2 rounded-md' placeholder='59000' required/>
+                </div>
+                <div className='grid grid-cols-3 gap-2 items-center'>
+                  <label htmlFor="city">Ville</label>
+                  <input type="text" id='city' name='city' className='p-2 col-span-2 rounded-md' placeholder='Lille' required/>
+                </div>
+                <div className='grid grid-cols-3 gap-2 items-center'>
+                  <label htmlFor="country">Pays</label>
+                  <input type="text" id='country' name='country' className='p-2 col-span-2 rounded-md' placeholder='France' required/>
+                </div>
+                <button className='bg-green-600 hover:bg-green-700 transition-all text-white p-2 cursor-pointer rounded-md flex gap-2 justify-center items-center'>
+                  <span>Créer</span>
+                  <PlusIcon size={20} />
+                </button>
+              </form>
+            </details>
+          </div>
+        )}
       </div>
     </div>
   )
