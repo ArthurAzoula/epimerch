@@ -52,8 +52,8 @@ const LoginComponent: React.FC = () => {
 
   return (
     <div className="flex-grow flex justify-center min-h-full h-full">
-      <div className="border-l border-r w-2/5 border-zinc-900 min-h-full h-full">
-        <h1 className="flex items-center justify-center pt-24 pb-8 text-3xl font-bold">
+      <div className="md:w-2/5 lg:w-2/5 sm:w-full md:border-l lg:border-l md:border-r lg:border-r border-zinc-900 min-h-full h-full">
+        <h1 className="text-center flex items-center justify-center pt-24 pb-8 text-3xl font-bold">
           Connectez-vous à l'élégance
         </h1>
         <form onSubmit={handleSubmit} className="px-16 py-4">
@@ -65,7 +65,7 @@ const LoginComponent: React.FC = () => {
               handleOnChange={handleEmailChange}
               placeholder="Ex: henri@epitech.eu"
               isRequired={true}
-              className="w-2/3"
+              className="sm:w-full md:w-2/3"
             />
           </div>
           <div>
@@ -88,7 +88,7 @@ const LoginComponent: React.FC = () => {
               />
             </div>
           </div>
-          <div className="flex justify-between pt-12 p-4">
+          <div className="flex justify-between pt-12 p-4 gap-4">
             <Link
               className="hover:underline underline-offset-2"
               to={"/forgot_password"}

@@ -79,7 +79,7 @@ const RegisterComponent: React.FC = () => {
     <>
       <Header />
       <div className="flex flex-grow  justify-center min-h-full h-screen">
-        <div className="border-l border-r w-2/5 border-zinc-900 min-h-full h-full">
+        <div className="md:w-2/5 lg:w-2/5 sm:w-full md:border-l lg:border-l md:border-r lg:border-r border-zinc-900 min-h-full h-full">
           <h1 className="flex items-center justify-center pt-24 pb-8 text-3xl font-bold">
             Créer le début d'une aventure
           </h1>
