@@ -19,12 +19,12 @@ const Clothes = () => {
 
   const { addProductToCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState<string>();
   const [searchParams] = useState(new URLSearchParams());
 
   const location = useLocation();
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   }
   
@@ -60,7 +60,7 @@ const Clothes = () => {
     setFilteredProducts(products.filter(p => p.name.includes(search ?? '')));
   }, [search, products]);
   
-  const handlePageClick = (data: any) => {
+  const handlePageClick = (data: {selected: number}) => {
     const selected = data.selected;
     setCurrentPage(selected);
   };
