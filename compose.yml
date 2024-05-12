@@ -22,6 +22,10 @@ services:
       - symfony_app_vendor:/var/www/symfony/vendor
     environment:
       DATABASE_URL: ${DATABASE_URL}
+      MAILER_DSN: ${MAILER_DSN}
+      JWT_PASSPHRASE: ${JWT_PASSPHRASE}
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
   webserver:
     image: nginx:alpine
     ports:
@@ -34,10 +38,18 @@ services:
       - ./app:/var/www/symfony:cached
       - symfony_app_var:/var/www/symfony/var
       - symfony_app_vendor:/var/www/symfony/vendor
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      MAILER_DSN: ${MAILER_DSN}
+      JWT_PASSPHRASE: ${JWT_PASSPHRASE}
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
   web:
     build: ./frontend
     ports:
       - "3000:80"
+    environment:
+      VITE_STRIPE_PUBLIC_KEY: pk_test_51PDMB7AsrguZorJQAmKw0BXA2sZ0zzpf26K8S5A84pq1XQwdbfxel5BXPHKAkK37OtViWpCLxHAR3JCli0hhvE0A00Rf8TKQy1
     volumes:
       - ./frontend:/app
   adminer:
