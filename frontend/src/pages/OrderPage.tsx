@@ -113,7 +113,7 @@ const OrderPage = () => {
               Détail de la commande n°{order?.id}
             </h1>
             <div className="flex flex-col lg:flex-row justify-center w-full gap-4">
-              <div className="w-2/5 p-4 shadow-md bg-gray-100">
+              <div className="lg:w-2/5 p-4 shadow-md bg-gray-100">
                 <div className='flex justify-between items-center mb-4'>
                   <h2 className="text-lg font-regular">Informations de la commande</h2>
                   <span className={`${order?.isPaid ? 'text-green-600' : 'text-red-600'}`}>{order?.isPaid ? 'Payé' : 'Non payé'}</span>
@@ -164,18 +164,18 @@ const OrderPage = () => {
                   <h2 className="text-lg font-regular my-2 flex items-center">
                     Paiment de la commande
                   </h2>
-                  <div className="flex items-center justify-around space-x-4 p-4">
-                    <div className="flex items-center space-x-4">
+                  <div className="flex flex-col gap-8 sm:flex-row items-center justify-around space-x-4 p-4">
+                    <div className="flex items-center gap-2">
                       <img src={Visa} alt="Visa" className="h-6" />
                       <p>Visa</p>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center gap-2">
                       <img src={MasterCard} alt="MasterCard" className="h-6" />
                       <p>MasterCard</p>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center gap-2">
                       <img src={Paypal} alt="Paypal" className="h-6" />
                       <p>Paypal</p>
                     </div>

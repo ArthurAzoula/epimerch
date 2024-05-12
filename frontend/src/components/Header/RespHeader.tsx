@@ -20,7 +20,7 @@ const RespHeader = () => {
         />
       </button>
       {isOpen && (
-        <div className="w-screen min-h-full h-screen max-h-screen fixed top-0 left-0 bg-white flex flex-col gap-4">
+        <div className="w-screen min-h-full h-screen absolute max-h-screen top-0 left-0 bg-white flex flex-col gap-4 !z-[9999]">
           <div className="flex justify-between items-center w-full max-w-full p-4 sm:px-8">
             <h1 className="uppercase text-3xl font-bold tracking-[0.7rem]">
               Epimerch
@@ -209,10 +209,14 @@ const RespHeader = () => {
             </details>
             <Link to="/cart" className="flex justify-between items-center">
               <span className="group-hover:bg-gray-200">Panier</span>
-              <span className="text-xs">{cartItems?.length ?? 0}</span>
+              <span className="text-xs px-2 py-1 rounded-md bg-red-600 text-white">{cartItems?.length ?? 0}</span>
             </Link>
             {user ? (
-              <Link to="/profile">Profil</Link>
+              <>
+                <Link to="/profile">Profil</Link>
+                <Link to="/orders">Mes Commandes</Link>
+                {isAdmin && <Link to="/admin">Administratrion</Link>}
+              </>
             ) : (
               <LoginButton className="" />
             )}

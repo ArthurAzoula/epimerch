@@ -245,7 +245,7 @@ const AdminTableView = ({entity, handleSearchParams}: {entity: EntityConfig, han
               <th className={`text-nowrap px-2 py-2 border border-t-0 border-black`}>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className='overflow-hidden'>
             {filteredData.map((row, index) => (
               <tr key={`${row['id']}-${index}`}>
                 {entity.columns.map((column, colIndex) => (
@@ -264,7 +264,7 @@ const AdminTableView = ({entity, handleSearchParams}: {entity: EntityConfig, han
           </tbody>
         </table>
       </div>
-      <div className='mt-auto flex justify-center'>
+      <div className='mt-auto flex justify-center fixed bottom-0 w-full bg-white border-t border-black pb-5'>
         <ReactPaginate
           previousLabel={"Precédent"}
           nextLabel={"Suivant"}
