@@ -20,7 +20,7 @@ const GroupButtonComponent = () => {
           handleMenuClick={() => handleMenuClick("summer")}
           menuTitle="Eté 24"
           uppercase={false}
-          activeMenu={""}
+          activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
           categorie={[
             "shirt",
@@ -84,7 +84,7 @@ const GroupButtonComponent = () => {
 
         <MenuButtonComponent
           handleMenuClick={() => handleMenuClick("kids")}
-          menuTitle="kids"
+          menuTitle="Enfant"
           activeMenu={activeMenu}
           setActiveMenu={setActiveMenu}
           uppercase={false}
