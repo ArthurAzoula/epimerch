@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import NavMenu from "../Header/NavMenu";
 import { Link } from 'react-router-dom';
 
 type MenuButtonComponentProps = {
