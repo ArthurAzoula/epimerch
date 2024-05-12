@@ -124,10 +124,9 @@ class AddressController extends AbstractController
     public function delete(Ulid $id)
     {
         try {
-
             $this->addressService->delete($id);
 
-            return Response::json(null, HttpStatus::NO_CONTENT);
+            return Response::success('Address deleted successfully', HttpStatus::OK);
         } catch (\Exception $e) {
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }

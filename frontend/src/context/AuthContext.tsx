@@ -32,6 +32,12 @@ const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element 
   async function refreshUser() {
     setLoading(true);
     return await AuthService.getUser().then((response) => {
+      if(!response){
+        setUser(null);
+        setIsAdmin(false);
+        return false;
+      }
+      
       if ("error" in response) {
         setUser(null);
         setIsAdmin(false);
@@ -52,18 +58,27 @@ const AuthContextProvider = ({children} : {children: JSX.Element}): JSX.Element 
   
   async function register(user: Register) {
     return await AuthService.register(user).then((response) => {
+      if(!response){
+        throw new Error("Erreur lors de l'inscription");
+      }
+      
       return "success" in response;
-    }).catch(() => false);
+    }).catch(() => {throw new Error("Erreur lors de l'inscription")});
   }
   
   async function login(user: Login) {
     return await AuthService.login(user).then((response) => {
+      if(!response){
+        return refreshUser();
+      }
+      
       if("token" in response){
         localStorage.setItem("token", response.token);
         return refreshUser();
       }
+      
       return false;
-    }).catch(() => false);
+    }).catch(() => {throw new Error("Erreur lors de la connexion")});
   }
   
   async function logout() {

@@ -12,6 +12,7 @@ use App\Entity\Client;
 use App\Entity\Product;
 use App\Repository\CartItemRepository;
 use App\Repository\ProductRepository;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Uid\Ulid;
 
 class CartService
@@ -111,7 +112,8 @@ class CartService
         }
 
         $existingCart->setClient($cart->getClient());
-        $existingCart->setTotalAmount($cart->getTotalAmount());
+        $existingCart->setCartItems($cart->getCartItems());
+        $existingCart->setAddress($cart->getAddress());
 
         $this->entityManager->flush();
 
@@ -169,14 +171,17 @@ class CartService
             $orderItem->setTotal($cartItem->getPrice() * $cartItem->getQuantity());
             $order->addOrderItem($orderItem);
             $order->setTotalPrice($order->getTotalPrice() + $orderItem->getTotal());
+            $this->entityManager->remove($cartItem);
         }
+        
+        $order->setAddress($cart->getAddress());
 
         $client->addOrder($order);
 
         $order->setClient($client);
 
         $this->entityManager->persist($order);
-
+        
         $this->entityManager->flush();
 
         return $order->getId();

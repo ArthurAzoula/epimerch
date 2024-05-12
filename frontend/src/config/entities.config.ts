@@ -422,7 +422,7 @@ const entitiesConfig: EntityConfig[] = [
         fetchValue: 'name',
         entity: 'adresse',
         editable: true,
-        required: true,
+        required: false,
         unique: false
       },
       {

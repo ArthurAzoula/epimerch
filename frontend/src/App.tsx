@@ -12,12 +12,13 @@ function App(): JSX.Element {
           <ToastContainer 
             position='bottom-right' 
             autoClose={2500} 
-            hideProgressBar={true} 
-            newestOnTop={true} 
+            hideProgressBar={true}
+            newestOnTop={false} 
             closeOnClick={true} 
             transition={Zoom} 
             theme='light' 
-            draggable={false}/>
+            draggable={false}
+            stacked={true}/>
         </>
       </CartContextProvider>
     </AuthContextProvider>

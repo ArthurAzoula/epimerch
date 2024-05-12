@@ -156,8 +156,9 @@ class OrderController extends AbstractController
         try {
             $this->orderService->delete($id);
 
-            return Response::json(null, HttpStatus::NO_CONTENT);
+            return Response::success('Order deleted', HttpStatus::OK);
         } catch (\Exception $e) {
+            (new ConsoleOutput())->writeln($e->getMessage());
             return Response::error($e->getMessage(), HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }

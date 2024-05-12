@@ -1,10 +1,11 @@
+import { Address } from './address.service';
 import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityData, Success } from "./base.service";
 import { CartItem } from "./cartitem.service";
-import { Client } from './client.service';
 import { Order } from "./order.service";
 
 export type Cart = BaseEntityData & {
     cartItems: CartItem[],
+    address: Address | string | null,
 };
 
 const CartService = {
@@ -48,6 +49,14 @@ const CartService = {
     async validateCart(): Promise<Order | Error> {
         return postRequest<Order>("/carts/validate");
     },
+    
+    async getCart(): Promise<Cart | Error> {
+        return getRequest<Cart>("/carts/cart");
+    },
+    
+    async updateCartAddress(addressId: string): Promise<Cart | Error> {
+        return putRequest<Cart>("/carts/cart", {address: addressId});
+    }
     
 };
 
