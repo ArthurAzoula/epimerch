@@ -11,7 +11,7 @@ const Modal = ({children, title, showModal, handleShowModal}: {children: JSX.Ele
               <h2 className='text-xl font-semibold'>{title}</h2>
               <button onClick={handleShowModal}><XIcon className='hover:scale-110 transition-all' /></button>
             </div>
-            <div className='p-4'>
+            <div className='p-4 max-h-[90vh] overflow-auto'>
               {children}
             </div>
           </div>
