@@ -76,7 +76,7 @@ const LoginComponent: React.FC = () => {
               handleOnChange={handlePasswordChange}
               placeholder="Mot de passe"
               isRequired={true}
-              className="w-2/3"
+              className="sm:w-full md:w-2/3"
             />
           </div>
           <div className="flex flex-col justify-center items-center">

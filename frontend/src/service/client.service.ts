@@ -3,6 +3,7 @@ import { Error, getRequest, postRequest, putRequest, deleteRequest, BaseEntityDa
 export type Client = BaseEntityData & {
     firstname: string,
     lastname: string,
+    login: string,
     email: string,
     password: string,
 };

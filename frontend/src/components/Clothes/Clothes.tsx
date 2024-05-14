@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { CartContext } from "../../context/CartContext";
 import { AuthContext } from "../../context/AuthContext";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 const Clothes = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -20,7 +20,7 @@ const Clothes = () => {
   const { addProductToCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
   const [search, setSearch] = useState<string>();
-  const [searchParams] = useState(new URLSearchParams());
+  const [searchParams] = useSearchParams();
 
   const location = useLocation();
 
@@ -30,6 +30,7 @@ const Clothes = () => {
   
   useEffect(() => {
     const fetchAllProducts = async () => {
+      console.log('fetchAllProducts:', fetchAllProducts);
       const response = await ProductService.getProducts();
       const category = searchParams.get("category");
       const genre = searchParams.get("genre");
@@ -54,11 +55,27 @@ const Clothes = () => {
     };
 
     fetchAllProducts();
-  }, [location.search]);
+  }, [location.search, searchParams]);
   
   useEffect(() => {
-    setFilteredProducts(products.filter(p => p.name.includes(search ?? '')));
-  }, [search, products]);
+    setFilteredProducts(() => {
+      console.log('products:', products);
+      let filteredProducts = products.filter((product) => {
+        return product.name.toLowerCase().includes(search?.toLowerCase() || "");
+      });
+      
+      if(searchParams.has("category") && searchParams.get("category") !== ""){
+        filteredProducts = filteredProducts.filter((product) => product.category === searchParams.get("category"));
+      }
+      
+      if(searchParams.has("genre") && searchParams.get("genre") !== ""){
+        filteredProducts = filteredProducts.filter((product) => product.genre === searchParams.get("genre"));
+      }
+      
+      console.log('filteredProducts:', filteredProducts);
+      return filteredProducts;
+    });
+  }, [search, searchParams, products]);
   
   const handlePageClick = (data: {selected: number}) => {
     const selected = data.selected;
@@ -75,7 +92,7 @@ const Clothes = () => {
           {user?.firstname ? user.firstname + ', ' : ''} prêt(e) à faire sauter la banque pour un nouveau
           vêtement ?
         </h1>
-        <div className='relative flex items-center'>
+        {/* <div className='relative flex items-center'>
           <SearchIcon size={24} className="absolute ms-1 pointer-events-none" />
           <input
             type="text"
@@ -83,7 +100,7 @@ const Clothes = () => {
             value={search}
             onChange={handleSearch}
             className="border border-black rounded px-2 py-1 ps-8"/>
-        </div>
+        </div> */}
       </div>
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full">
         {currentProducts.map((product, index) => (
