@@ -57,7 +57,7 @@ const OrderPage = () => {
           throw new Error();
         }
         
-        if(response.id === id){
+        if(response.id === id && response.isPaid){
           setOrder(response);
         } else {
           throw new Error();
@@ -187,7 +187,7 @@ const OrderPage = () => {
                   <Elements stripe={stripePromise} options={{clientSecret: clientSecret}}>
                   {paymentLoading ? (
                     <div className='flex justify-center items-center h-full gap-4'>
-                      <span>En attente dy payment</span>
+                      <span>En attente du payment</span>
                       <Loader2Icon size={20} className='animate-spin text-black'/>
                     </div>
                     ) : (

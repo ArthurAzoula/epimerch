@@ -31,7 +31,7 @@ const OrdersPage = () => {
           <ShoppingCart size={24} className="inline-block mr-2" />
           Résumé de tes commandes ({orders?.length ?? 0})
         </h1>
-        {orders?.sort((a, b) => new Date(a?.createdAt.date) >= new Date(b.createdAt.date) ? 1 : 0).map((order, index) => (
+        {orders?.sort((a, b) => new Date(a?.createdAt.date) < new Date(b.createdAt.date) ? 1 : 0).map((order, index) => (
           <div
             key={order.id}
             className={`border p-4 mb-4 rounded shadow ${
